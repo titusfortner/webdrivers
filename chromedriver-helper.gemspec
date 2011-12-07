@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.description = <<EOF
 `chromedriver-helper` installs a script, `chromedriver`, in your gem
 path. This script will, if necessary, download the appropriate binary
-for your platform and install it into `~/.chromedriver`, then it will
-exec the real `chromedriver`. Easy peasy!
+for your platform and install it into `~/.chromedriver-helper`, then
+it will exec the real `chromedriver`. Easy peasy!
 EOF
 
   s.files         = `git ls-files`.split("\n")
