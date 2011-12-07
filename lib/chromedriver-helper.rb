@@ -5,3 +5,5 @@ module Chromedriver
     # Your code goes here...
   end
 end
+
+require "chromedriver-helper/google_code_parser"
