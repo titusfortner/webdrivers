@@ -1,5 +1,4 @@
-require "rspec"
-require File.expand_path(File.join(File.dirname(__FILE__), "..", "lib/chromedriver-helper/google_code_parser"))
+require "spec_helper"
 
 describe Chromedriver::Helper::GoogleCodeParser do
   describe ".new" do

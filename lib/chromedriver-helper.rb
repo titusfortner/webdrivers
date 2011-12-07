@@ -1,9 +1,8 @@
 require "chromedriver-helper/version"
+require "chromedriver-helper/google_code_parser"
 
 module Chromedriver
-  module Helper
-    # Your code goes here...
+  class Helper
+
   end
 end
-
-require "chromedriver-helper/google_code_parser"

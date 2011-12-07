@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 module Chromedriver
-  module Helper
+  class Helper
     class GoogleCodeParser
       attr_reader :html
 
