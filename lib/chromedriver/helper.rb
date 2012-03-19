@@ -5,7 +5,7 @@ require 'open-uri'
 
 module Chromedriver
   class Helper
-    DOWNLOAD_URL = "http://code.google.com/p/chromium/downloads/list"
+    DOWNLOAD_URL = "http://code.google.com/p/chromedriver/downloads/list"
 
     def run *args
       download
