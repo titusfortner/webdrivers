@@ -33,9 +33,24 @@ then, in your specs:
     end
 
 
+# Updating Chromedriver
+
+If you'd like to force-upgrade to the latest version of chromedriver,
+run the script `chromedriver-update` that also comes packaged with
+this gem.
+
+This might be necessary on platforms on which Chrome auto-updates,
+which has been known to introduce incompatibilities with older
+versions of chromedriver (see
+[Issue #3](https://github.com/flavorjones/chromedriver-helper/issues/3)
+for an example).
+
+
 # Support
 
-The code lives at [http://github.com/flavorjones/chromedriver-helper](http://github.com/flavorjones/chromedriver-helper). Open a Github Issue, or send a pull request! Thanks! You're the best.
+The code lives at
+[http://github.com/flavorjones/chromedriver-helper](http://github.com/flavorjones/chromedriver-helper).
+Open a Github Issue, or send a pull request! Thanks! You're the best.
 
 
 # License

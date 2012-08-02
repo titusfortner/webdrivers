@@ -12,16 +12,22 @@ module Chromedriver
       exec binary_path, *args
     end
 
-    def download
-      return if File.exists? binary_path
+    def download hit_network=false
+      return if File.exists?(binary_path) && ! hit_network
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
-        system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
-        raise "Could not download #{url}" unless File.exists? filename
-        system "unzip #{filename}"
+        unless File.exists? filename
+          system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
+          raise "Could not download #{url}" unless File.exists? filename
+          system "unzip -o #{filename}"
+        end
       end
       raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
+    end
+
+    def update
+      download true
     end
 
     def download_url
