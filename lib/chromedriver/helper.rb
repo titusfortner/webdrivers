@@ -58,7 +58,7 @@ module Chromedriver
       cfg = RbConfig::CONFIG
       case cfg['host_os']
       when /linux/ then
-        cfg['host_cpu'] =~ /x86_64/ ? "linux64" : "linux32"
+        cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
       when /darwin/ then "mac"
       else "win"
       end
