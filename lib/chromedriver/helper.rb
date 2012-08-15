@@ -2,6 +2,7 @@ require "chromedriver/helper/version"
 require "chromedriver/helper/google_code_parser"
 require 'fileutils'
 require 'open-uri'
+require 'rbconfig'
 
 module Chromedriver
   class Helper
@@ -54,9 +55,10 @@ module Chromedriver
     end
 
     def platform
-      case RUBY_PLATFORM
-      when /64.*linux|linux.*64/ then "linux64"
-      when /linux/ then "linux32"
+      cfg = RbConfig::CONFIG
+      case cfg['host_os']
+      when /linux/ then
+        cfg['host_cpu'] =~ /x86_64/ ? "linux64" : "linux32"
       when /darwin/ then "mac"
       else "win"
       end
