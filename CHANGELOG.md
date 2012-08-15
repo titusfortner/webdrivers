@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+0.0.5 - 15 Aug 2012
+----------
+
+* Fixed support for JRuby on non-Windows platforms.
+
+
 0.0.4 - 1 Aug 2012
 ----------
 
