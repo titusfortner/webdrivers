@@ -1,17 +1,27 @@
 require 'nokogiri'
+require 'open-uri'
 
 module Chromedriver
   class Helper
     class GoogleCodeParser
-      attr_reader :html
+      BUCKET_URL = 'http://chromedriver.storage.googleapis.com'
 
-      def initialize html
-        @html = html
+      attr_reader :source, :platform
+
+      def initialize(platform)
+        @platform = platform
+        @source = open(BUCKET_URL)
       end
 
       def downloads
-        doc = Nokogiri::HTML html
-        doc.css("td.vt a[@title=Download]").collect {|_| _["href"]}
+        doc = Nokogiri::XML.parse(source)
+        items = doc.css("Contents Key").collect {|k| k.text }
+        items.reject! {|k| !(/chromedriver_#{platform}/===k) }
+        items.map {|k| "#{BUCKET_URL}/#{k}"}
+      end
+
+      def newest_download
+        downloads.last
       end
     end
   end

@@ -1,12 +1,10 @@
 require "chromedriver/helper/version"
 require "chromedriver/helper/google_code_parser"
 require 'fileutils'
-require 'open-uri'
 require 'rbconfig'
 
 module Chromedriver
   class Helper
-    DOWNLOAD_URL = "http://code.google.com/p/chromedriver/downloads/list"
 
     def run *args
       download
@@ -18,11 +16,10 @@ module Chromedriver
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
-        unless File.exists? filename
-          system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
-          raise "Could not download #{url}" unless File.exists? filename
-          system "unzip -o #{filename}"
-        end
+        system "rm #{filename}"
+        system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
+        raise "Could not download #{url}" unless File.exists? filename
+        system "unzip -o #{filename}"
       end
       raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
     end
@@ -32,10 +29,7 @@ module Chromedriver
     end
 
     def download_url
-      downloads = GoogleCodeParser.new(open(DOWNLOAD_URL)).downloads
-      url = downloads.grep(/chromedriver_#{platform}_.*\.zip/).first
-      url = "http:#{url}" if url !~ /^http/
-      url
+      GoogleCodeParser.new(platform).newest_download
     end
 
     def binary_path
