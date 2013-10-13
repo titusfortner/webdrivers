@@ -9,17 +9,17 @@ describe Chromedriver::Helper::GoogleCodeParser do
   describe "#downloads" do
     it "returns an array of URLs for the platform" do
       parser.downloads.should == [
-        "https://chromedriver.storage.googleapis.com/2.0/chromedriver_mac32.zip",
-        "https://chromedriver.storage.googleapis.com/2.1/chromedriver_mac32.zip",
-        "https://chromedriver.storage.googleapis.com/2.2/chromedriver_mac32.zip",
-        "https://chromedriver.storage.googleapis.com/2.3/chromedriver_mac32.zip",
-        "https://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"]
+        "http://chromedriver.storage.googleapis.com/2.0/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.1/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.2/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.3/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"]
     end
   end
 
   describe "#newest_download" do
     it "returns the last URL for the platform" do
-      parser.newest_download.should == "https://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"
+      parser.newest_download.should == "http://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"
     end
   end
 end
