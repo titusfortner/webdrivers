@@ -39,7 +39,7 @@ module Chromedriver
         File.join platform_install_dir, "chromedriver"
       end
     end
-    
+
     def platform_install_dir
       dir = File.join install_dir, platform
       FileUtils.mkdir_p dir
@@ -61,5 +61,6 @@ module Chromedriver
       else "win"
       end
     end
+
   end
 end
