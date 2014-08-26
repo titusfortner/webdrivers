@@ -8,9 +8,9 @@ module Chromedriver
 
       attr_reader :source, :platform
 
-      def initialize(platform)
+      def initialize(platform, open_uri_provider=OpenURI)
         @platform = platform
-        @source = open(BUCKET_URL)
+        @source = open_uri_provider.open_uri(BUCKET_URL)
       end
 
       def downloads
