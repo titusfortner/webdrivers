@@ -1,27 +1,25 @@
 require "spec_helper"
 
 describe Chromedriver::Helper::GoogleCodeParser do
-  describe ".new" do
-    it "takes HTML" do
-      html = "<html><body><div>hello</div></body></html>"
-      parser = Chromedriver::Helper::GoogleCodeParser.new html
-      parser.html.should == html
+  before(:each) do
+    Chromedriver::Helper::GoogleCodeParser.any_instance.stub(:open).and_return(File.read(File.join(File.dirname(__FILE__), "assets/google-code-bucket.xml")))
+  end
+  let!(:parser) { Chromedriver::Helper::GoogleCodeParser.new('mac') }
+
+  describe "#downloads" do
+    it "returns an array of URLs for the platform" do
+      parser.downloads.should == [
+        "http://chromedriver.storage.googleapis.com/2.0/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.1/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.2/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.3/chromedriver_mac32.zip",
+        "http://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"]
     end
   end
 
-  describe "#downloads" do
-    it "returns a hash of names and urls" do
-      parser = Chromedriver::Helper::GoogleCodeParser.new File.read(File.join(File.dirname(__FILE__), "assets/google-code.html"))
-      parser.downloads.should == [
-        "//chromium.googlecode.com/files/chromedriver_win_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_mac_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_linux64_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_linux32_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/Chrome552.215.exe",
-        "//chromium.googlecode.com/files/Chrome517.41.exe",
-        "//chromium.googlecode.com/files/codesite.crx",
-        "//chromium.googlecode.com/files/chromecomicJPGS.zip"
-        ]
+  describe "#newest_download" do
+    it "returns the last URL for the platform" do
+      parser.newest_download.should == "http://chromedriver.storage.googleapis.com/2.4/chromedriver_mac32.zip"
     end
   end
 end
