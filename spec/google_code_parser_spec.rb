@@ -13,15 +13,12 @@ describe Chromedriver::Helper::GoogleCodeParser do
     it "returns a hash of names and urls" do
       parser = Chromedriver::Helper::GoogleCodeParser.new File.read(File.join(File.dirname(__FILE__), "assets/google-code.html"))
       parser.downloads.should == [
-        "//chromium.googlecode.com/files/chromedriver_win_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_mac_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_linux64_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/chromedriver_linux32_16.0.902.0.zip",
-        "//chromium.googlecode.com/files/Chrome552.215.exe",
-        "//chromium.googlecode.com/files/Chrome517.41.exe",
-        "//chromium.googlecode.com/files/codesite.crx",
-        "//chromium.googlecode.com/files/chromecomicJPGS.zip"
-        ]
+        "//chromedriver.googlecode.com/files/chromedriver_linux32_2.3.zip",
+        "//chromedriver.googlecode.com/files/chromedriver_mac32_2.3.zip",
+        "//chromedriver.googlecode.com/files/chromedriver_linux64_2.3.zip",
+        "//chromedriver.googlecode.com/files/release_notes_2.3.txt",
+        "//chromedriver.googlecode.com/files/chromedriver_win32_2.3.zip",
+      ]
     end
   end
 end
