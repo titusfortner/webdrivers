@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+0.0.6 - 26 Aug 2014
+----------
+
+* Fixed to work with new Google download page. #7 (Thanks, @mars!)
+
+
 0.0.5 - 15 Aug 2012
 ----------
 
