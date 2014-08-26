@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+0.0.7 - 26 Aug 2014
+----------
+
+* Added support for windows binaries. (Thanks, @elementc!)
+
+
 0.0.6 - 26 Aug 2014
 ----------
 
