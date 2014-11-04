@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
+require 'version_sorter'
 
 module Chromedriver
   class Helper
@@ -21,7 +22,7 @@ module Chromedriver
       end
 
       def newest_download
-        downloads.last
+        VersionSorter.sort(downloads).last
       end
     end
   end
