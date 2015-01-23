@@ -2,7 +2,7 @@
 
 [![Build status](https://api.travis-ci.org/flavorjones/chromedriver-helper.svg)](https://travis-ci.org/flavorjones/chromedriver-helper)
 
-Easy installation and use of chromedriver, the Chromium project's
+Easy installation and use of [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/), the Chromium project's
 selenium webdriver adapter.
 
 * [http://github.com/flavorjones/chromedriver-helper](http://github.com/flavorjones/chromedriver-helper)
