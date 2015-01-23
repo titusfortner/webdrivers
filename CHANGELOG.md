@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+0.0.8 - 2015-01-23
+----------
+
+* Guaranteeing that we get the *latest* version of chromedriver. (#15) (Thanks, @AlexRiedler!)
+
+
 0.0.7 - 26 Aug 2014
 ----------
 
