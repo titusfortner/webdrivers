@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'open-uri'
-require 'version_sorter'
 
 module Chromedriver
   class Helper
@@ -22,7 +21,14 @@ module Chromedriver
       end
 
       def newest_download
-        VersionSorter.sort(downloads).last
+        (downloads.sort { |a, b| version_of(a) <=> version_of(b)}).last
+      end
+
+      private
+
+      def version_of(url)
+        v = url.gsub("#{BUCKET_URL}/", "").split("/").shift
+        Gem::Version.new(v)
       end
     end
   end
