@@ -2,6 +2,8 @@ require "chromedriver/helper/version"
 require "chromedriver/helper/google_code_parser"
 require 'fileutils'
 require 'rbconfig'
+require 'open-uri'
+require 'archive/zip'
 
 module Chromedriver
   class Helper
@@ -16,10 +18,14 @@ module Chromedriver
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
-        system "rm #{filename}"
-        system("wget -c -O #{filename} #{url}") || system("curl -C - -o #{filename} #{url}")
+        File.delete(filename) if File.exists? filename
+		File.open(filename, "wb") do |saved_file|
+			URI.parse(url).open("rb") do |read_file|
+				saved_file.write(read_file.read)
+			end
+		end
         raise "Could not download #{url}" unless File.exists? filename
-        system "unzip -o #{filename}"
+        Archive::Zip.extract(filename, '.')
       end
       raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
     end
