@@ -19,6 +19,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec",      "~> 3.0"
   s.add_development_dependency "rake"
   s.add_runtime_dependency "nokogiri",       "~> 1.6"
-  s.add_runtime_dependency "version_sorter", "~> 1.1"
   s.add_runtime_dependency "archive-zip",   "~> 0.7.0"
 end

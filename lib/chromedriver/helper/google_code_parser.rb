@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'open-uri'
-require 'version_sorter'
 
 module Chromedriver
   class Helper
@@ -22,7 +21,18 @@ module Chromedriver
       end
 
       def newest_download
-        VersionSorter.sort(downloads).last
+        (downloads.sort { |a, b| version_of(a) <=> version_of(b)}).last
+      end
+
+      private
+
+      def version_of url
+        Gem::Version.new grab_version_string_from(url)
+      end
+
+      def grab_version_string_from url
+        # assumes url is of form similar to http://chromedriver.storage.googleapis.com/2.3/chromedriver_mac32.zip
+        url.split("/")[3]
       end
     end
   end
