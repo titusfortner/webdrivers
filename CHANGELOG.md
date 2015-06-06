@@ -5,6 +5,7 @@ Changelog
 ----------
 
 * No longer require 'curl' or 'wget', or 'unzip' utilities to be installed. You know, for Windows. (Thanks, @elementc!)
+* Support JRuby by removing dependency on native-C-extension gem. (Thanks, Marques Lee!)
 
 
 0.0.8 - 2015-01-23
