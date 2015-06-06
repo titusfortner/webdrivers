@@ -19,11 +19,11 @@ module Chromedriver
       filename = File.basename url
       Dir.chdir platform_install_dir do
         File.delete(filename) if File.exists? filename
-		File.open(filename, "wb") do |saved_file|
-			URI.parse(url).open("rb") do |read_file|
-				saved_file.write(read_file.read)
-			end
-		end
+        File.open(filename, "wb") do |saved_file|
+          URI.parse(url).open("rb") do |read_file|
+            saved_file.write(read_file.read)
+          end
+        end
         raise "Could not download #{url}" unless File.exists? filename
         Archive::Zip.extract(filename, '.')
       end
