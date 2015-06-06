@@ -26,9 +26,13 @@ module Chromedriver
 
       private
 
-      def version_of(url)
-        v = url.gsub("#{BUCKET_URL}/", "").split("/").shift
-        Gem::Version.new(v)
+      def version_of url
+        Gem::Version.new grab_version_string_from(url)
+      end
+
+      def grab_version_string_from url
+        # assumes url is of form similar to http://chromedriver.storage.googleapis.com/2.3/chromedriver_mac32.zip
+        url.split("/")[3]
       end
     end
   end
