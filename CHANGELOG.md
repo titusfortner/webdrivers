@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+0.0.9 - 2015-06-06
+----------
+
+* No longer require 'curl' or 'wget', or 'unzip' utilities to be installed. You know, for Windows. (Thanks, @elementc!)
+
+
 0.0.8 - 2015-01-23
 ----------
 
