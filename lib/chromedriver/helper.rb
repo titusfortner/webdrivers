@@ -18,16 +18,17 @@ module Chromedriver
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
-        File.delete(filename) if File.exists? filename
+        FileUtils.rm_f filename
         File.open(filename, "wb") do |saved_file|
           URI.parse(url).open("rb") do |read_file|
             saved_file.write(read_file.read)
           end
         end
         raise "Could not download #{url}" unless File.exists? filename
-        Archive::Zip.extract(filename, '.')
+        Archive::Zip.extract(filename, '.', :overwrite => :all)
       end
       raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
+      FileUtils.chmod "ugo+rx", binary_path
     end
 
     def update
