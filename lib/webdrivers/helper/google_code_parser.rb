@@ -1,7 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 
-module Chromedriver
+module Webdrivers
   class Helper
     class GoogleCodeParser
       BUCKET_URL = 'http://chromedriver.storage.googleapis.com'

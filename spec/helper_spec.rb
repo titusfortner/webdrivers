@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe Chromedriver::Helper do
-  let(:helper) { Chromedriver::Helper.new }
+describe Webdrivers::Helper do
+  let(:helper) { Webdrivers::Helper.new }
 
   describe "#binary_path" do
     context "on a linux platform" do

@@ -1,11 +1,10 @@
-require "webdrivers/helper/version"
 require "webdrivers/helper/google_code_parser"
 require 'fileutils'
 require 'rbconfig'
 require 'open-uri'
 require 'archive/zip'
 
-module Chromedriver
+module Webdrivers
   class Helper
 
     def run *args
@@ -40,11 +39,8 @@ module Chromedriver
     end
 
     def binary_path
-      if platform == "win"
-        File.join platform_install_dir, "chromedriver.exe"
-      else
-        File.join platform_install_dir, "chromedriver"
-      end
+      file = platform == "win" ? "chromedriver.exe" : "chromedriver"
+      File.join platform_install_dir, file
     end
 
     def platform_install_dir

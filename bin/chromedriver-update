@@ -1,5 +1,5 @@
 #! /usr/bin/env ruby
 
-require "chromedriver/helper"
+require "webdrivers/helper"
 
-Chromedriver::Helper.new.update
+Webdrivers::Helper.new.update
