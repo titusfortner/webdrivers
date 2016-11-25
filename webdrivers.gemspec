@@ -1,15 +1,14 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "chromedriver/helper/version"
 
 Gem::Specification.new do |s|
-  s.name        = "chromedriver-helper"
-  s.version     = Chromedriver::Helper::VERSION
-  s.authors     = ["Mike Dalessio"]
-  s.email       = ["mike.dalessio@gmail.com"]
-  s.homepage    = "https://github.com/flavorjones/loofah"
-  s.summary     = "Easy installation and use of chromedriver."
-  s.description = "Easy installation and use of chromedriver, the Chromium project's selenium webdriver adapter."
+  s.name        = "webdrivers"
+  s.version     = "2.0.0.beta"
+  s.authors     = ["Titus Fortner"]
+  s.email       = ["titusfortner@gmail.com"]
+  s.homepage    = "https://github.com/titusfortner/webdrivers"
+  s.summary     = "Easy installation and use of webdrivers."
+  s.description = "Run Selenium tests more easily with install and updates for all supported webdrivers."
   s.licenses    = ["MIT"]
 
   s.files         = `git ls-files`.split("\n")
