@@ -4,6 +4,12 @@ describe Webdrivers::Chromedriver do
 
   let(:chromedriver) { Webdrivers::Chromedriver }
 
+  it 'downloads' do
+    chromedriver.download
+    file = "#{ENV['GEM_HOME']}/bin/chromedriver"
+    expect(File.exist?(file)).to eq true
+  end
+
   it { expect(chromedriver.newest_version.to_f).to be >= 2.25 }
 
   it { expect(chromedriver.downloads.size).to be >= 26 }
