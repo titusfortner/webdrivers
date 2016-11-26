@@ -30,6 +30,28 @@ module Webdrivers
         FileUtils.chmod "ugo+rx", binary_path
       end
 
+      def decompress_file(filename)
+        case filename
+        when /tar\.gz$/
+          untargz_file(filename)
+        else
+          unzip_file(filename)
+        end
+      end
+
+      def untargz_file(filename)
+        tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filename))
+        tar_extract.rewind
+
+        ucf = File.open(file_name, "w+")
+        tar_extract.each { |entry| ucf << entry.read }
+        ucf.close
+      end
+
+      def unzip_file(filename)
+        Archive::Zip.extract(filename, '.', :overwrite => :all)
+      end
+
       def download_url(version = nil)
         downloads[version || newest_version]
       end

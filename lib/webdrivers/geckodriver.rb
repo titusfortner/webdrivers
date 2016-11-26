@@ -32,15 +32,6 @@ module Webdrivers
         end
       end
 
-      def decompress_file(filename)
-        tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filename))
-        tar_extract.rewind
-
-        ucf = File.open(file_name, "w+")
-        tar_extract.each { |entry| ucf << entry.read }
-        ucf.close
-      end
-
       def base_url
         'https://github.com/mozilla/geckodriver/releases'
       end

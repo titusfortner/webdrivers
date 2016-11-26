@@ -31,10 +31,6 @@ module Webdrivers
         end
       end
 
-      def decompress_file(filename)
-        Archive::Zip.extract(filename, '.', :overwrite => :all)
-      end
-
       def base_url
         'http://chromedriver.storage.googleapis.com'
       end
