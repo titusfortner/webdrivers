@@ -1,6 +1,13 @@
 Changelog
 ==========
 
+2.0.0 - 2016-11-25
+----------
+
+* Renamed fork from chromedriver-helper to webdrivers
+* Re-implemented chromedriver usage
+
+
 1.0.0 - 2015-06-06
 ----------
 
