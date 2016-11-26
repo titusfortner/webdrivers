@@ -24,7 +24,8 @@ module Webdrivers
             end
           end
           raise "Could not download #{url}" unless File.exists? filename
-          decompress_file(filename)
+          dcf = decompress_file(filename)
+          extract_file(dcf) if respond_to? :extract_file
         end
         raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
         FileUtils.chmod "ugo+rx", binary_path
@@ -46,10 +47,12 @@ module Webdrivers
         ucf = File.open(file_name, "w+")
         tar_extract.each { |entry| ucf << entry.read }
         ucf.close
+        File.basename ucf
       end
 
       def unzip_file(filename)
         Archive::Zip.extract(filename, '.', :overwrite => :all)
+        filename.gsub('.zip', '')
       end
 
       def download_url(version = nil)
