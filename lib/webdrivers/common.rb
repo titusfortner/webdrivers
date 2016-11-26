@@ -1,3 +1,5 @@
+require 'rubygems/package'
+
 module Webdrivers
   class Common
 
@@ -22,7 +24,7 @@ module Webdrivers
             end
           end
           raise "Could not download #{url}" unless File.exists? filename
-          Archive::Zip.extract(filename, '.', :overwrite => :all)
+          decompress_file(filename)
         end
         raise "Could not unzip #{filename} to get #{binary_path}" unless File.exists? binary_path
         FileUtils.chmod "ugo+rx", binary_path

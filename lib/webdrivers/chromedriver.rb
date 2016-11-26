@@ -25,10 +25,14 @@ module Webdrivers
       def downloads
         doc = Nokogiri::XML.parse(OpenURI.open_uri(base_url))
         items = doc.css("Contents Key").collect(&:text)
-        items.select! {|item| item.include?(platform)}
+        items.select! { |item| item.include?(platform) }
         items.each_with_object({}) do |item, hash|
           hash[item[/^[^\/]+/]] = "#{base_url}/#{item}"
         end
+      end
+
+      def decompress_file(filename)
+        Archive::Zip.extract(filename, '.', :overwrite => :all)
       end
 
       def base_url
