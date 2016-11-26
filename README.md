@@ -1,70 +1,37 @@
-# chromedriver-helper
+# Webdrivers
 
-[![Build status](https://api.travis-ci.org/flavorjones/chromedriver-helper.svg)](https://travis-ci.org/flavorjones/chromedriver-helper)
+[![Build status](https://api.travis-ci.org/titusfortner/webdrivers.svg)](https://travis-ci.org/titusfortner/webdrivers)
 
-Easy installation and use of [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/), the Chromium project's
-selenium webdriver adapter.
-
-* [http://github.com/flavorjones/chromedriver-helper](http://github.com/flavorjones/chromedriver-helper)
-
+Run Selenium tests more easily with install and updates for all supported webdrivers.
 
 # Description
 
-`chromedriver-helper` installs an executable, `chromedriver`, in your
-gem path.
+`webdrivers` installs driver executables, in your gem path.
+`chromedriver` and `geckodriver` are currently supported.
 
-This script will, if necessary, download the appropriate binary for
-your platform and install it into `~/.chromedriver-helper`, then exec
-it. Easy peasy!
-
-chromedriver is fast. By my unscientific benchmark, it's around 20%
-faster than webdriver + Firefox 8. You should use it!
+Drivers are stored in `~/.webdrivers` directory and used within the context of your gem path
 
 
 # Usage
 
-If you're using Bundler and Capybara, it's as easy as:
+`gem install webdrivers`
 
-    # Gemfile
-    gem "chromedriver-helper"
+or in your Gemfile: 
 
-then, in your specs:
-
-    Capybara.register_driver :selenium do |app|
-      Capybara::Selenium::Driver.new(app, :browser => :chrome)
-    end
-
-
-# Updating Chromedriver
-
-If you'd like to force-upgrade to the latest version of chromedriver,
-run the script `chromedriver-update` that also comes packaged with
-this gem.
-
-This might be necessary on platforms on which Chrome auto-updates,
-which has been known to introduce incompatibilities with older
-versions of chromedriver (see
-[Issue #3](https://github.com/flavorjones/chromedriver-helper/issues/3)
-for an example).
-
-
-# Support
-
-The code lives at
-[http://github.com/flavorjones/chromedriver-helper](http://github.com/flavorjones/chromedriver-helper).
-Open a Github Issue, or send a pull request! Thanks! You're the best.
+`gem "webdrivers", "~> 2.1"`
 
 
 # License
 
-MIT licensed, see LICENSE.txt for full details.
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT), 
+see LICENSE.txt for full details and copyright.
+
+
+# Contributing
+
+Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers).
 
 
 # Credit
 
-The idea for this gem comes from @brianhempel's project
-`chromedriver-gem` which, despite the name, is not currently published
-on http://rubygems.org/.
-
-Some improvements on the idea were taken from the installation process
-for standalone Phusion Passenger.
+This is a fork of [chromedriver-helper](https://github.com/flavorjones/chromedriver-helper) gem
