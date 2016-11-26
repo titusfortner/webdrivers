@@ -1,0 +1,5 @@
+#! /usr/bin/env ruby
+
+require "webdrivers"
+
+Webdrivers::Edgedriver.install(*ARGV) if Webdrivers::IEDriver.platform == 'win'

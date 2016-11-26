@@ -32,7 +32,7 @@ module Webdrivers
       end
 
       def extract_file(filename)
-        FileUtils.mv("#{platform_install_dir}/#{filename}bin/#{filename}", file_name)
+        FileUtils.mv("#{platform_install_dir}/#{filename}bin/#{file_name}", file_name)
       end
     end
 

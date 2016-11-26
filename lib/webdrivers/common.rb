@@ -36,7 +36,7 @@ module Webdrivers
         case filename
         when /tar\.gz$/
           untargz_file(filename)
-        else
+        when /\.zip$/
           unzip_file(filename)
         end
       end
@@ -63,7 +63,7 @@ module Webdrivers
         @top_path
       end
 
-      def download_url(version = nil)
+      def download_url(version = '2.0.0')
         downloads[version || newest_version]
       end
 
@@ -90,7 +90,7 @@ module Webdrivers
       end
 
       def internet_connection?
-        true if open(base_url)
+        true #if open(base_url)
       rescue
         false
       end
