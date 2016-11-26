@@ -1,6 +1,13 @@
 Changelog
 ==========
 
+2.3.0 - 2016-11-26
+----------
+
+* Implement IEDriver support
+* Implement MicrosoftWebDriver support
+
+
 2.2.1 - 2016-11-26
 ----------
 
