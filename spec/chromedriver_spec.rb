@@ -12,7 +12,7 @@ describe Webdrivers::Chromedriver do
 
   it { expect(chromedriver.newest_version.to_f).to be >= 2.25 }
 
-  it { expect(chromedriver.downloads.size).to be >= 26 }
+  it { expect(chromedriver.downloads.size).to be >= 25 }
 
   context "on a linux platform" do
     before { allow(chromedriver).to receive(:platform) { "linux32" } }

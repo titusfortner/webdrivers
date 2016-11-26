@@ -1,4 +1,5 @@
 require 'rubygems/package'
+require 'zip'
 
 module Webdrivers
   class Common
@@ -51,8 +52,15 @@ module Webdrivers
       end
 
       def unzip_file(filename)
-        Archive::Zip.extract(filename, '.', :overwrite => :all)
-        filename.gsub('.zip', '')
+        Zip::ZipFile.open("#{Dir.pwd}/#{filename}") do |zip_file|
+          zip_file.each do |f|
+            @top_path ||= f.name
+            f_path = File.join(Dir.pwd, f.name)
+            FileUtils.mkdir_p(File.dirname(f_path))
+            zip_file.extract(f, f_path) unless File.exist?(f_path)
+          end
+        end
+        @top_path
       end
 
       def download_url(version = nil)

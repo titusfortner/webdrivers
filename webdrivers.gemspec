@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake",    "~> 10.0"
 
   s.add_runtime_dependency "nokogiri",    "~> 1.6"
-  s.add_runtime_dependency "archive-zip", "~> 0.7.0"
+  s.add_runtime_dependency "zip"
 end

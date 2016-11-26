@@ -5,4 +5,3 @@ require "webdrivers/phantomjs"
 require 'fileutils'
 require 'rbconfig'
 require 'open-uri'
-require 'archive/zip'
