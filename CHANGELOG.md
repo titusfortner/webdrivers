@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+2.1.0 - 2016-11-25
+----------
+
+* Implemented geckodriver support
+
+
 2.0.0 - 2016-11-25
 ----------
 
