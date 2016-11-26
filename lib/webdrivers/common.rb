@@ -63,7 +63,7 @@ module Webdrivers
         @top_path
       end
 
-      def download_url(version = '2.0.0')
+      def download_url(version = nil)
         downloads[version || newest_version]
       end
 

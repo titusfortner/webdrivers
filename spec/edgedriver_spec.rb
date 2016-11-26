@@ -6,7 +6,7 @@ describe Webdrivers::Edgedriver do
 
   it 'downloads' do
     edgedriver.download
-    file = "#{ENV['GEM_HOME']}/bin/edgedriver"
+    file = "#{ENV['GEM_HOME']}/bin/MicrosoftWebDriver"
     expect(File.exist?(file)).to eq true
   end
 

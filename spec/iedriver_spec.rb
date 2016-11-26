@@ -6,7 +6,7 @@ describe Webdrivers::IEDriver do
 
   it 'downloads' do
     iedriver.download
-    file = "#{ENV['GEM_HOME']}/bin/iedriver"
+    file = "#{ENV['GEM_HOME']}/bin/IEDriverServer"
     expect(File.exist?(file)).to eq true
   end
 
