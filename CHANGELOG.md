@@ -1,6 +1,12 @@
 Changelog
 ==========
 
+2.1.1 - 2016-11-26
+----------
+
+* Improve Decompression Approach
+
+
 2.1.0 - 2016-11-25
 ----------
 
