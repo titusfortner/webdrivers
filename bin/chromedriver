@@ -1,5 +1,5 @@
 #! /usr/bin/env ruby
 
-require "webdrivers/helper"
+require "webdrivers"
 
-Webdrivers::Helper.new.run *ARGV
+Webdrivers::Chromedriver.install *ARGV
