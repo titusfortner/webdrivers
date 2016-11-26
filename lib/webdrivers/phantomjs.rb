@@ -10,7 +10,7 @@ module Webdrivers
 
       def current_version
         return nil unless File.exists?(binary_path)
-        %x(#{binary_path} --version).match(/phantomjs (\d\.\d+\.\d+)/)[1]
+        %x(#{binary_path} --version).strip.match(/phantomjs (\d\.\d+\.\d+)/)[1]
       end
 
       def newest_version
