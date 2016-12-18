@@ -5,14 +5,17 @@ describe Webdrivers::Edgedriver do
   let(:edgedriver) { Webdrivers::Edgedriver }
 
   it 'downloads' do
+    allow(edgedriver).to receive(:newest_version).and_return(0)
     edgedriver.download
     file = "#{ENV['GEM_HOME']}/bin/MicrosoftWebDriver"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
   end
 
-  it { expect(edgedriver.newest_version.to_f).to be >= 2.25 }
-
+  it 'gets latest version' do
+    skip unless Selenium::WebDriver::Platform.windows?
+    expect(edgedriver.newest_version.to_f).to be >= 2.25
+  end
 
   context "on a windows platform" do
     before { allow(edgedriver).to receive(:platform) { "win" } }

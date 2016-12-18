@@ -5,6 +5,7 @@ describe Webdrivers::IEDriver do
   let(:iedriver) { Webdrivers::IEDriver }
 
   it 'downloads' do
+    allow(iedriver).to receive(:current_version).and_return(0)
     iedriver.download
     file = "#{ENV['GEM_HOME']}/bin/IEDriverServer"
     expect(File.exist?(file)).to eq true
