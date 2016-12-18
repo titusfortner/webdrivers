@@ -52,7 +52,7 @@ module Webdrivers
       end
 
       def unzip_file(filename)
-        Zip::ZipFile.open("#{Dir.pwd}/#{filename}") do |zip_file|
+        Zip::File.open("#{Dir.pwd}/#{filename}") do |zip_file|
           zip_file.each do |f|
             @top_path ||= f.name
             f_path = File.join(Dir.pwd, f.name)
