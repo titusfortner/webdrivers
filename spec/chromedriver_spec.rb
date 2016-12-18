@@ -8,6 +8,7 @@ describe Webdrivers::Chromedriver do
     chromedriver.download
     file = "#{ENV['GEM_HOME']}/bin/chromedriver"
     expect(File.exist?(file)).to eq true
+    FileUtils.rm(file)
   end
 
   it { expect(chromedriver.newest_version.to_f).to be >= 2.25 }

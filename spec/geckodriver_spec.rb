@@ -8,6 +8,7 @@ describe Webdrivers::Geckodriver do
     geckodriver.download
     file = "#{ENV['GEM_HOME']}/bin/geckodriver"
     expect(File.exist?(file)).to eq true
+    FileUtils.rm(file)
   end
 
   it { expect(geckodriver.newest_version.to_f).to be >= 0.11 }

@@ -8,6 +8,7 @@ describe Webdrivers::Edgedriver do
     edgedriver.download
     file = "#{ENV['GEM_HOME']}/bin/MicrosoftWebDriver"
     expect(File.exist?(file)).to eq true
+    FileUtils.rm(file)
   end
 
   it { expect(edgedriver.newest_version.to_f).to be >= 2.25 }

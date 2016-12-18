@@ -8,6 +8,7 @@ describe Webdrivers::PhantomJS do
     phantomjs.download
     file = "#{ENV['GEM_HOME']}/bin/phantomjs"
     expect(File.exist?(file)).to eq true
+    FileUtils.rm(file)
   end
 
   it { expect(phantomjs.newest_version.to_f).to be >= 0.11 }
