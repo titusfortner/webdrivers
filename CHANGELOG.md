@@ -1,6 +1,14 @@
 Changelog
 ==========
 
+2.4.0 - 2016-12-18
+----------
+
+* Update MicrosoftWebDriver version
+* Use rubyzip gem instead of zip
+* Bug fixes for download method
+
+
 2.3.2 - 2016-11-26
 ----------
 
