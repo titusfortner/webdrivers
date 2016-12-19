@@ -36,6 +36,9 @@ module Webdrivers
         case filename
         when /tar\.gz$/
           untargz_file(filename)
+        when /tar\.bz2$/
+          system "tar xjf #{filename}"
+          filename.gsub('.tar.bz2', '')
         when /\.zip$/
           unzip_file(filename)
         end
@@ -77,16 +80,18 @@ module Webdrivers
       end
 
       def install_dir
-        File.expand_path(File.join(ENV['HOME'], ".webdrivers")).tap { |dir| FileUtils.mkdir_p dir}
+        File.expand_path(File.join(ENV['HOME'], ".webdrivers")).tap { |dir| FileUtils.mkdir_p dir }
       end
 
       def platform
         cfg = RbConfig::CONFIG
         case cfg['host_os']
-          when /linux/ then
-            cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
-          when /darwin/ then "mac"
-          else "win"
+        when /linux/
+          cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
+        when /darwin/
+          "mac"
+        else
+          "win"
         end
       end
 
