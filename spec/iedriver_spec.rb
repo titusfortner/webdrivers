@@ -7,7 +7,7 @@ describe Webdrivers::IEDriver do
   it 'downloads' do
     allow(iedriver).to receive(:current_version).and_return(0)
     iedriver.download
-    file = "#{ENV['GEM_HOME']}/bin/IEDriverServer"
+    file = "#{iedriver.platform_install_dir}/IEDriverServer.exe"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
   end

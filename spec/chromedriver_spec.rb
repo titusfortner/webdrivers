@@ -6,7 +6,8 @@ describe Webdrivers::Chromedriver do
 
   it 'downloads' do
     chromedriver.download
-    file = "#{ENV['GEM_HOME']}/bin/chromedriver"
+    suffix = Selenium::WebDriver::Platform.windows? ? '.exe' : ''
+    file = "#{chromedriver.platform_install_dir}/chromedriver#{suffix}"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
   end

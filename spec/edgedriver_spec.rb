@@ -7,7 +7,7 @@ describe Webdrivers::Edgedriver do
   it 'downloads' do
     allow(edgedriver).to receive(:newest_version).and_return(0)
     edgedriver.download
-    file = "#{ENV['GEM_HOME']}/bin/MicrosoftWebDriver"
+    file = "#{edgedriver.platform_install_dir}/MicrosoftWebDriver.exe"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
   end

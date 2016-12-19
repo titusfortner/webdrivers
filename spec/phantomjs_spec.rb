@@ -6,7 +6,8 @@ describe Webdrivers::PhantomJS do
 
   it 'downloads' do
     phantomjs.download
-    file = "#{ENV['GEM_HOME']}/bin/phantomjs"
+    suffix = Selenium::WebDriver::Platform.windows? ? '.exe' : ''
+    file = "#{phantomjs.platform_install_dir}/phantomjs#{suffix}"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
   end

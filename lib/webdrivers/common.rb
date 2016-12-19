@@ -56,8 +56,9 @@ module Webdrivers
           zip_file.each do |f|
             @top_path ||= f.name
             f_path = File.join(Dir.pwd, f.name)
-            FileUtils.mkdir_p(File.dirname(f_path))
-            zip_file.extract(f, f_path) unless File.exist?(f_path)
+            FileUtils.rm_rf(f_path) if File.exist?(f_path)
+            FileUtils.mkdir_p(File.dirname(f_path)) unless File.exist?(File.dirname(f_path))
+            zip_file.extract(f, f_path)
           end
         end
         @top_path
