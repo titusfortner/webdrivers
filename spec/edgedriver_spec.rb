@@ -13,7 +13,7 @@ describe Webdrivers::Edgedriver do
   end
 
   it 'gets latest version' do
-    skip unless Selenium::WebDriver::Platform.windows?
+    skip unless edgedriver.platform == 'win'
     expect(edgedriver.newest_version.to_f).to be >= 2.25
   end
 

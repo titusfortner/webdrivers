@@ -6,7 +6,7 @@ describe Webdrivers::Geckodriver do
 
   it 'downloads' do
     geckodriver.download
-    suffix = Selenium::WebDriver::Platform.windows? ? '.exe' : ''
+    suffix = geckodriver.platform == 'win' ? '.exe' : ''
     file = "#{geckodriver.platform_install_dir}/geckodriver#{suffix}"
     expect(File.exist?(file)).to eq true
     FileUtils.rm(file)
