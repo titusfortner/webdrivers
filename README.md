@@ -1,14 +1,43 @@
-# W3C WebDriver Specification [![Build Status](https://travis-ci.org/w3c/webdriver.svg)](https://travis-ci.org/w3c/webdriver)
+# Webdrivers
 
-This repository contains the ongoing work on the W3C specification
-for the browser automation protocol known as _WebDriver_.
-It is being developed by the [Browser Testing and Tools Working Group](http://www.w3.org/testing/browser/).
+[![Build status](https://api.travis-ci.org/titusfortner/webdrivers.svg)](https://travis-ci.org/titusfortner/webdrivers)
 
-The [working draft version of the spec](http://www.w3.org/TR/webdriver/)
-is automatically re-published each time a change is committed
-to the [editor’s draft](https://w3c.github.io/webdriver/webdriver-spec.html).
-So the content of the two versions is identical,
-they just have slightly different presentational “skinning”.
+Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
-Bugs can be filed against the [W3C bug tracker](https://www.w3.org/Bugs/Public/enter_bug.cgi?comment=&blocked=20860&short_desc=%5BWebDriver%20Spec%5D%3A%20&product=Browser%20Test%2FTools%20WG&component=WebDriver),
-and pull requests should patch `webdriver-spec.html`.
+# Description
+
+`webdrivers` downloads drivers and directs Selenium to use them.
+
+Currently supported:
+* `chromedriver`
+* `geckodriver`
+* `IEDriverServer`
+* `MicrosoftWebDriver`
+
+Drivers are stored in `~/.webdrivers` directory
+
+# Usage
+
+in your Gemfile: 
+
+`gem "webdrivers", "~> 3.0"`
+
+in your project:
+
+`require 'webdrivers'`
+
+# License
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT), 
+see LICENSE.txt for full details and copyright.
+
+
+# Contributing
+
+Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers).
+
+
+## Copyright
+
+Copyright (c) 2017 Titus Fortner
+See LICENSE for details
