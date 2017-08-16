@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "webdrivers"
-  s.version     = "3.0.0.beta1"
+  s.version     = "3.0.0.beta2"
   s.authors     = ["Titus Fortner"]
   s.email       = ["titusfortner@gmail.com"]
   s.homepage    = "https://github.com/titusfortner/webdrivers"
