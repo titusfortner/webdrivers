@@ -7,5 +7,11 @@ module Selenium
         @driver_path ||= Webdrivers::Chromedriver.update
       end
     end
+
+    module Firefox
+      def self.driver_path
+        @driver_path ||= Webdrivers::Geckodriver.update
+      end
+    end
   end
 end
