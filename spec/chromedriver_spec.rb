@@ -14,6 +14,7 @@ describe Webdrivers::Chromedriver do
   end
 
   it 'downloads latest version by default' do
+    chromedriver.remove
     chromedriver.download
     expect(chromedriver.current).to eq chromedriver.latest
   end
