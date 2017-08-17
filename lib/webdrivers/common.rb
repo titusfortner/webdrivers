@@ -35,6 +35,7 @@ module Webdrivers
           end
           raise "Could not download #{url}" unless File.exists? filename
           dcf = decompress_file(filename)
+          FileUtils.rm_f filename if dcf
           extract_file(dcf) if respond_to? :extract_file
         end
         raise "Could not unzip #{filename} to get #{binary}" unless File.exists?(binary)
@@ -58,7 +59,7 @@ module Webdrivers
 
       def site_available?
         true if open(base_url)
-      rescue => ex
+      rescue
         false
       end
 
