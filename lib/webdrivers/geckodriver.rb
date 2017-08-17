@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'open-uri'
-require 'zip'
 
 module Webdrivers
   class Geckodriver < Common
@@ -34,7 +33,7 @@ module Webdrivers
       end
 
       def file_name
-        'geckodriver'
+        platform == "win" ? "geckodriver.exe" : "geckodriver"
       end
 
       def base_url

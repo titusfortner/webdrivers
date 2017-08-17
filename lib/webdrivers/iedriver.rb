@@ -1,9 +1,8 @@
 require 'nokogiri'
 require 'open-uri'
-require 'zip'
 
 module Webdrivers
-  class Chromedriver < Common
+  class IEdriver < Common
     class << self
 
       def current
@@ -11,21 +10,21 @@ module Webdrivers
         puts binary
         string = %x(#{binary} --version)
         puts string
-        normalize string.match(/ChromeDriver (\d\.\d+)/)[1]
+        normalize string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
       end
 
       private
 
       def normalize(string)
-        string.size == 3 ? string.gsub('.', '.0').to_f : string.to_f
+        string.to_f
       end
 
       def file_name
-        platform == "win" ? "chromedriver.exe" : "chromedriver"
+        "IEDriverServer.exe"
       end
 
       def base_url
-        'http://chromedriver.storage.googleapis.com'
+        'http://selenium-release.storage.googleapis.com/'
       end
 
       def downloads
@@ -33,11 +32,11 @@ module Webdrivers
 
         @downloads ||= begin
           doc = Nokogiri::XML.parse(OpenURI.open_uri(base_url))
-          items = doc.css("Contents Key").collect(&:text)
-          items.select! {|item| item.include?(platform)}
+          items = doc.css("Key").collect(&:text)
+          items.select! { |item| item.include?('IEDriverServer_Win32') }
           items.each_with_object({}) do |item, hash|
             key = normalize item[/^[^\/]+/]
-            hash[key] = "#{base_url}/#{item}"
+            hash[key] = "#{base_url}#{item}"
           end
         end
       end
