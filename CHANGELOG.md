@@ -1,3 +1,7 @@
+### 3.0.0 (2017-08-17)
+
+* Removes unnecessary downloads 
+
 ### 3.0.0.beta3 (2017-08-17)
 
 * Supports Windows
