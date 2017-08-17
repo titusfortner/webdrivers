@@ -1,5 +1,4 @@
 require 'rubygems/package'
-require 'nokogiri'
 require 'open-uri'
 require 'zip'
 
@@ -24,7 +23,7 @@ module Webdrivers
       end
 
       def download(version = nil)
-        url = downloads[version || latest]
+        url = download_url(version)
         filename = File.basename url
 
         Dir.chdir install_dir do
@@ -45,6 +44,10 @@ module Webdrivers
 
       private
 
+      def download_url(version)
+        downloads[version || latest]
+      end
+
       def downloaded?
         File.exist? binary
       end
@@ -55,7 +58,7 @@ module Webdrivers
 
       def site_available?
         true if open(base_url)
-      rescue
+      rescue => ex
         false
       end
 
