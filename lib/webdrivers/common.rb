@@ -26,6 +26,7 @@ module Webdrivers
         url = download_url(version)
         filename = File.basename url
 
+        Dir.mkdir(install_dir) unless File.exists?(install_dir)
         Dir.chdir install_dir do
           FileUtils.rm_f filename
           File.open(filename, "wb") do |saved_file|
@@ -60,6 +61,7 @@ module Webdrivers
       def site_available?
         true if open(base_url)
       rescue
+        Webdrivers.logger.info "Site Not Available: #{base_url}"
         false
       end
 
