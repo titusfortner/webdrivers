@@ -1,3 +1,7 @@
+### 3.0.1 (2017-08-18)
+
+* Create ~/.webdrivers directory if doesn't already exist 
+
 ### 3.0.0 (2017-08-17)
 
 * Removes unnecessary downloads 
