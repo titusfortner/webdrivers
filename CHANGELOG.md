@@ -1,3 +1,7 @@
+### 3.2.0 (2017-08-21)
+
+* Implemented Proxy support 
+
 ### 3.1.0 (2017-08-21)
 
 * Implemented Logging functionality 
