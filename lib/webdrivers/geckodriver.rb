@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'open-uri'
 
 module Webdrivers
   class Geckodriver < Common
@@ -24,7 +23,7 @@ module Webdrivers
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin
-          doc = Nokogiri::XML.parse(OpenURI.open_uri(base_url))
+          doc = Nokogiri::XML.parse(OpenURI.open_uri(base_url, proxy_opt))
           items = doc.css(".release-downloads a").collect {|item| item["href"]}
           items.reject! {|item| item.include?('archive')}
           items.select! {|item| item.include?(platform)}
