@@ -1,3 +1,7 @@
+### 3.1.0 (2017-08-21)
+
+* Implemented Logging functionality 
+
 ### 3.0.1 (2017-08-18)
 
 * Create ~/.webdrivers directory if doesn't already exist 
