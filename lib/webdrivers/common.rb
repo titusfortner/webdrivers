@@ -19,6 +19,7 @@ module Webdrivers
       end
 
       def remove
+        Webdrivers.logger.debug "Deleting #{binary}"
         FileUtils.rm_f binary
       end
 
@@ -35,12 +36,21 @@ module Webdrivers
             end
           end
           raise "Could not download #{url}" unless File.exists? filename
+          Webdrivers.logger.debug "Successfully downloaded #{filename}"
           dcf = decompress_file(filename)
-          FileUtils.rm_f filename if dcf
-          extract_file(dcf) if respond_to? :extract_file
+          Webdrivers.logger.debug "Decompression Complete"
+          if dcf
+            Webdrivers.logger.debug "Deleting #{filename}"
+            FileUtils.rm_f filename
+          end
+          if respond_to? :extract_file
+            Webdrivers.logger.debug "Extracting #{dcf}"
+            extract_file(dcf)
+          end
         end
-        raise "Could not unzip #{filename} to get #{binary}" unless File.exists?(binary)
+        raise "Could not decompress #{filename} to get #{binary}" unless File.exists?(binary)
         FileUtils.chmod "ugo+rx", binary
+        Webdrivers.logger.debug "Completed download and processing of #{binary}"
         binary
       end
 
@@ -51,17 +61,22 @@ module Webdrivers
       end
 
       def downloaded?
-        File.exist? binary
+        result = File.exist? binary
+        Webdrivers.logger.debug "File is already downloaded: #{result}"
+        result
       end
 
       def binary
         File.join install_dir, file_name
       end
 
+      # TODO - specify what gets rescued
       def site_available?
-        true if open(base_url)
+        open(base_url)
+        Webdrivers.logger.debug "Found Site: #{base_url}"
+        true
       rescue
-        Webdrivers.logger.info "Site Not Available: #{base_url}"
+        Webdrivers.logger.debug "Site Not Available: #{base_url}"
         false
       end
 
@@ -80,12 +95,18 @@ module Webdrivers
       def decompress_file(filename)
         case filename
         when /tar\.gz$/
+          Webdrivers.logger.debug "Decompressing tar"
           untargz_file(filename)
         when /tar\.bz2$/
+          Webdrivers.logger.debug "Decompressing bz2"
           system "tar xjf #{filename}"
           filename.gsub('.tar.bz2', '')
         when /\.zip$/
+          Webdrivers.logger.debug "Decompressing zip"
           unzip_file(filename)
+        else
+          Webdrivers.logger.debug "No Decompression needed"
+          nil
         end
       end
 

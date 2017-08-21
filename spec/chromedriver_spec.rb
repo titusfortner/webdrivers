@@ -34,11 +34,11 @@ describe Webdrivers::Chromedriver do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
     it 'raises exception finding latest version' do
-      expect {chromedriver.latest}.to raise_error(StandardError, "Can not reach site")
+      expect {chromedriver.latest}.to raise_error(StandardError, "Can not download from website")
     end
 
     it 'raises exception downloading' do
-      expect {chromedriver.download}.to raise_error(StandardError, "Can not reach site")
+      expect {chromedriver.download}.to raise_error(StandardError, "Can not download from website")
     end
   end
 
