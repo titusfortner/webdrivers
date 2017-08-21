@@ -1,6 +1,3 @@
-require 'nokogiri'
-require 'open-uri'
-
 module Webdrivers
   class MSWebdriver < Common
     class << self

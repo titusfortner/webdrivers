@@ -30,10 +30,8 @@ module Webdrivers
         Dir.mkdir(install_dir) unless File.exists?(install_dir)
         Dir.chdir install_dir do
           FileUtils.rm_f filename
-          File.open(filename, "wb") do |saved_file|
-            URI.parse(url).open("rb") do |read_file|
-              saved_file.write(read_file.read)
-            end
+          open(filename, "wb") do |file|
+            file.print open(url, proxy_opt, &:read)
           end
           raise "Could not download #{url}" unless File.exists? filename
           Webdrivers.logger.debug "Successfully downloaded #{filename}"
@@ -55,6 +53,20 @@ module Webdrivers
       end
 
       private
+
+      def proxy_opt
+        proxy_uri = ENV['WD_PROXY_URI']
+        proxy_user = ENV['WD_PROXY_USER']
+        proxy_pass = ENV['WD_PROXY_PASS']
+
+        if proxy_uri && proxy_user
+          {proxy_http_basic_authentication: [proxy_uri, proxy_user, proxy_pass]}
+        elsif proxy_uri
+          {proxy: proxy_uri}
+        else
+          {}
+        end
+      end
 
       def download_url(version)
         downloads[version || latest]
