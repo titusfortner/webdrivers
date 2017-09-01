@@ -1,5 +1,4 @@
 require 'rubygems/package'
-require 'open-uri'
 require 'zip'
 
 module Webdrivers
@@ -31,7 +30,7 @@ module Webdrivers
         Dir.chdir install_dir do
           FileUtils.rm_f filename
           open(filename, "wb") do |file|
-            file.print open(url, proxy_opt, &:read)
+            file.print get(url)
           end
           raise "Could not download #{url}" unless File.exists? filename
           Webdrivers.logger.debug "Successfully downloaded #{filename}"
@@ -52,20 +51,24 @@ module Webdrivers
         binary
       end
 
+      protected
+
+      def get(url)
+        http.get(URI(url))
+      end
+
+      def http
+        if using_proxy
+          return Net::HTTP.Proxy(Webdrivers.proxy_addr, Webdrivers.proxy_port,
+                          Webdrivers.proxy_user, Webdrivers.proxy_pass)
+        end
+        return Net::HTTP
+      end
+
       private
 
-      def proxy_opt
-        proxy_uri = ENV['WD_PROXY_URI']
-        proxy_user = ENV['WD_PROXY_USER']
-        proxy_pass = ENV['WD_PROXY_PASS']
-
-        if proxy_uri && proxy_user
-          {proxy_http_basic_authentication: [proxy_uri, proxy_user, proxy_pass]}
-        elsif proxy_uri
-          {proxy: proxy_uri}
-        else
-          {}
-        end
+      def using_proxy
+        Webdrivers.proxy_addr && Webdrivers.proxy_port
       end
 
       def download_url(version)
@@ -84,7 +87,7 @@ module Webdrivers
 
       # TODO - specify what gets rescued
       def site_available?
-        open(base_url)
+        get(base_url)
         Webdrivers.logger.debug "Found Site: #{base_url}"
         true
       rescue
@@ -95,30 +98,30 @@ module Webdrivers
       def platform
         cfg = RbConfig::CONFIG
         case cfg['host_os']
-        when /linux/
-          cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
-        when /darwin/
-          "mac"
-        else
-          "win"
+          when /linux/
+            cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
+          when /darwin/
+            "mac"
+          else
+            "win"
         end
       end
 
       def decompress_file(filename)
         case filename
-        when /tar\.gz$/
-          Webdrivers.logger.debug "Decompressing tar"
-          untargz_file(filename)
-        when /tar\.bz2$/
-          Webdrivers.logger.debug "Decompressing bz2"
-          system "tar xjf #{filename}"
-          filename.gsub('.tar.bz2', '')
-        when /\.zip$/
-          Webdrivers.logger.debug "Decompressing zip"
-          unzip_file(filename)
-        else
-          Webdrivers.logger.debug "No Decompression needed"
-          nil
+          when /tar\.gz$/
+            Webdrivers.logger.debug "Decompressing tar"
+            untargz_file(filename)
+          when /tar\.bz2$/
+            Webdrivers.logger.debug "Decompressing bz2"
+            system "tar xjf #{filename}"
+            filename.gsub('.tar.bz2', '')
+          when /\.zip$/
+            Webdrivers.logger.debug "Decompressing zip"
+            unzip_file(filename)
+          else
+            Webdrivers.logger.debug "No Decompression needed"
+            nil
         end
       end
 

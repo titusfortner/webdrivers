@@ -7,7 +7,17 @@ require "webdrivers/iedriver"
 require "webdrivers/mswebdriver"
 
 module Webdrivers
-  def self.logger
-    @logger ||= Webdrivers::Logger.new
+
+  class << self
+
+    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
+
+    def logger
+      @logger ||= Webdrivers::Logger.new
+    end
+
+    def configure
+      yield self
+    end
   end
 end
