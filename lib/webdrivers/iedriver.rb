@@ -31,7 +31,7 @@ module Webdrivers
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin
-          doc = Nokogiri::XML.parse(OpenURI.open_uri(base_url, proxy_opt))
+          doc = Nokogiri::XML.parse(get(base_url))
           items = doc.css("Key").collect(&:text)
           items.select! { |item| item.include?('IEDriverServer_Win32') }
           ds = items.each_with_object({}) do |item, hash|
