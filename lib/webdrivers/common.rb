@@ -53,8 +53,21 @@ module Webdrivers
 
       protected
 
-      def get(url)
-        http.get(URI(url))
+      def get(url, limit = 10)
+        raise StandardError, 'Too many HTTP redirects' if limit == 0
+
+        response = http.get_response(URI(url))
+
+        case response
+          when Net::HTTPSuccess then
+            response.body
+          when Net::HTTPRedirection
+            location = response['location']
+            Webdrivers.logger.debug "Redirected to #{location}"
+            get(location, limit - 1)
+          else
+            response.value
+        end
       end
 
       def http
