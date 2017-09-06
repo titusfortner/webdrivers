@@ -24,7 +24,19 @@ in your Gemfile:
 
 in your project:
 
-`require 'webdrivers'`
+`require 'webdrivers'
+
+If there is a proxy between you and the Internet then you will need to configure
+the gem to use the proxy.  You can do this by calling the `configure` method.
+
+````ruby
+Webdrivers.configure do |config|
+  config.proxy_addr = 'myproxy_address.com'
+  config.proxy_port = '8080'
+  config.proxy_user = 'username'
+  config.proxy_pass = 'password'
+end
+````
 
 # License
 
