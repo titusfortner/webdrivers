@@ -1,3 +1,7 @@
+### 3.2.1 (2017-09-06)
+
+* Fixed Proxy support so it actually works (thanks Cheezy) 
+
 ### 3.2.0 (2017-08-21)
 
 * Implemented Proxy support 
