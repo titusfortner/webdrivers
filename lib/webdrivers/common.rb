@@ -98,12 +98,11 @@ module Webdrivers
         File.join install_dir, file_name
       end
 
-      # TODO - specify what gets rescued
       def site_available?
         get(base_url)
         Webdrivers.logger.debug "Found Site: #{base_url}"
         true
-      rescue
+      rescue StandardError
         Webdrivers.logger.debug "Site Not Available: #{base_url}"
         false
       end
