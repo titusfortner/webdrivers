@@ -6,13 +6,18 @@ module Webdrivers
 
       def current
         Webdrivers.logger.debug "Checking current version"
-        return nil unless downloaded?
+        downloaded_version = downloaded? ? extract_version(binary) : 0
+        path_version = extract_version(path_binary)
+        [downloaded_version, path_version].max
+      end
+
+      private
+
+      def extract_version(binary)
         string = %x(#{binary} --version)
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
         normalize string.match(/ChromeDriver (\d\.\d+)/)[1]
       end
-
-      private
 
       def normalize(string)
         string.size == 3 ? string.gsub('.', '.0').to_f : string.to_f

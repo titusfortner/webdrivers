@@ -30,6 +30,8 @@ describe Webdrivers::Chromedriver do
     expect(chromedriver.current).to be_nil
   end
 
+  it 'uses system driver if current'
+
   context 'when offline' do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
@@ -40,6 +42,8 @@ describe Webdrivers::Chromedriver do
     it 'raises exception downloading' do
       expect {chromedriver.download}.to raise_error(StandardError, "Can not download from website")
     end
+
+    it 'uses system driver if greater than latest downloaded driver'
   end
 
 end

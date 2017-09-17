@@ -94,6 +94,10 @@ module Webdrivers
         result
       end
 
+      def system_binary
+        %x(which #{file_name}).strip
+      end
+
       def binary
         File.join install_dir, file_name
       end
