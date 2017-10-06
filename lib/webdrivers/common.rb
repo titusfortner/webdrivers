@@ -139,12 +139,11 @@ module Webdrivers
 
       def untargz_file(filename)
         tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filename))
-        tar_extract.rewind
 
-        ucf = File.open(file_name, "w+")
-        tar_extract.each {|entry| ucf << entry.read}
-        ucf.close
-        File.basename ucf
+        File.open(file_name, "w+b") do |ucf|
+          tar_extract.each {|entry| ucf << entry.read}
+          File.basename ucf
+        end
       end
 
       def unzip_file(filename)
