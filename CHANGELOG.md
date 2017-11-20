@@ -1,3 +1,7 @@
+### 3.2.2 (2017-11-20)
+
+* Fixed bug in `#untargz_file` (thanks Jake Goulding)
+
 ### 3.2.1 (2017-09-06)
 
 * Fixed Proxy support so it actually works (thanks Cheezy) 
