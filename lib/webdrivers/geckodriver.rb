@@ -24,7 +24,7 @@ module Webdrivers
 
         @downloads ||= begin
           doc = Nokogiri::XML.parse(get(base_url))
-          items = doc.css(".release-downloads a").collect {|item| item["href"]}
+          items = doc.css(".release-body a").collect {|item| item["href"]}
           items.reject! {|item| item.include?('archive')}
           items.select! {|item| item.include?(platform)}
           ds = items.each_with_object({}) do |item, hash|
