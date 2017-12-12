@@ -1,3 +1,7 @@
+### 3.2.3 (2017-12-12)
+
+* Fixed bug with finding geckodriver on updated Github release pages
+
 ### 3.2.2 (2017-11-20)
 
 * Fixed bug in `#untargz_file` (thanks Jake Goulding)
