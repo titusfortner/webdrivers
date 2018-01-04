@@ -4,6 +4,19 @@ describe Webdrivers::Geckodriver do
 
   let(:geckodriver) { Webdrivers::Geckodriver }
 
+  it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
+    geckodriver.remove
+    allow(geckodriver).to receive(:latest).and_return(nil)
+    msg = /^Unable to find the latest version of geckodriver; try downloading manually from (.*)?and place in (.*)?\.webdrivers$/
+    expect { geckodriver.update }.to raise_exception StandardError, msg
+  end
+
+  it 'uses found version of geckodriver if latest release unable to be found' do
+    geckodriver.download
+    allow(geckodriver).to receive(:latest).and_return(nil)
+    expect(geckodriver.update).to match(/\.webdrivers\/geckodriver/)
+  end
+
   it 'finds latest version' do
     expect(geckodriver.latest).to be > 0.17
     expect(geckodriver.latest).to be < 0.2
