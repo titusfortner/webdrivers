@@ -9,7 +9,17 @@ module Webdrivers
         unless site_available?
           return current.nil? ? nil : binary
         end
-        return binary if current == latest
+        released = latest()
+        location = binary()
+
+        return location if released.nil? && File.exist?(location)
+
+        if released.nil?
+          msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
+          raise StandardError, msg
+        end
+
+        return location if current == released
         remove && download
       end
 
