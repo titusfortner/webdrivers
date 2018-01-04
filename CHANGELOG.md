@@ -1,4 +1,4 @@
-### 3.2.3 (2017-01-04)
+### 3.2.4 (2017-01-04)
 
 * Improve error message when unable to find the latest driver
 
