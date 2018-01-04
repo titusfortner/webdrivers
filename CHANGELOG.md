@@ -1,3 +1,7 @@
+### 3.2.3 (2017-01-04)
+
+* Improve error message when unable to find the latest driver
+
 ### 3.2.3 (2017-12-12)
 
 * Fixed bug with finding geckodriver on updated Github release pages
