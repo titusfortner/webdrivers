@@ -12,7 +12,28 @@ module Webdrivers
         normalize string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
       end
 
+      def latest
+        downloads.keys.sort {|a,b| compare_versions(a, b)}.last
+      end
+
+
       private
+
+      def compare_versions(a, b)
+        a = float_to_digits_array(a) if a.is_a?(Float)
+        b = float_to_digits_array(b) if b.is_a?(Float)
+        if a.size == 1
+          a[0] <=> b[0]
+        elsif a[0] == b[0]
+          compare_versions *[a,b].map {|v| v.drop(1)}
+        else
+          a[0] <=> b[0]
+        end
+      end
+
+      def float_to_digits_array(float_value)
+        float_value.to_s.split('.').map(&:to_i)
+      end
 
       def normalize(string)
         string.to_f
