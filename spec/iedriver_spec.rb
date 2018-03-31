@@ -5,7 +5,9 @@ describe Webdrivers::IEdriver do
   let(:iedriver) { Webdrivers::IEdriver }
 
   it 'finds latest version' do
-    expect(iedriver.latest).to be > 3.4
+    major, minor = iedriver.latest.to_s.split('.').map(&:to_i)
+    expect(major).to eq 3
+    expect(minor).to be > 10
     expect(iedriver.latest).to be < 4
   end
 
