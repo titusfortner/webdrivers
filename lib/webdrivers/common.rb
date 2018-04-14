@@ -9,18 +9,24 @@ module Webdrivers
         unless site_available?
           return current.nil? ? nil : binary
         end
-        released = latest()
-        location = binary()
+        released      = latest()
+        location      = binary()
+        binary_exists = File.exists?(location)
 
-        return location if released.nil? && File.exist?(location)
+        return location if released.nil? && binary_exists
 
         if released.nil?
           msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
           raise StandardError, msg
         end
 
-        return location if current == released
-        remove && download
+        if current == released && binary_exists # Already have latest/matching one
+          Webdrivers.logger.debug "Expected webdriver version found"
+          return location
+        end
+
+        remove if binary_exists # Remove outdated exe
+        download
       end
 
       def latest
