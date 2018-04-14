@@ -46,7 +46,7 @@ module Webdrivers
       end
 
       def base_url
-        'https://www.microsoft.com/en-us/download'
+        'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver'
       end
 
     end
