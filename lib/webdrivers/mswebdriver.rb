@@ -32,7 +32,7 @@ module Webdrivers
         raise StandardError, "Can not reach site" unless site_available?
 
         available = {} # version => download_url
-        doc                = Nokogiri::HTML(get(download_page))
+        doc       = Nokogiri::HTML(get(download_page))
         doc.xpath("//li[@class='driver-download']/a").map { |link|
           next if link.text == 'Insiders' # Ignore Insiders release
           available[link.text.scan(/\d+/).first.to_i] = link['href']
