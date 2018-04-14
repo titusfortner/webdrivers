@@ -4,9 +4,10 @@ module Webdrivers
 
       def current
         Webdrivers.logger.debug "Checking current version"
-        version = %x(ver)
-        Webdrivers.logger.debug "Current version of Windows Build is #{version}"
-        version[/\d+\.\d+\.\d+/][/[^\.]\d+$/]
+        ps_query = `powershell Get-AppxPackage -Name Microsoft.MicrosoftEdge`
+        version = ps_query.scan(/\d{2,}.\d*.*.*/).first.split('.')[1]
+        Webdrivers.logger.debug "Current version of Microsoft Edge is #{version}"
+        version.split('.')[1] # "41.16299.248.0" => "16299"
       end
 
       def latest
