@@ -10,7 +10,7 @@ module Webdrivers
         # To work around it we query the currently installed version of Microsoft Edge instead
         # and compare it to the list of available downloads.
         version = `powershell (Get-AppxPackage -Name Microsoft.MicrosoftEdge).Version`
-        raise "Failed to check Microsoft Edge version." if version.blank? # Package name changed?
+        raise "Failed to check Microsoft Edge version." if version.empty? # Package name changed?
         Webdrivers.logger.debug "Current version of Microsoft Edge is #{version.chomp!}"
 
         build   = version.split('.')[1] # "41.16299.248.0" => "16299"
