@@ -30,7 +30,7 @@ module Webdrivers
 
       def downloads
         raise StandardError, "Can not reach site" unless site_available?
-        array = Nokogiri::HTML(get(download_page)).xpath("//li[@class='driver-download']/a")
+        array = Nokogiri::HTML(get(base_url)).xpath("//li[@class='driver-download']/a")
         array.each_with_object({}) do |link, hash|
           next if link.text == 'Insiders'
           hash[link.text.scan(/\d+/).first.to_i] = link['href']
@@ -38,17 +38,8 @@ module Webdrivers
       end
 
       def base_url
-        'https://www.microsoft.com/en-us/download'
+        'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
       end
-
-       # Using this as base_url yields Net::HTTPRedirection with a partial location, which fails
-       # on the second Common#get call in lib/webdrivers/common.rb:77.
-       # Using existing base_url to get past that hurdle until we discuss a better way to handle
-       # the HTTP status.
-      def download_page
-        "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/"
-      end
-
     end
   end
 end
