@@ -19,7 +19,7 @@ describe Webdrivers::MSWebdriver do
     before { allow(mswebdriver).to receive(:site_available?).and_return(false) }
 
     it 'raises exception downloading' do
-      expect {mswebdriver.download}.to raise_error(StandardError, "Can not reach site")
+      expect { mswebdriver.download }.to raise_error(StandardError, "Can not reach site")
     end
   end
 
