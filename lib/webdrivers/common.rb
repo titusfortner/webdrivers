@@ -9,18 +9,24 @@ module Webdrivers
         unless site_available?
           return current.nil? ? nil : binary
         end
-        released = latest()
-        location = binary()
+        released      = latest()
+        location      = binary()
+        binary_exists = File.exists?(location)
 
-        return location if released.nil? && File.exist?(location)
+        return location if released.nil? && binary_exists
 
         if released.nil?
           msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
           raise StandardError, msg
         end
 
-        return location if current == released
-        remove && download
+        if current == released && binary_exists # Already have latest/matching one
+          Webdrivers.logger.debug "Expected webdriver version found"
+          return location
+        end
+
+        remove if binary_exists # Remove outdated exe
+        download
       end
 
       def latest
@@ -33,7 +39,7 @@ module Webdrivers
       end
 
       def download(version = nil)
-        url = download_url(version)
+        url      = download_url(version)
         filename = File.basename url
 
         Dir.mkdir(install_dir) unless File.exists?(install_dir)
@@ -83,7 +89,7 @@ module Webdrivers
       def http
         if using_proxy
           return Net::HTTP.Proxy(Webdrivers.proxy_addr, Webdrivers.proxy_port,
-                          Webdrivers.proxy_user, Webdrivers.proxy_pass)
+                                 Webdrivers.proxy_user, Webdrivers.proxy_pass)
         end
         return Net::HTTP
       end
@@ -151,7 +157,7 @@ module Webdrivers
         tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filename))
 
         File.open(file_name, "w+b") do |ucf|
-          tar_extract.each {|entry| ucf << entry.read}
+          tar_extract.each { |entry| ucf << entry.read }
           File.basename ucf
         end
       end
@@ -160,7 +166,7 @@ module Webdrivers
         Zip::File.open("#{Dir.pwd}/#{filename}") do |zip_file|
           zip_file.each do |f|
             @top_path ||= f.name
-            f_path = File.join(Dir.pwd, f.name)
+            f_path    = File.join(Dir.pwd, f.name)
             FileUtils.rm_rf(f_path) if File.exist?(f_path)
             FileUtils.mkdir_p(File.dirname(f_path)) unless File.exist?(File.dirname(f_path))
             zip_file.extract(f, f_path)
@@ -170,7 +176,7 @@ module Webdrivers
       end
 
       def install_dir
-        File.expand_path(File.join(ENV['HOME'], ".webdrivers")).tap {|dir| FileUtils.mkdir_p dir}
+        File.expand_path(File.join(ENV['HOME'], ".webdrivers")).tap { |dir| FileUtils.mkdir_p dir }
       end
     end
   end
