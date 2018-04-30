@@ -1,3 +1,7 @@
+### 3.3.0 (2018-04-29)
+
+* Ensures downloading correct MSWebdriver version (Thanks kapoorlakshya) 
+
 ### 3.2.4 (2017-01-04)
 
 * Improve error message when unable to find the latest driver
