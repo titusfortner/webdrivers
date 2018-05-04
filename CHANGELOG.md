@@ -1,3 +1,7 @@
+### 3.3.1 (2018-05-04)
+
+* Fix bug with MSWebdriver to fetch the correct driver instead of latest (Thanks kapoorlakshya) 
+
 ### 3.3.0 (2018-04-29)
 
 * Ensures downloading correct MSWebdriver version (Thanks kapoorlakshya) 
