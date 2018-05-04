@@ -1,5 +1,6 @@
 module Webdrivers
   class MSWebdriver < Common
+
     class << self
 
       def current
@@ -16,6 +17,13 @@ module Webdrivers
         build = version.split('.')[1] # "41.16299.248.0" => "16299"
         Webdrivers.logger.debug "Expecting MicrosoftWebDriver.exe version #{build}"
         build.to_i
+      end
+
+      # Webdriver binaries for Microsoft Edge are not backwards compatible.
+      # For this reason, instead of downloading the latest binary we download the correct one for the
+      # currently installed browser version.
+      def download(version = current)
+        super
       end
 
       private
@@ -40,6 +48,13 @@ module Webdrivers
       def base_url
         'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
       end
+
+      # Assume we have the latest if file exists since MicrosoftWebdriver.exe does not have an
+      # argument to check the current version.
+      def correct_binary?
+        File.exist?(binary)
+      end
+
     end
   end
 end

@@ -24,7 +24,7 @@ in your Gemfile:
 
 in your project:
 
-`require 'webdrivers'
+`require 'webdrivers'`
 
 If there is a proxy between you and the Internet then you will need to configure
 the gem to use the proxy.  You can do this by calling the `configure` method.
@@ -37,6 +37,18 @@ Webdrivers.configure do |config|
   config.proxy_pass = 'password'
 end
 ````
+
+**Note when using Microsoft Edge**:
+
+After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
+to be able to download the latest version through this gem.
+
+This is because `MicrosoftWebDriver.exe` is not backwards compatible and it does not have an argument to retrieve 
+the current version. We work around this limitation by querying the current Edge version from the registry and 
+fetching the corresponding binary IF a file does not already exist. If a file does exist, the gem assumes it is the 
+expected version and skips the download process.
+
+If you continue with the outdated binary, Selenium will throw an error: `unable to connect to MicrosoftWebDriver localhost:17556`.
 
 # License
 
