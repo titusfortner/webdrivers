@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'rubygems/version'
 
 module Webdrivers
   class IEdriver < Common
@@ -13,30 +14,14 @@ module Webdrivers
       end
 
       def latest
-        downloads.keys.sort {|a,b| compare_versions(a, b)}.last
+        downloads.keys.sort.last
       end
 
 
       private
 
-      def compare_versions(a, b)
-        a = float_to_digits_array(a) if a.is_a?(Float)
-        b = float_to_digits_array(b) if b.is_a?(Float)
-        if a.size == 1
-          a[0] <=> b[0]
-        elsif a[0] == b[0]
-          compare_versions *[a,b].map {|v| v.drop(1)}
-        else
-          a[0] <=> b[0]
-        end
-      end
-
-      def float_to_digits_array(float_value)
-        float_value.to_s.split('.').map(&:to_i)
-      end
-
       def normalize(string)
-        string.to_f
+        Gem::Version.new(string)
       end
 
       def file_name
@@ -56,7 +41,7 @@ module Webdrivers
           items = doc.css("Key").collect(&:text)
           items.select! { |item| item.include?('IEDriverServer_Win32') }
           ds = items.each_with_object({}) do |item, hash|
-            key = normalize item[/^[^\/]+/]
+            key = normalize item[/\d+\.\d+\.\d+(?=\.zip$)/]
             hash[key] = "#{base_url}#{item}"
           end
           Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
