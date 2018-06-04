@@ -41,7 +41,7 @@ module Webdrivers
           items = doc.css("Key").collect(&:text)
           items.select! { |item| item.include?('IEDriverServer_Win32') }
           ds = items.each_with_object({}) do |item, hash|
-            key = normalize item[/\d+\.\d+\.\d+(?=\.zip$)/]
+            key = normalize item[/([^_]+)\.zip/, 1]
             hash[key] = "#{base_url}#{item}"
           end
           Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
