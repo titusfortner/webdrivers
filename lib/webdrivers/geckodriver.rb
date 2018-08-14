@@ -15,7 +15,7 @@ module Webdrivers
       private
 
       def normalize(string)
-        string.match(/(\d+)\.(\d+\.\d+)/).to_a.map {|v| v.tr('.', '')}[1..-1].join('.').to_f
+        string.scan(/\d+/).map(&:to_i)
       end
 
       def downloads
@@ -23,14 +23,17 @@ module Webdrivers
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin
-          doc = Nokogiri::XML.parse(get(base_url))
-          items = doc.css(".py-2 a").collect {|item| item["href"]}
-          items.reject! {|item| item.include?('archive')}
-          items.select! {|item| item.include?(platform)}
-          ds = items.each_with_object({}) do |item, hash|
-            key = normalize item[/v(\d+\.\d+\.\d+)/, 1]
-            hash[key] = "https://github.com#{item}"
+          doc = JSON.parse(get(base_url))
+
+          tags_and_urls = doc.flat_map do |release|
+            release['assets'].map {|asset| [release['tag_name'], asset['browser_download_url']]}
           end
+
+          tags_and_urls = tags_and_urls
+            .select {|vers, url| url.include?(platform)}
+            .map {|vers, url| [normalize(vers), url]}
+
+          ds = Hash[tags_and_urls]
           Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
           ds
         end
@@ -41,7 +44,7 @@ module Webdrivers
       end
 
       def base_url
-        'https://github.com/mozilla/geckodriver/releases'
+        'https://api.github.com/repos/mozilla/geckodriver/releases'
       end
 
     end

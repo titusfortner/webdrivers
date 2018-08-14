@@ -18,8 +18,8 @@ describe Webdrivers::Geckodriver do
   end
 
   it 'finds latest version' do
-    expect(geckodriver.latest).to be > 0.17
-    expect(geckodriver.latest).to be <= 0.201
+    expect(geckodriver.latest <=> [0,  17, 0]).to be  1
+    expect(geckodriver.latest <=> [0, 201, 0]).to be -1
   end
 
   it 'downloads latest version by default' do
@@ -29,8 +29,8 @@ describe Webdrivers::Geckodriver do
 
   it 'downloads specified version' do
     geckodriver.remove
-    geckodriver.download(0.17)
-    expect(geckodriver.current).to eq 0.17
+    geckodriver.download([0, 17, 0])
+    expect(geckodriver.current).to eq [0, 17, 0]
   end
 
   it 'removes geckodriver' do
