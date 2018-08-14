@@ -1,3 +1,7 @@
+### 3.3.3 (2018-08-14)
+
+* Fix Geckodriver since Github changed its html again
+
 ### 3.3.2 (2018-05-04)
 
 * Fix bug with IEDriver versioning (Thanks Aleksei Gusev)

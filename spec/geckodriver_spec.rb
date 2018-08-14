@@ -19,7 +19,7 @@ describe Webdrivers::Geckodriver do
 
   it 'finds latest version' do
     expect(geckodriver.latest).to be > 0.17
-    expect(geckodriver.latest).to be <= 0.201
+    expect(geckodriver.latest).to be <= 0.30
   end
 
   it 'downloads latest version by default' do
