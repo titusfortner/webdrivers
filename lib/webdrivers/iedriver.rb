@@ -20,10 +20,6 @@ module Webdrivers
 
       private
 
-      def normalize(string)
-        Gem::Version.new(string)
-      end
-
       def file_name
         "IEDriverServer.exe"
       end

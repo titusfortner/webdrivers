@@ -108,7 +108,14 @@ module Webdrivers
       end
 
       def download_url(version)
-        downloads[version || latest]
+        key = if version.is_a?(Gem::Version)
+                version
+              elsif version.nil?
+                latest
+              else
+                Gem::Version.new(version.to_s)
+              end
+        downloads[key]
       end
 
       def downloaded?
@@ -183,6 +190,9 @@ module Webdrivers
         latest == current && File.exists?(binary)
       end
 
+      def normalize(string)
+        Gem::Version.new(string)
+      end
     end
   end
 end

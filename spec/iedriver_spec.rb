@@ -5,7 +5,12 @@ describe Webdrivers::IEdriver do
   let(:iedriver) { Webdrivers::IEdriver }
 
   it 'finds latest version' do
-    expect(iedriver.latest.segments).to eq [3, 12, 0]
+    old_version = Gem::Version.new("3.12.0")
+    future_version = Gem::Version.new("3.60.0")
+    latest_version = iedriver.latest
+
+    expect(latest_version).to be > old_version
+    expect(latest_version).to be < future_version
   end
 
   it 'downloads iedriver' do
