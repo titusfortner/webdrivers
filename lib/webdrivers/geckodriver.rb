@@ -14,10 +14,6 @@ module Webdrivers
 
       private
 
-      def normalize(string)
-        string.match(/(\d+)\.(\d+\.\d+)/).to_a.map {|v| v.tr('.', '')}[1..-1].join('.').to_f
-      end
-
       def downloads
         raise StandardError, "Can not reach site" unless site_available?
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads

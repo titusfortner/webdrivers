@@ -14,10 +14,6 @@ module Webdrivers
 
       private
 
-      def normalize(string)
-        string.size == 3 ? string.gsub('.', '.0').to_f : string.to_f
-      end
-
       def file_name
         platform == "win" ? "chromedriver.exe" : "chromedriver"
       end

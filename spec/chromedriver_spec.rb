@@ -5,12 +5,16 @@ describe Webdrivers::Chromedriver do
   let(:chromedriver) { Webdrivers::Chromedriver }
 
   it 'parses chromedriver versions before 2.10' do
-    expect(chromedriver.send :normalize, '2.9').to eq 2.09
+    expect(chromedriver.send(:normalize, '2.9').version).to eq '2.9'
   end
 
   it 'finds latest version' do
-    expect(chromedriver.latest).to be > 2.30
-    expect(chromedriver.latest).to be < 2.9
+    old_version = Gem::Version.new("2.30")
+    future_version = Gem::Version.new("2.90")
+    latest_version = chromedriver.latest
+
+    expect(latest_version).to be > old_version
+    expect(latest_version).to be < future_version
   end
 
   it 'downloads latest version by default' do
@@ -19,10 +23,16 @@ describe Webdrivers::Chromedriver do
     expect(chromedriver.current).to eq chromedriver.latest
   end
 
-  it 'downloads specified version' do
+  it 'downloads specified version by Float' do
     chromedriver.remove
     chromedriver.download(2.29)
-    expect(chromedriver.current).to eq 2.29
+    expect(chromedriver.current.version).to eq '2.29'
+  end
+
+  it 'downloads specified version by String' do
+    chromedriver.remove
+    chromedriver.download('2.29')
+    expect(chromedriver.current.version).to eq '2.29'
   end
 
   it 'removes chromedriver' do

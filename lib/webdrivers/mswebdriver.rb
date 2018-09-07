@@ -28,10 +28,6 @@ module Webdrivers
 
       private
 
-      def normalize(string)
-        string.match(/(\d+)\.(\d+\.\d+)/).to_a.map { |v| v.tr('.', '') }[1 .. -1].join('.').to_f
-      end
-
       def file_name
         "MicrosoftWebDriver.exe"
       end
