@@ -41,7 +41,7 @@ module Webdrivers
         url      = download_url(version)
         filename = File.basename url
 
-        Dir.mkdir(install_dir) unless File.exists?(install_dir)
+        FileUtils.mkdir_p(install_dir) unless File.exists?(install_dir)
         Dir.chdir install_dir do
           FileUtils.rm_f filename
           open(filename, "wb") do |file|
@@ -64,6 +64,14 @@ module Webdrivers
         FileUtils.chmod "ugo+rx", binary
         Webdrivers.logger.debug "Completed download and processing of #{binary}"
         binary
+      end
+
+      def install_dir
+        File.expand_path(File.join(ENV['HOME'], ".webdrivers"))
+      end
+
+      def binary
+        File.join install_dir, file_name
       end
 
       protected
@@ -107,10 +115,6 @@ module Webdrivers
         result = File.exist? binary
         Webdrivers.logger.debug "File is already downloaded: #{result}"
         result
-      end
-
-      def binary
-        File.join install_dir, file_name
       end
 
       def site_available?
@@ -172,10 +176,6 @@ module Webdrivers
           end
         end
         @top_path
-      end
-
-      def install_dir
-        File.expand_path(File.join(ENV['HOME'], ".webdrivers")).tap { |dir| FileUtils.mkdir_p dir }
       end
 
       # Already have latest version downloaded?
