@@ -1,3 +1,9 @@
+### 3.4.0 (2018-09-07)
+
+* Allow public access to `#install_dir` and `#binary`
+* Allow user to set the default download directory
+* Improve version comparisons with use of `Gem::Version` 
+
 ### 3.3.3 (2018-08-14)
 
 * Fix Geckodriver since Github changed its html again
