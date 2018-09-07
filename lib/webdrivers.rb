@@ -10,7 +10,7 @@ module Webdrivers
 
   class << self
 
-    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
+    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 
     def logger
       @logger ||= Webdrivers::Logger.new
