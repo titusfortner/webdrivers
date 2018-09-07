@@ -42,6 +42,16 @@ describe Webdrivers::Chromedriver do
     end
   end
 
+  it 'allows setting of install directory' do
+    begin
+      install_dir = File.expand_path(File.join(ENV['HOME'], ".webdrivers2"))
+      Webdrivers.install_dir = install_dir
+      expect(chromedriver.install_dir).to eq install_dir
+    ensure
+      Webdrivers.install_dir = nil
+    end
+  end
+
   it 'returns full location of binary' do
     install_dir = File.expand_path(File.join(ENV['HOME'], ".webdrivers"))
     expect(chromedriver.binary).to match /#{install_dir}\/chromedriver/
