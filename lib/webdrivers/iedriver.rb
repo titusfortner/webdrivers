@@ -13,11 +13,6 @@ module Webdrivers
         normalize string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
       end
 
-      def latest
-        downloads.keys.sort.last
-      end
-
-
       private
 
       def file_name
