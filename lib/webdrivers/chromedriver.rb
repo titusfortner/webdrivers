@@ -12,6 +12,14 @@ module Webdrivers
         normalize string.match(/ChromeDriver (\d\.\d+)/)[1]
       end
 
+      def latest
+        Gem::Version.new('2.42')
+      end
+
+      def download(version = 2.42)
+        super
+      end
+
       private
 
       def file_name
