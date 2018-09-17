@@ -1,3 +1,7 @@
+### 3.4.1 (2018-09-17)
+
+* Hardcode latest chromedriver version to 2.42 until we figure out chromedriver 70 
+
 ### 3.4.0 (2018-09-07)
 
 * Allow public access to `#install_dir` and `#binary`
