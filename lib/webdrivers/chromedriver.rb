@@ -13,11 +13,7 @@ module Webdrivers
       end
 
       def latest
-        Gem::Version.new('2.42')
-      end
-
-      def download(version = 2.42)
-        super
+        Gem::Version.new(get(URI.join(base_url, "LATEST_RELEASE")))
       end
 
       private
