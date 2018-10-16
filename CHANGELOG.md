@@ -1,3 +1,7 @@
+### 3.4.2 (2018-10-15)
+
+* Use chromedriver latest version 
+
 ### 3.4.1 (2018-09-17)
 
 * Hardcode latest chromedriver version to 2.42 until we figure out chromedriver 70 
