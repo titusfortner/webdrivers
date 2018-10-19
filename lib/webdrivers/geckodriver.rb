@@ -19,7 +19,7 @@ module Webdrivers
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin
-          doc = Nokogiri::XML.parse(get(base_url))
+          doc = Nokogiri::HTML.parse(get(base_url))
           items = doc.css(".py-1 a").collect {|item| item["href"]}
           items.reject! {|item| item.include?('archive')}
           items.select! {|item| item.include?(platform)}
