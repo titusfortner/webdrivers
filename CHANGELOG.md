@@ -1,3 +1,7 @@
+### 3.4.3 (2018-10-22)
+
+* Fix bug with JRuby and geckodriver (thanks twalpole)
+
 ### 3.4.2 (2018-10-15)
 
 * Use chromedriver latest version 
