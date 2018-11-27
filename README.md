@@ -61,7 +61,7 @@ If you continue with the outdated binary, Selenium will throw an error: `unable 
 
 # License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT), 
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT),
 see LICENSE.txt for full details and copyright.
 
 
