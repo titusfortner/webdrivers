@@ -23,7 +23,7 @@ module Webdrivers
       end
 
       def base_url
-        'http://chromedriver.storage.googleapis.com'
+        'https://chromedriver.storage.googleapis.com'
       end
 
       def downloads

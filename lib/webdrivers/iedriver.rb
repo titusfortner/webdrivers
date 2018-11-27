@@ -20,7 +20,7 @@ module Webdrivers
       end
 
       def base_url
-        'http://selenium-release.storage.googleapis.com/'
+        'https://selenium-release.storage.googleapis.com/'
       end
 
       def downloads
