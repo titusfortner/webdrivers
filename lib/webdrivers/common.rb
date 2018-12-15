@@ -7,8 +7,9 @@ module Webdrivers
 
       def update
         unless site_available?
-          return current.nil? ? nil : binary
+          return current_version.nil? ? nil : binary
         end
+
         released = latest()
         location = binary()
 
@@ -187,7 +188,7 @@ module Webdrivers
 
       # Already have latest version downloaded?
       def correct_binary?
-        latest == current && File.exists?(binary)
+        latest == current_version && File.exists?(binary)
       end
 
       def normalize(string)

@@ -3,10 +3,10 @@ module Webdrivers
 
     class << self
 
-      def current
+      def current_version
         Webdrivers.logger.debug "Checking current version"
 
-        # current() from other webdrivers returns the version from the webdriver EXE.
+        # current_version() from other webdrivers returns the version from the webdriver EXE.
         # Unfortunately, MicrosoftWebDriver.exe does not have an option to get the version.
         # To work around it we query the currently installed version of Microsoft Edge instead
         # and compare it to the list of available downloads.
@@ -22,7 +22,7 @@ module Webdrivers
       # Webdriver binaries for Microsoft Edge are not backwards compatible.
       # For this reason, instead of downloading the latest binary we download the correct one for the
       # currently installed browser version.
-      def download(version = current)
+      def download(version = current_version)
         super
       end
 

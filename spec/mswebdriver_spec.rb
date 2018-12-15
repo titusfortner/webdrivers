@@ -6,7 +6,7 @@ describe Webdrivers::MSWebdriver do
 
   it 'downloads mswebdriver' do
     mswebdriver.remove
-    allow(mswebdriver).to receive(:current)
+    allow(mswebdriver).to receive(:current_version)
     expect(File.exist?(mswebdriver.download)).to be true
   end
 

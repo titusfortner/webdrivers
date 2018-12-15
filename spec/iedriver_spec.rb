@@ -6,7 +6,7 @@ describe Webdrivers::IEdriver do
 
   it 'finds latest version' do
     old_version = Gem::Version.new("3.12.0")
-    future_version = Gem::Version.new("3.60.0")
+    future_version = Gem::Version.new("4.0")
     latest_version = iedriver.latest
 
     expect(latest_version).to be > old_version
@@ -20,7 +20,7 @@ describe Webdrivers::IEdriver do
 
   it 'removes iedriver' do
     iedriver.remove
-    expect(iedriver.current).to be_nil
+    expect(iedriver.current_version).to be_nil
   end
 
   context 'when offline' do
