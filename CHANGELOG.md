@@ -1,3 +1,7 @@
+### 3.5.0.beta1 (2018-12-15)
+
+* Allow version to be specified
+
 ### 3.4.3 (2018-10-22)
 
 * Fix bug with JRuby and geckodriver (thanks twalpole)
