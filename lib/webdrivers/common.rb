@@ -5,31 +5,40 @@ module Webdrivers
   class Common
     class << self
 
+      attr_accessor :version
+
       def update
         unless site_available?
           return current_version.nil? ? nil : binary
         end
 
-        released = latest()
-        location = binary()
+        return binary if desired_version.nil? && File.exists?(binary) # Newer not found, keep current
 
-        return location if released.nil? && File.exists?(binary) # Newer not found, keep current
-
-        if released.nil? # Can't find latest and no existing binary
+        if desired_version.nil? # Can't find latest and no existing binary
           msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
           raise StandardError, msg
         end
 
         if correct_binary?
           Webdrivers.logger.debug "Expected webdriver version found"
-          return location
+          return binary
         end
 
         remove # Remove outdated exe
         download # Fetch latest
       end
 
-      def latest
+      def desired_version
+        if self.version.is_a?(Gem::Version)
+          version
+        elsif self.version.nil?
+          latest_version
+        else
+          Gem::Version.new(self.version.to_s)
+        end
+      end
+
+      def latest_version
         downloads.keys.sort.last
       end
 
@@ -38,8 +47,8 @@ module Webdrivers
         FileUtils.rm_f binary
       end
 
-      def download(version = nil)
-        url      = download_url(version)
+      def download
+        url = downloads[desired_version]
         filename = File.basename url
 
         FileUtils.mkdir_p(install_dir) unless File.exists?(install_dir)
@@ -106,17 +115,6 @@ module Webdrivers
 
       def using_proxy
         Webdrivers.proxy_addr && Webdrivers.proxy_port
-      end
-
-      def download_url(version)
-        key = if version.is_a?(Gem::Version)
-                version
-              elsif version.nil?
-                latest
-              else
-                Gem::Version.new(version.to_s)
-              end
-        downloads[key]
       end
 
       def downloaded?
@@ -188,7 +186,7 @@ module Webdrivers
 
       # Already have latest version downloaded?
       def correct_binary?
-        latest == current_version && File.exists?(binary)
+        latest_version == current_version && File.exists?(binary)
       end
 
       def normalize(string)

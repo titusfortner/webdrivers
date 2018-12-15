@@ -9,10 +9,10 @@ module Webdrivers
         return nil unless downloaded?
         string = %x(#{binary} --version)
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize string.match(/ChromeDriver (\d\.\d+)/)[1]
+        normalize string.match(/ChromeDriver (\d+\.\d+)/)[1]
       end
 
-      def latest
+      def latest_version
         Gem::Version.new(get(URI.join(base_url, "LATEST_RELEASE")))
       end
 
