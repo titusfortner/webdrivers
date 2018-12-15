@@ -15,7 +15,7 @@ describe Webdrivers::Chromedriver do
   it 'finds latest version' do
     old_version = Gem::Version.new("2.30")
     future_version = Gem::Version.new("2.90")
-    latest_version = chromedriver.latest
+    latest_version = chromedriver.latest_version
 
     expect(latest_version).to be > old_version
     expect(latest_version).to be < future_version
@@ -24,18 +24,20 @@ describe Webdrivers::Chromedriver do
   it 'downloads latest version by default' do
     chromedriver.remove
     chromedriver.download
-    expect(chromedriver.current_version).to eq chromedriver.latest
+    expect(chromedriver.current_version).to eq chromedriver.latest_version
   end
 
   it 'downloads specified version by Float' do
     chromedriver.remove
-    chromedriver.download(2.29)
+    chromedriver.version = 2.29
+    chromedriver.download
     expect(chromedriver.current_version.version).to eq '2.29'
   end
 
   it 'downloads specified version by String' do
     chromedriver.remove
-    chromedriver.download('2.29')
+    chromedriver.version = '2.29'
+    chromedriver.download
     expect(chromedriver.current_version.version).to eq '2.29'
   end
 
@@ -48,7 +50,7 @@ describe Webdrivers::Chromedriver do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
     xit 'raises exception finding latest version' do
-      expect {chromedriver.latest}.to raise_error(StandardError, "Can not download from website")
+      expect {chromedriver.latest_version}.to raise_error(StandardError, "Can not download from website")
     end
 
     it 'raises exception downloading' do

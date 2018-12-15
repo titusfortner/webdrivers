@@ -3,7 +3,7 @@ module Webdrivers
 
     class << self
 
-      def current_version
+      def windows_version
         Webdrivers.logger.debug "Checking current version"
 
         # current_version() from other webdrivers returns the version from the webdriver EXE.
@@ -22,9 +22,7 @@ module Webdrivers
       # Webdriver binaries for Microsoft Edge are not backwards compatible.
       # For this reason, instead of downloading the latest binary we download the correct one for the
       # currently installed browser version.
-      def download(version = current_version)
-        super
-      end
+      alias :version :windows_version
 
       private
 

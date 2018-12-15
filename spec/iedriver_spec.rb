@@ -7,10 +7,10 @@ describe Webdrivers::IEdriver do
   it 'finds latest version' do
     old_version = Gem::Version.new("3.12.0")
     future_version = Gem::Version.new("4.0")
-    latest_version = iedriver.latest
+    desired_version = iedriver.desired_version
 
-    expect(latest_version).to be > old_version
-    expect(latest_version).to be < future_version
+    expect(desired_version).to be > old_version
+    expect(desired_version).to be < future_version
   end
 
   it 'downloads iedriver' do
@@ -27,7 +27,7 @@ describe Webdrivers::IEdriver do
     before { allow(iedriver).to receive(:site_available?).and_return(false) }
 
     it 'raises exception finding latest version' do
-      expect {iedriver.latest}.to raise_error(StandardError, "Can not reach site")
+      expect {iedriver.latest_version}.to raise_error(StandardError, "Can not reach site")
     end
 
     it 'raises exception downloading' do
