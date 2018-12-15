@@ -4,7 +4,7 @@ module Webdrivers
   class Geckodriver < Common
     class << self
 
-      def current
+      def current_version
         Webdrivers.logger.debug "Checking current version"
         return nil unless downloaded?
         string = %x(#{binary} --version)

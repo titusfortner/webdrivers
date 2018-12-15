@@ -28,18 +28,18 @@ describe Webdrivers::Geckodriver do
 
   it 'downloads latest version by default' do
     geckodriver.download
-    expect(geckodriver.current).to eq geckodriver.latest
+    expect(geckodriver.current_version).to eq geckodriver.latest
   end
 
   it 'downloads specified version' do
     geckodriver.remove
     geckodriver.download('0.17.0')
-    expect(geckodriver.current.version).to eq '0.17.0'
+    expect(geckodriver.current_version.version).to eq '0.17.0'
   end
 
   it 'removes geckodriver' do
     geckodriver.remove
-    expect(geckodriver.current).to be_nil
+    expect(geckodriver.current_version).to be_nil
   end
 
   context 'when offline' do
