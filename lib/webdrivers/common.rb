@@ -12,9 +12,11 @@ module Webdrivers
           return current_version.nil? ? nil : binary
         end
 
-        return binary if desired_version.nil? && File.exists?(binary) # Newer not found, keep current
+        # Newer not specified or latest not found, so use existing
+        return binary if desired_version.nil? && File.exists?(binary)
 
-        if desired_version.nil? # Can't find latest and no existing binary
+        # Can't find desired and no existing binary
+        if desired_version.nil?
           msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
           raise StandardError, msg
         end
@@ -124,6 +126,7 @@ module Webdrivers
       end
 
       def site_available?
+        Webdrivers.logger.debug "Looking for Site: #{base_url}"
         get(base_url)
         Webdrivers.logger.debug "Found Site: #{base_url}"
         true
