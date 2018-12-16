@@ -24,6 +24,10 @@ module Webdrivers
       # currently installed browser version.
       alias :version :windows_version
 
+      def version=(*)
+        raise "Version can not be set for MSWebdriver because it is dependent on the version of Edge"
+      end
+
       private
 
       def file_name
