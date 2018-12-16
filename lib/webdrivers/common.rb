@@ -96,16 +96,17 @@ module Webdrivers
         raise StandardError, 'Too many HTTP redirects' if limit == 0
 
         response = http.get_response(URI(url))
+        Webdrivers.logger.debug "Get response: #{response.inspect}"
 
         case response
-          when Net::HTTPSuccess then
-            response.body
-          when Net::HTTPRedirection
-            location = response['location']
-            Webdrivers.logger.debug "Redirected to #{location}"
-            get(location, limit - 1)
-          else
-            response.value
+        when Net::HTTPSuccess
+          response.body
+        when Net::HTTPRedirection
+          location = response['location']
+          Webdrivers.logger.debug "Redirected to #{location}"
+          get(location, limit - 1)
+        else
+          response.value
         end
       end
 
@@ -135,20 +136,18 @@ module Webdrivers
         get(base_url)
         Webdrivers.logger.debug "Found Site: #{base_url}"
         true
-      rescue StandardError
-        Webdrivers.logger.debug "Site Not Available: #{base_url}"
+      rescue StandardError => ex
+        Webdrivers.logger.debug ex.inspect
         false
       end
 
       def platform
-        cfg = RbConfig::CONFIG
-        case cfg['host_os']
-          when /linux/
-            cfg['host_cpu'] =~ /x86_64|amd64/ ? "linux64" : "linux32"
-          when /darwin/
-            "mac"
-          else
-            "win"
+        if Selenium::WebDriver::Platform.linux?
+          "linux#{Selenium::WebDriver::Platform.bitsize}"
+        elsif Selenium::WebDriver::Platform.mac?
+          'mac'
+        else
+          'win'
         end
       end
 
@@ -194,7 +193,7 @@ module Webdrivers
 
       # Already have latest version downloaded?
       def correct_binary?
-        latest_version == current_version && File.exists?(binary)
+        desired_version == current_version && File.exists?(binary)
       end
 
       def normalize(string)
