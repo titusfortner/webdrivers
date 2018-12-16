@@ -13,6 +13,7 @@ module Webdrivers
       end
 
       def latest_version
+        raise StandardError, "Can not reach site" unless site_available?
         Gem::Version.new(get(URI.join(base_url, "LATEST_RELEASE")))
       end
 
@@ -27,7 +28,6 @@ module Webdrivers
       end
 
       def downloads
-        raise StandardError, "Can not download from website" unless site_available?
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin

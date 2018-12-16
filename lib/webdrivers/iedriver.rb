@@ -24,7 +24,6 @@ module Webdrivers
       end
 
       def downloads
-        raise StandardError, "Can not reach site" unless site_available?
         Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
 
         @downloads ||= begin
