@@ -1,3 +1,5 @@
+### 3.5.0 (2018-12-15)
+
 ### 3.5.0.beta1 (2018-12-15)
 
 * Allow version to be specified
