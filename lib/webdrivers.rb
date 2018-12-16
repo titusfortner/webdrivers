@@ -1,3 +1,4 @@
+require "net_http_ssl_fix"
 require "webdrivers/selenium"
 require "webdrivers/logger"
 require "webdrivers/common"

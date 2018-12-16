@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec",   "~> 3.0"
   s.add_development_dependency "rake",    "~> 10.0"
 
+  s.add_runtime_dependency "net_http_ssl_fix"
   s.add_runtime_dependency "nokogiri",    "~> 1.6"
   s.add_runtime_dependency "rubyzip",     "~> 1.0"
   s.add_runtime_dependency "selenium-webdriver",     "~> 3.0"
