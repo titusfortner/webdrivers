@@ -35,7 +35,8 @@ module Webdrivers
         array = Nokogiri::HTML(get(base_url)).xpath("//li[@class='driver-download']/a")
         array.each_with_object({}) do |link, hash|
           next if link.text == 'Insiders'
-          hash[link.text.scan(/\d+/).first.to_i] = link['href']
+          key = normalize link.text.scan(/\d+/).first.to_i
+          hash[key] = link['href']
         end
       end
 
