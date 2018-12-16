@@ -1,3 +1,7 @@
+### 3.5.2 (2018-12-16)
+
+* Use net_http_ssl_fix to address Net::HTTP issues on windows
+
 ### 3.5.1 (2018-12-16)
 
 ### 3.5.0 (2018-12-15)
