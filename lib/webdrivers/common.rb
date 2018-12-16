@@ -41,6 +41,8 @@ module Webdrivers
       end
 
       def latest_version
+        raise StandardError, "Can not reach site" unless site_available?
+
         downloads.keys.sort.last
       end
 
@@ -50,6 +52,8 @@ module Webdrivers
       end
 
       def download
+        raise StandardError, "Can not reach site" unless site_available?
+
         url = downloads[desired_version]
         filename = File.basename url
 
@@ -107,10 +111,11 @@ module Webdrivers
 
       def http
         if using_proxy
-          return Net::HTTP.Proxy(Webdrivers.proxy_addr, Webdrivers.proxy_port,
+          Net::HTTP.Proxy(Webdrivers.proxy_addr, Webdrivers.proxy_port,
                                  Webdrivers.proxy_user, Webdrivers.proxy_pass)
+        else
+          Net::HTTP
         end
-        return Net::HTTP
       end
 
       private

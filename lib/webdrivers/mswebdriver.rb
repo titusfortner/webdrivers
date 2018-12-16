@@ -35,7 +35,6 @@ module Webdrivers
       end
 
       def downloads
-        raise StandardError, "Can not reach site" unless site_available?
         array = Nokogiri::HTML(get(base_url)).xpath("//li[@class='driver-download']/a")
         array.each_with_object({}) do |link, hash|
           next if link.text == 'Insiders'

@@ -49,12 +49,12 @@ describe Webdrivers::Chromedriver do
   context 'when offline' do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
-    xit 'raises exception finding latest version' do
-      expect {chromedriver.latest_version}.to raise_error(StandardError, "Can not download from website")
+    it 'raises exception finding latest version' do
+      expect {chromedriver.latest_version}.to raise_error(StandardError, "Can not reach site")
     end
 
     it 'raises exception downloading' do
-      expect {chromedriver.download}.to raise_error(StandardError, "Can not download from website")
+      expect {chromedriver.download}.to raise_error(StandardError, "Can not reach site")
     end
   end
 
