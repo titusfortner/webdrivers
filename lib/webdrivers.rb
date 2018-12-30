@@ -1,4 +1,3 @@
-require "net_http_ssl_fix"
 require "webdrivers/selenium"
 require "webdrivers/logger"
 require "webdrivers/common"
@@ -19,6 +18,10 @@ module Webdrivers
 
     def configure
       yield self
+    end
+
+    def net_http_ssl_fix
+      require "net_http_ssl_fix"
     end
   end
 end

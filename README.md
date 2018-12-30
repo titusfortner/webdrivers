@@ -38,6 +38,15 @@ Webdrivers.configure do |config|
 end
 ````
 
+If you are getting an error like this (especially common on Windows)  
+`SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed`
+
+add the following to your code:
+
+````ruby
+Webdrivers.net_http_ssl_fix
+````
+
 **Note when using Microsoft Edge**:
 
 After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
