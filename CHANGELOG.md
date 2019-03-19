@@ -1,3 +1,7 @@
+### 3.7.0 (2019-03-19)
+
+* `chromedriver` version now matches the installed Chrome version. See [#32](https://github.com/titusfortner/webdrivers/pull/32).
+
 ### 3.6.0 (2018-12-30)
 
 * Put net_http_ssl_fix inside a toggle since it can cause other issues
