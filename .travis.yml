@@ -1,7 +1,11 @@
 sudo: required
-dist: trusty
+os:
+  - linux
+  - osx
 language: ruby
 cache: bundler
 rvm:
   - 2.4.1
   - jruby-9.2.0.0
+addons:
+  chrome: stable
