@@ -79,7 +79,7 @@ module Webdrivers
       end
 
       def chrome_on_linux
-        `google-chrome --version`
+        `#{ENV['GOOGLE_CHROME_BIN'] || 'google-chrome'} --version`
       end
 
       def chrome_on_mac
