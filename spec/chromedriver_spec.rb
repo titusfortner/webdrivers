@@ -25,7 +25,7 @@ describe Webdrivers::Chromedriver do
     chromedriver.remove
     chromedriver.download
     cur_ver    = chromedriver.current_version.version
-    latest_ver = chromedriver.latest_version.version[0..3] # "72.0.3626.69" - > "72.0"
+    latest_ver = chromedriver.latest_version.version
     expect(cur_ver).to eq latest_ver
   end
 
@@ -33,19 +33,35 @@ describe Webdrivers::Chromedriver do
     chromedriver.remove
     chromedriver.version = 2.29
     chromedriver.download
-    expect(chromedriver.current_version.version).to eq '2.29'
+    expect(chromedriver.current_version.version).to include '2.29'
   end
 
   it 'downloads specified version by String' do
     chromedriver.remove
-    chromedriver.version = '74.0.3729.6'
+    chromedriver.version = '73.0.3683.68'
     chromedriver.download
-    expect(chromedriver.current_version.version).to eq '74.0'
+    expect(chromedriver.current_version.version).to eq '73.0.3683.68'
   end
 
   it 'removes chromedriver' do
     chromedriver.remove
     expect(chromedriver.current_version).to be_nil
+  end
+
+  if Selenium::WebDriver::Platform.linux? && ENV['TRAVIS']
+    # Ubuntu 14.04 (trusty) is limited to v65
+    context 'when using a Chromium version < 70.0.3538' do
+      before do
+        chromedriver.remove
+        chromedriver.version = nil
+        Selenium::WebDriver::Chrome.path = `which chromium-browser`.strip
+      end
+
+      it 'downloads chromedriver 2.46' do
+        chromedriver.update
+        expect(chromedriver.current_version.version[/\d+.\d+/]).to eq('2.46')
+      end
+    end
   end
 
   context 'when offline' do
