@@ -9,3 +9,6 @@ rvm:
   - jruby-9.2.0.0
 addons:
   chrome: stable
+
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install chromium-browser libgconf-2-4 ; fi
