@@ -80,7 +80,7 @@ module Webdrivers
         end
 
         # Google Chrome 73.0.3683.75 -> 73.0.3683.75
-        ver[/(\d|\.)+/]
+        ver[/\d+\.\d+\.\d+\.\d+/]
       end
 
       def chrome_on_windows
