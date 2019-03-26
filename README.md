@@ -1,5 +1,6 @@
 # Webdrivers
 
+[![Gem Version](https://badge.fury.io/rb/webdrivers.svg)](https://badge.fury.io/rb/webdrivers)
 [![Build status](https://api.travis-ci.org/titusfortner/webdrivers.svg)](https://travis-ci.org/titusfortner/webdrivers)
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
@@ -14,17 +15,23 @@ Currently supported:
 * `IEDriverServer`
 * `MicrosoftWebDriver`
 
-Drivers are stored in `~/.webdrivers` directory
+Drivers are stored in `~/.webdrivers` directory, and this is configurable:
+ 
+ ```ruby
+ Webdrivers.install_dir = '/webdrivers/install/dir'
+```
 
 # Usage
 
-in your Gemfile: 
+In your Gemfile: 
 
-`gem "webdrivers", "~> 3.0"`
+`gem 'webdrivers', '~> 3.0'`
 
-in your project:
+In your project:
 
-`require 'webdrivers'`
+```ruby
+require 'webdrivers'
+```
 
 If there is a proxy between you and the Internet then you will need to configure
 the gem to use the proxy.  You can do this by calling the `configure` method.
@@ -47,7 +54,24 @@ add the following to your code:
 Webdrivers.net_http_ssl_fix
 ````
 
-**Note when using Microsoft Edge**:
+You can also specify the webdriver versions if you don't want the latest:
+
+```ruby
+Webdrivers::Chromedriver.version = '2.46'
+Webdrivers::Geckodriver.version  = '0.17.0'
+Webdrivers::IEdriver.version     = '3.14.0'
+Webdrivers::MSWebdriver.version  = '17134'
+```
+
+**Note when using Chrome/Chromium with Selenium**
+
+You can configure the gem to use a specific browser version (Chrome vs Chromium) by providing the path to its binary:
+
+```ruby
+Selenium::WebDriver::Chrome.path = '/chromium/install/path'
+```
+
+**Note when using Microsoft Edge**
 
 After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
 to be able to download the latest version through this gem.

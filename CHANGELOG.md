@@ -1,3 +1,7 @@
+### 3.7.1 (2019-03-25)
+* Use `Selenium::WebDriver::Chrome#path` to check for a user given browser executable before defaulting to Google Chrome. Addresses [#38](https://github.com/titusfortner/webdrivers/issues/38).
+* Download `chromedriver` v2.46 if Chrome/Chromium version is less than 70.
+
 ### 3.7.0 (2019-03-19)
 
 * `chromedriver` version now matches the installed Chrome version. See [#32](https://github.com/titusfortner/webdrivers/pull/32).
