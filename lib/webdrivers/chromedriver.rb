@@ -3,7 +3,6 @@ require 'nokogiri'
 module Webdrivers
   class Chromedriver < Common
     class << self
-
       def current_version
         Webdrivers.logger.debug 'Checking current version'
         return nil unless downloaded?
@@ -31,7 +30,7 @@ module Webdrivers
       private
 
       def file_name
-        platform == "win" ? "chromedriver.exe" : "chromedriver"
+        platform == 'win' ? 'chromedriver.exe' : 'chromedriver'
       end
 
       def base_url
@@ -43,10 +42,10 @@ module Webdrivers
 
         @downloads ||= begin
           doc   = Nokogiri::XML.parse(get(base_url))
-          items = doc.css("Contents Key").collect(&:text)
+          items = doc.css('Contents Key').collect(&:text)
           items.select! { |item| item.include?(platform) }
           ds = items.each_with_object({}) do |item, hash|
-            key       = normalize item[/^[^\/]+/]
+            key       = normalize item[%r{^[^/]+}]
             hash[key] = "#{base_url}/#{item}"
           end
           Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
@@ -65,19 +64,17 @@ module Webdrivers
       # Returns currently installed Chrome version
       def chrome_version
         ver = case platform
-                when 'win'
-                  chrome_on_windows
-                when /linux/
-                  chrome_on_linux
-                when 'mac'
-                  chrome_on_mac
-                else
-                  raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
+              when 'win'
+                chrome_on_windows
+              when /linux/
+                chrome_on_linux
+              when 'mac'
+                chrome_on_mac
+              else
+                raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
               end.chomp
 
-        if ver.nil? || ver.empty?
-          raise StandardError, 'Failed to find Chrome binary or its version.'
-        end
+        raise StandardError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
         # Google Chrome 73.0.3683.75 -> 73.0.3683.75
         ver[/(\d|\.)+/]

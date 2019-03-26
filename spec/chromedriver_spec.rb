@@ -1,7 +1,6 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Webdrivers::Chromedriver do
-
   let(:chromedriver) { Webdrivers::Chromedriver }
 
   it 'updates' do
@@ -68,17 +67,17 @@ describe Webdrivers::Chromedriver do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
     it 'raises exception finding latest version' do
-      expect {chromedriver.latest_version}.to raise_error(StandardError, "Can not reach site")
+      expect { chromedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')
     end
 
     it 'raises exception downloading' do
-      expect {chromedriver.download}.to raise_error(StandardError, "Can not reach site")
+      expect { chromedriver.download }.to raise_error(StandardError, 'Can not reach site')
     end
   end
 
   it 'allows setting of install directory' do
     begin
-      install_dir = File.expand_path(File.join(ENV['HOME'], ".webdrivers2"))
+      install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
       Webdrivers.install_dir = install_dir
       expect(chromedriver.install_dir).to eq install_dir
     ensure
@@ -87,7 +86,7 @@ describe Webdrivers::Chromedriver do
   end
 
   it 'returns full location of binary' do
-    install_dir = File.expand_path(File.join(ENV['HOME'], ".webdrivers"))
-    expect(chromedriver.binary).to match /#{install_dir}\/chromedriver/
+    install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
+    expect(chromedriver.binary).to match %r{#{install_dir}/chromedriver}
   end
 end

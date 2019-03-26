@@ -2,11 +2,11 @@ require 'spec_helper'
 
 class FakeDriver < Webdrivers::Common
   def self.http_object
-    self.http
+    http
   end
 end
 
-describe "Support for proxies" do
+describe 'Support for proxies' do
   let(:http_object) { FakeDriver.http_object }
 
   before do

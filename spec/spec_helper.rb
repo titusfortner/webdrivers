@@ -1,2 +1,2 @@
-require "rspec"
-require "webdrivers"
+require 'rspec'
+require 'webdrivers'

@@ -1,7 +1,6 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Webdrivers::Geckodriver do
-
   let(:geckodriver) { Webdrivers::Geckodriver }
 
   it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
@@ -14,7 +13,7 @@ describe Webdrivers::Geckodriver do
   it 'uses found version of geckodriver if latest release unable to be found' do
     geckodriver.download
     allow(geckodriver).to receive(:desired_version).and_return(nil)
-    expect(geckodriver.update).to match(/\.webdrivers\/geckodriver/)
+    expect(geckodriver.update).to match(%r{\.webdrivers/geckodriver})
   end
 
   it 'finds latest version' do
@@ -51,12 +50,11 @@ describe Webdrivers::Geckodriver do
     before { allow(geckodriver).to receive(:site_available?).and_return(false) }
 
     it 'raises exception finding latest version' do
-      expect { geckodriver.desired_version }.to raise_error(StandardError, "Can not reach site")
+      expect { geckodriver.desired_version }.to raise_error(StandardError, 'Can not reach site')
     end
 
     it 'raises exception downloading' do
-      expect { geckodriver.download }.to raise_error(StandardError, "Can not reach site")
+      expect { geckodriver.download }.to raise_error(StandardError, 'Can not reach site')
     end
   end
-
 end
