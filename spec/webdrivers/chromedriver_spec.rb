@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Webdrivers::Chromedriver do
-  let(:chromedriver) { Webdrivers::Chromedriver }
+  let(:chromedriver) { described_class }
 
   it 'updates' do
     chromedriver.update

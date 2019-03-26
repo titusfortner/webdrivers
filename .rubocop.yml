@@ -1,3 +1,4 @@
+require: rubocop-rspec
 Metrics/LineLength:
   Enabled: false
 Metrics/MethodLength:
@@ -11,4 +12,8 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Enabled: false
 Style/Documentation:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
   Enabled: false

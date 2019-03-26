@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Webdrivers::MSWebdriver do
-  let(:mswebdriver) { Webdrivers::MSWebdriver }
+  let(:mswebdriver) { described_class }
 
   it 'downloads mswebdriver' do
     mswebdriver.remove

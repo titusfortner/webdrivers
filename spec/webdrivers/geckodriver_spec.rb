@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Webdrivers::Geckodriver do
-  let(:geckodriver) { Webdrivers::Geckodriver }
+  let(:geckodriver) { described_class }
 
   it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
     geckodriver.remove

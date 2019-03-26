@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Webdrivers::IEdriver do
-  let(:iedriver) { Webdrivers::IEdriver }
+  let(:iedriver) { described_class }
 
   it 'finds latest version' do
     old_version = Gem::Version.new('3.12.0')
