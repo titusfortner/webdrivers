@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rubocop', '~>0.66'
   s.add_development_dependency 'rubocop-rspec'
+  s.add_development_dependency 'simplecov'
 
   s.add_runtime_dependency 'net_http_ssl_fix'
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
