@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'shellwords'
 
 module Webdrivers
   class Chromedriver < Common
@@ -86,7 +87,16 @@ module Webdrivers
       def chrome_on_windows
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion`
+          return `powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion`.strip
+        end
+
+        # Workaround for Google Chrome when using Jruby on Windows.
+        # @see https://github.com/titusfortner/webdrivers/issues/41
+        if RUBY_PLATFORM == 'java' && platform == 'win'
+          ver = "powershell (Get-Item -Path ((Get-ItemProperty \"HKLM:\\Software\\Microsoft" \
+          "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
+          ".VersionInfo.ProductVersion"
+          return `#{ver}`.strip
         end
 
         # Default to Google Chrome
