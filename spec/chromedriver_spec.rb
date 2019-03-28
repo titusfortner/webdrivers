@@ -64,6 +64,18 @@ describe Webdrivers::Chromedriver do
     end
   end
 
+  # Workaround for Google Chrome when using Jruby on Windows.
+  # @see https://github.com/titusfortner/webdrivers/issues/41
+  if RUBY_PLATFORM == 'java' && Selenium::WebDriver::Platform.windows?
+    context 'when using Jruby on Windows' do
+      it 'uses Jruby specific workaround to retrieve the Google Chrome version' do
+        chromedriver.remove
+        chromedriver.update
+        expect(chromedriver.current_version).to_not be_nil
+      end
+    end
+  end
+
   context 'when offline' do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
