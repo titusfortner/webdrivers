@@ -110,7 +110,7 @@ module Webdrivers
       def chrome_on_linux
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `#{browser_binary} --product-version`.strip
+          return `#{Shellwords.escape browser_binary} --product-version`.strip
         end
 
         # Default to Google Chrome
