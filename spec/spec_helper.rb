@@ -1,2 +1,5 @@
-require "rspec"
-require "webdrivers"
+require 'simplecov'
+SimpleCov.start
+
+require 'rspec'
+require 'webdrivers'

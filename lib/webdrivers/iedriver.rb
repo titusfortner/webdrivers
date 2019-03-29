@@ -4,11 +4,11 @@ require 'rubygems/version'
 module Webdrivers
   class IEdriver < Common
     class << self
-
       def current_version
-        Webdrivers.logger.debug "Checking current version"
+        Webdrivers.logger.debug 'Checking current version'
         return nil unless downloaded?
-        string = %x(#{binary} --version)
+
+        string = `#{binary} --version`
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
         normalize string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
       end
@@ -16,7 +16,7 @@ module Webdrivers
       private
 
       def file_name
-        "IEDriverServer.exe"
+        'IEDriverServer.exe'
       end
 
       def base_url
@@ -28,7 +28,7 @@ module Webdrivers
 
         @downloads ||= begin
           doc = Nokogiri::XML.parse(get(base_url))
-          items = doc.css("Key").collect(&:text)
+          items = doc.css('Key').collect(&:text)
           items.select! { |item| item.include?('IEDriverServer_Win32') }
           ds = items.each_with_object({}) do |item, hash|
             key = normalize item[/([^_]+)\.zip/, 1]
@@ -38,7 +38,6 @@ module Webdrivers
           ds
         end
       end
-
     end
   end
 end

@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 $LOAD_PATH.push File.expand_path('../lib', __dir__)
 
 Gem::Specification.new do |s|
@@ -19,6 +17,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10.0'
   s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'rubocop', '~>0.66'
+  s.add_development_dependency 'rubocop-rspec', '~>1.32'
+  s.add_development_dependency 'simplecov', '~>0.16'
 
   s.add_runtime_dependency 'net_http_ssl_fix'
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
