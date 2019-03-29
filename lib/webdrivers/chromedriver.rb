@@ -122,7 +122,7 @@ module Webdrivers
       def chrome_on_mac
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `#{browser_binary} --version`.strip
+          return `#{Shellwords.escape browser_binary} --version`.strip
         end
 
         # Default to Google Chrome
