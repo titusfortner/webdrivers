@@ -1,15 +1,13 @@
-require "webdrivers/selenium"
-require "webdrivers/logger"
-require "webdrivers/common"
-require "webdrivers/chromedriver"
-require "webdrivers/geckodriver"
-require "webdrivers/iedriver"
-require "webdrivers/mswebdriver"
+require 'webdrivers/selenium'
+require 'webdrivers/logger'
+require 'webdrivers/common'
+require 'webdrivers/chromedriver'
+require 'webdrivers/geckodriver'
+require 'webdrivers/iedriver'
+require 'webdrivers/mswebdriver'
 
 module Webdrivers
-
   class << self
-
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 
     def logger
@@ -21,7 +19,7 @@ module Webdrivers
     end
 
     def net_http_ssl_fix
-      require "net_http_ssl_fix"
+      require 'net_http_ssl_fix'
     end
   end
 end
