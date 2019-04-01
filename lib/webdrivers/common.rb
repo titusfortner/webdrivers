@@ -18,7 +18,7 @@ module Webdrivers
           raise StandardError, update_failed_msg if current_version.nil?
 
           # Use existing binary
-          Webdrivers.logger.info "Update site is down. Using existing #{file_name}"
+          Webdrivers.logger.error "Can not reach update site. Using existing #{file_name} #{current_version}"
           return binary
         end
 
@@ -50,7 +50,7 @@ module Webdrivers
           cur_ver = current_version
           raise StandardError, update_failed_msg if cur_ver.nil? # Site is down and no existing binary
 
-          Webdrivers.logger.info "Can not reach update site. Using existing #{file_name} #{cur_ver}"
+          Webdrivers.logger.error "Can not reach update site. Using existing #{file_name} #{cur_ver}"
           return cur_ver
         end
 
