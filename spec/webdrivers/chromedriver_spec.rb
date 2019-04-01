@@ -96,7 +96,10 @@ describe Webdrivers::Chromedriver do
   end
 
   context 'when offline' do
-    before { allow(chromedriver).to receive(:site_available?).and_return(false) }
+    before do
+      chromedriver.remove
+      allow(chromedriver).to receive(:site_available?).and_return(false)
+    end
 
     it 'raises exception finding latest version if no existing binary' do
       expect { chromedriver.latest_version }.to raise_error(StandardError, update_failed_msg)
