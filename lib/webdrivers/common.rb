@@ -7,40 +7,52 @@ module Webdrivers
       attr_accessor :version
 
       def update
+        if correct_binary? # Already have desired or latest version
+          Webdrivers.logger.debug 'Expected webdriver version found'
+          return binary
+        end
+
+        # If site is down
         unless site_available?
-          return current_version.nil? ? nil : binary
+          # No existing binary and we can't download
+          raise StandardError, update_failed_msg if current_version.nil?
+
+          # Use existing binary
+          Webdrivers.logger.info "Update site is down. Using existing #{file_name}"
+          return binary
         end
 
         # Newer not specified or latest not found, so use existing
         return binary if desired_version.nil? && File.exist?(binary)
 
         # Can't find desired and no existing binary
-        if desired_version.nil?
-          msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
-          raise StandardError, msg
-        end
-
-        if correct_binary?
-          Webdrivers.logger.debug 'Expected webdriver version found'
-          return binary
-        end
+        raise StandardError, update_failed_msg if desired_version.nil?
 
         remove # Remove outdated exe
-        download # Fetch latest
+        download # Fetch desired or latest
       end
 
       def desired_version
-        if version.is_a?(Gem::Version)
-          version
-        elsif version.nil?
-          latest_version
-        else
-          Gem::Version.new(version.to_s)
-        end
+        ver = if version.is_a?(Gem::Version)
+                version
+              elsif version.nil?
+                latest_version
+              else
+                Gem::Version.new(version.to_s)
+              end
+
+        Webdrivers.logger.debug "Desired version: #{ver}"
+        ver
       end
 
       def latest_version
-        raise StandardError, 'Can not reach site' unless site_available?
+        unless site_available?
+          cur_ver = current_version
+          raise StandardError, update_failed_msg if cur_ver.nil? # Site is down and no existing binary
+
+          Webdrivers.logger.info "Can not reach update site. Using existing #{file_name} #{cur_ver}"
+          return cur_ver
+        end
 
         downloads.keys.max
       end
@@ -51,9 +63,10 @@ module Webdrivers
       end
 
       def download
-        raise StandardError, 'Can not reach site' unless site_available?
+        raise StandardError, update_failed_msg unless site_available?
 
         url = downloads[desired_version]
+        Webdrivers.logger.debug "Downloading #{url}"
         filename = File.basename url
 
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
@@ -91,13 +104,31 @@ module Webdrivers
         File.join install_dir, file_name
       end
 
+      #
+      # Returns count of network request made to the base url. Used for debugging
+      # purpose only.
+      #
+      def network_requests
+        @network_requests || 0
+      end
+
+      #
+      # Resets network request count to 0.
+      #
+      def reset_network_requests
+        @network_requests = 0
+      end
+
       protected
 
       def get(url, limit = 10)
         raise StandardError, 'Too many HTTP redirects' if limit.zero?
 
+        @network_requests ||= 0
         response = http.get_response(URI(url))
         Webdrivers.logger.debug "Get response: #{response.inspect}"
+        @network_requests += 1
+        Webdrivers.logger.debug "Successful network request ##{@network_requests}"
 
         case response
         when Net::HTTPSuccess
@@ -199,6 +230,11 @@ module Webdrivers
 
       def normalize(string)
         Gem::Version.new(string)
+      end
+
+      def update_failed_msg
+        "Update site is unreachable. Try downloading '#{file_name}' manually from " \
+          "#{base_url} and place in '#{install_dir}'"
       end
     end
   end

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Webdrivers::Chromedriver do
   let(:chromedriver) { described_class }
+  let(:update_failed_msg) { /^Update site is unreachable. Try downloading 'chromedriver(.exe)?' manually from (.*)?and place in '(.*)?\.webdrivers'$/ }
 
   it 'updates' do
     chromedriver.update
@@ -42,6 +43,25 @@ describe Webdrivers::Chromedriver do
     expect(chromedriver.current_version.version).to eq '73.0.3683.68'
   end
 
+  it 'does not download if desired version already exists' do
+    chromedriver.remove
+    chromedriver.version = '73.0.3683.68'
+    chromedriver.update
+    chromedriver.reset_network_requests
+    chromedriver.update
+    expect(chromedriver.network_requests).to be(0)
+  end
+
+  it 'uses existing version if update site is unreachable' do
+    chromedriver.remove
+    chromedriver.version = '2.46'
+    chromedriver.download
+    allow(chromedriver).to receive(:site_available?).and_return(false)
+    chromedriver.version = nil
+    chromedriver.update
+    expect(chromedriver.latest_version.version).to include('2.46')
+  end
+
   it 'removes chromedriver' do
     chromedriver.remove
     expect(chromedriver.current_version).to be_nil
@@ -78,12 +98,12 @@ describe Webdrivers::Chromedriver do
   context 'when offline' do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
-    it 'raises exception finding latest version' do
-      expect { chromedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')
+    it 'raises exception finding latest version if no existing binary' do
+      expect { chromedriver.latest_version }.to raise_error(StandardError, update_failed_msg)
     end
 
     it 'raises exception downloading' do
-      expect { chromedriver.download }.to raise_error(StandardError, 'Can not reach site')
+      expect { chromedriver.download }.to raise_error(StandardError, update_failed_msg)
     end
   end
 

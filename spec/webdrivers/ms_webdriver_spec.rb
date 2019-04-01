@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Webdrivers::MSWebdriver do
   let(:mswebdriver) { described_class }
+  let(:update_failed_msg) { /^Update site is unreachable. Try downloading 'MicrosoftWebDriver(.exe)?' manually from (.*)?and place in '(.*)?\.webdrivers'$/ }
 
   it 'downloads mswebdriver' do
     mswebdriver.remove
@@ -15,10 +16,13 @@ describe Webdrivers::MSWebdriver do
   end
 
   context 'when offline' do
-    before { allow(mswebdriver).to receive(:site_available?).and_return(false) }
+    before do
+      allow(mswebdriver).to receive(:site_available?).and_return(false)
+      mswebdriver.remove
+    end
 
     it 'raises exception downloading' do
-      expect { mswebdriver.download }.to raise_error(StandardError, 'Can not reach site')
+      expect { mswebdriver.download }.to raise_error(StandardError, update_failed_msg)
     end
   end
 end

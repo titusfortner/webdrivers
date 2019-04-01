@@ -16,7 +16,13 @@ module Webdrivers
       end
 
       def latest_version
-        raise StandardError, 'Can not reach site' unless site_available?
+        unless site_available?
+          cur_ver = current_version
+          raise StandardError, update_failed_msg if cur_ver.nil? # Site is down and no existing binary
+
+          Webdrivers.logger.warn "Can not reach update site. Using existing #{file_name} #{cur_ver}"
+          return cur_ver
+        end
 
         # Versions before 70 do not have a LATEST_RELEASE file
         return Gem::Version.new('2.46') if release_version < '70.0.3538'
@@ -89,7 +95,7 @@ module Webdrivers
 
         # Workaround for Google Chrome when using Jruby on Windows.
         # @see https://github.com/titusfortner/webdrivers/issues/41
-        if RUBY_PLATFORM == 'java' && platform == 'win'
+        if RUBY_PLATFORM == 'java'
           ver = 'powershell (Get-Item -Path ((Get-ItemProperty "HKLM:\\Software\\Microsoft' \
           "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
           '.VersionInfo.ProductVersion'

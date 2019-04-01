@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Webdrivers::Geckodriver do
   let(:geckodriver) { described_class }
+  let(:update_failed_msg) { /^Update site is unreachable. Try downloading 'geckodriver(.exe)?' manually from (.*)?and place in '(.*)?\.webdrivers'$/ }
 
   it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
     geckodriver.remove
     allow(geckodriver).to receive(:desired_version).and_return(nil)
-    msg = /^Unable to find the latest version of geckodriver(.exe)?; try downloading manually from (.*)?and place in (.*)?\.webdrivers$/
-    expect { geckodriver.update }.to raise_exception StandardError, msg
+    expect { geckodriver.update }.to raise_exception StandardError, update_failed_msg
   end
 
   it 'uses found version of geckodriver if latest release unable to be found' do
@@ -30,6 +30,15 @@ describe Webdrivers::Geckodriver do
     expect(geckodriver.current_version).to eq geckodriver.desired_version
   end
 
+  it 'does not download if desired version already exists' do
+    geckodriver.remove
+    geckodriver.version = '0.23.0'
+    geckodriver.download
+    geckodriver.reset_network_requests
+    geckodriver.update
+    expect(geckodriver.network_requests).to be(0)
+  end
+
   it 'downloads specified version' do
     begin
       geckodriver.remove
@@ -41,20 +50,34 @@ describe Webdrivers::Geckodriver do
     end
   end
 
+  it 'uses existing version if update site is unreachable' do
+    geckodriver.remove
+    geckodriver.version = '0.23.0'
+    geckodriver.download
+    allow(geckodriver).to receive(:site_available?).and_return(false)
+    geckodriver.update
+    geckodriver.version = nil
+    expect(geckodriver.latest_version.version).to eq '0.23.0'
+  end
+
   it 'removes geckodriver' do
     geckodriver.remove
     expect(geckodriver.current_version).to be_nil
   end
 
   context 'when offline' do
-    before { allow(geckodriver).to receive(:site_available?).and_return(false) }
+    before do
+      allow(geckodriver).to receive(:site_available?).and_return(false)
+      geckodriver.remove
+      geckodriver.version = nil
+    end
 
-    it 'raises exception finding latest version' do
-      expect { geckodriver.desired_version }.to raise_error(StandardError, 'Can not reach site')
+    it 'raises exception finding latest version if no existing binary' do
+      expect { geckodriver.desired_version }.to raise_error(StandardError, update_failed_msg)
     end
 
     it 'raises exception downloading' do
-      expect { geckodriver.download }.to raise_error(StandardError, 'Can not reach site')
+      expect { geckodriver.download }.to raise_error(StandardError, update_failed_msg)
     end
   end
 end
