@@ -1,4 +1,4 @@
-### 3.7.2 (2019-03-29)
+### 3.7.2 (2019-04-01)
 * Fix bugs in methods that retrieve Chrome/Chromium version. See [#43](https://github.com/titusfortner/webdrivers/pull/43) and [#52](https://github.com/titusfortner/webdrivers/issues/52).
 * Add workaround for a Jruby bug when retrieving Chrome version on Windows. See [#41](https://github.com/titusfortner/webdrivers/issues/41).
 * Update README with more information.
