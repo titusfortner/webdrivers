@@ -7,19 +7,12 @@ Run Selenium tests more easily with automatic installation and updates for all s
 
 # Description
 
-`webdrivers` downloads drivers and directs Selenium to use them.
+`webdrivers` downloads drivers and directs Selenium to use them. Currently supports:
 
-Currently supported:
-* `chromedriver`
-* `geckodriver`
-* `IEDriverServer`
-* `MicrosoftWebDriver`
-
-Drivers are stored in `~/.webdrivers` directory, and this is configurable:
- 
- ```ruby
- Webdrivers.install_dir = '/webdrivers/install/dir'
-```
+* [chromedriver](http://chromedriver.chromium.org/)
+* [geckodriver](https://github.com/mozilla/geckodriver)
+* [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
+* [MicrosoftWebDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
 # Usage
 
@@ -33,6 +26,44 @@ In your project:
 require 'webdrivers'
 ```
 
+The drivers will now be automatically downloaded or updated when you launch a browser
+through Selenium. 
+
+**Download Location**
+
+The default download location is `~/.webdrivers` directory, and this is configurable:
+ 
+ ```ruby
+ Webdrivers.install_dir = '/webdrivers/install/dir'
+```
+
+**Version Pinning**
+
+If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise, the latest (stable) 
+driver will be downloaded and passed to Selenium.
+
+```ruby
+# Chrome
+Webdrivers::Chromedriver.version = '2.46'
+
+# Firefox
+Webdrivers::Geckodriver.version  = '0.23.0'
+
+# Microsoft Internet Explorer
+Webdrivers::IEdriver.version     = '3.14.0'
+
+# Microsoft Edge
+Webdrivers::MSWebdriver.version  = '17134'
+```
+
+You can also trigger the update in your code, but it is not required:
+
+```ruby
+Webdrivers::Chromedriver.update
+```
+
+# Proxy
+
 If there is a proxy between you and the Internet then you will need to configure
 the gem to use the proxy.  You can do this by calling the `configure` method.
 
@@ -45,33 +76,43 @@ Webdrivers.configure do |config|
 end
 ````
 
-If you are getting an error like this (especially common on Windows)  
+If you are getting an error like this (especially common on Windows):
+ 
 `SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed`
 
-add the following to your code:
+Add the following to your code:
 
 ````ruby
 Webdrivers.net_http_ssl_fix
 ````
 
-You can also specify the webdriver versions if you don't want the latest:
+# Logging
+
+The logging level can be configured for debugging purpose:
 
 ```ruby
-Webdrivers::Chromedriver.version = '2.46'
-Webdrivers::Geckodriver.version  = '0.17.0'
-Webdrivers::IEdriver.version     = '3.14.0'
-Webdrivers::MSWebdriver.version  = '17134'
+Webdrivers.logger.level = :DEBUG
 ```
 
-**Note when using Chrome/Chromium with Selenium**
+# Browser Specific Notes
 
-You can configure the gem to use a specific browser version (Chrome vs Chromium) by providing the path to its binary:
+**When using Chrome/Chromium**
+
+The version of `chromedriver` will depend on the version of Chrome you are using it with:
+
+ * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. More information [here](http://chromedriver.chromium.org/downloads/version-selection).
+ * For versions <=  69, `chromedriver` version 2.46 will be downloaded.
+ * For beta versions, you'll have to set the desired beta version of `chromedriver` using `Webdrivers::Chromedriver.version`.
+ 
+The gem, by default, looks for the Google Chrome version. You can override this by providing a path to the Chromium binary:
 
 ```ruby
-Selenium::WebDriver::Chrome.path = '/chromium/install/path'
+Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 ```
 
-**Note when using Microsoft Edge**
+This is also required if Google Chrome is not installed in its [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
+
+**When using Microsoft Edge**
 
 After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
 to be able to download the latest version through this gem.
@@ -83,6 +124,10 @@ expected version and skips the download process.
 
 If you continue with the outdated binary, Selenium will throw an error: `unable to connect to MicrosoftWebDriver localhost:17556`.
 
+# Wiki
+
+Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki) for solutions to commonly reported issues.
+
 # License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT),
@@ -91,7 +136,7 @@ see LICENSE.txt for full details and copyright.
 
 # Contributing
 
-Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers).
+Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers). Run `bundle exec rake` and squash the commits in your PRs.
 
 
 ## Copyright
