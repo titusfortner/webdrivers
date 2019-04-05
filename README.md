@@ -5,7 +5,7 @@
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
-# Description
+## Description
 
 `webdrivers` downloads drivers and directs Selenium to use them. Currently supports:
 
@@ -14,7 +14,7 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
 * [MicrosoftWebDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
-# Usage
+## Usage
 
 In your Gemfile: 
 
@@ -29,7 +29,7 @@ require 'webdrivers'
 The drivers will now be automatically downloaded or updated when you launch a browser
 through Selenium. 
 
-**Download Location**
+### Download Location
 
 The default download location is `~/.webdrivers` directory, and this is configurable:
  
@@ -37,7 +37,7 @@ The default download location is `~/.webdrivers` directory, and this is configur
  Webdrivers.install_dir = '/webdrivers/install/dir'
 ```
 
-**Version Pinning**
+### Version Pinning
 
 If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise, the latest (stable) 
 driver will be downloaded and passed to Selenium.
@@ -62,7 +62,7 @@ You can also trigger the update in your code, but it is not required:
 Webdrivers::Chromedriver.update
 ```
 
-# Proxy
+### Proxy
 
 If there is a proxy between you and the Internet then you will need to configure
 the gem to use the proxy.  You can do this by calling the `configure` method.
@@ -76,17 +76,25 @@ Webdrivers.configure do |config|
 end
 ````
 
+### `SSL_connect` errors
+
 If you are getting an error like this (especially common on Windows):
  
 `SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed`
 
+Add the following to your Gemfile:
+
+```ruby
+gem "net_http_ssl_fix"
+```
+
 Add the following to your code:
 
 ````ruby
-Webdrivers.net_http_ssl_fix
+require 'net_http_ssl_fix'
 ````
 
-# Logging
+### Logging
 
 The logging level can be configured for debugging purpose:
 
@@ -94,9 +102,9 @@ The logging level can be configured for debugging purpose:
 Webdrivers.logger.level = :DEBUG
 ```
 
-# Browser Specific Notes
+### Browser Specific Notes
 
-**When using Chrome/Chromium**
+#### When using Chrome/Chromium
 
 The version of `chromedriver` will depend on the version of Chrome you are using it with:
 
@@ -112,7 +120,7 @@ Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 
 This is also required if Google Chrome is not installed in its [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
-**When using Microsoft Edge**
+#### When using Microsoft Edge
 
 After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
 to be able to download the latest version through this gem.
@@ -124,20 +132,18 @@ expected version and skips the download process.
 
 If you continue with the outdated binary, Selenium will throw an error: `unable to connect to MicrosoftWebDriver localhost:17556`.
 
-# Wiki
+## Wiki
 
 Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki) for solutions to commonly reported issues.
 
-# License
+## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT),
 see LICENSE.txt for full details and copyright.
 
-
-# Contributing
+## Contributing
 
 Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers). Run `bundle exec rake` and squash the commits in your PRs.
-
 
 ## Copyright
 
