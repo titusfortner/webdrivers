@@ -137,8 +137,8 @@ module Webdrivers
         get(base_url)
         Webdrivers.logger.debug "Found Site: #{base_url}"
         true
-      rescue StandardError => ex
-        Webdrivers.logger.debug ex.inspect
+      rescue StandardError => e
+        Webdrivers.logger.debug e
         false
       end
 
