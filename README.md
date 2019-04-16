@@ -94,6 +94,8 @@ Add the following to your code:
 require 'net_http_ssl_fix'
 ````
 
+Other solutions are documented on the RubyGems [website](https://guides.rubygems.org/ssl-certificate-update/).
+
 ### Logging
 
 The logging level can be configured for debugging purpose:
