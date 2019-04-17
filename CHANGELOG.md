@@ -1,3 +1,7 @@
+### 3.8.0 (2019-04-17)
+* Add support for `selenium-webdriver` v4. See [#69](https://github.com/titusfortner/webdrivers/pull/69).
+* Remove dependency on `net_http_ssl_fix` gem. `Webdrivers.net_http_ssl_fix` now raises an exception and points to other solutions. See [#60](https://github.com/titusfortner/webdrivers/pull/60) and [#68](https://github.com/titusfortner/webdrivers/pull/68).
+
 ### 3.7.2 (2019-04-01)
 * Fix bugs in methods that retrieve Chrome/Chromium version. See [#43](https://github.com/titusfortner/webdrivers/pull/43) and [#52](https://github.com/titusfortner/webdrivers/issues/52).
 * Add workaround for a Jruby bug when retrieving Chrome version on Windows. See [#41](https://github.com/titusfortner/webdrivers/issues/41).
