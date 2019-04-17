@@ -17,5 +17,10 @@ module Webdrivers
     def configure
       yield self
     end
+
+    def net_http_ssl_fix
+      raise 'Webdrivers.net_http_ssl_fix is no longer available.' \
+      ' Please see https://github.com/titusfortner/webdrivers#ssl_connect-errors.'
+    end
   end
 end

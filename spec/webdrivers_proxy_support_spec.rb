@@ -42,4 +42,10 @@ describe Webdrivers do
   it 'does not use the Proxy when proxy is not configured' do
     expect(http_object.instance_variable_get('@is_proxy_class')).to be false
   end
+
+  it 'raises an exception when net_http_ssl_fix is called.' do
+    err = 'Webdrivers.net_http_ssl_fix is no longer available.' \
+      ' Please see https://github.com/titusfortner/webdrivers#ssl_connect-errors.'
+    expect { described_class.net_http_ssl_fix }.to raise_error(StandardError, err)
+  end
 end
