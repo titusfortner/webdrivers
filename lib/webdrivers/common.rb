@@ -7,12 +7,17 @@ module Webdrivers
       attr_accessor :version
 
       def update
+        if update_disabled? && binary_exists?
+          Webdrivers.logger.debug "Automatic update is disabled. Using existing #{binary} v#{current_version}"
+          return binary
+        end
+
         unless site_available?
           return current_version.nil? ? nil : binary
         end
 
         # Newer not specified or latest not found, so use existing
-        return binary if desired_version.nil? && File.exist?(binary)
+        return binary if desired_version.nil? && binary_exists?
 
         # Can't find desired and no existing binary
         if desired_version.nil?
@@ -161,6 +166,14 @@ module Webdrivers
         false
       end
 
+      #
+      # Returns true if automatic updates are disabled.
+      #
+      def update_disabled?
+        Webdrivers.auto_update = true if Webdrivers.auto_update.nil? # Default to auto-update
+        !Webdrivers.auto_update
+      end
+
       def platform
         if Selenium::WebDriver::Platform.linux?
           "linux#{Selenium::WebDriver::Platform.bitsize}"
@@ -213,7 +226,14 @@ module Webdrivers
 
       # Already have latest version downloaded?
       def correct_binary?
-        desired_version == current_version && File.exist?(binary)
+        desired_version == current_version && binary_exists?
+      end
+
+      #
+      # Returns true if an existing driver binary is found.
+      #
+      def binary_exists?
+        File.exist?(binary)
       end
 
       def normalize(string)
