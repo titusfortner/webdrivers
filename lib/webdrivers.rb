@@ -8,7 +8,8 @@ require 'webdrivers/mswebdriver'
 
 module Webdrivers
   class << self
-    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
+    attr_accessor :proxy_addr, :proxy_port, :proxy_user,
+                  :proxy_pass, :install_dir, :auto_update
 
     def logger
       @logger ||= Webdrivers::Logger.new
