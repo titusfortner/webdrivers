@@ -75,6 +75,24 @@ describe Webdrivers::Chromedriver do
     end
   end
 
+  context 'when auto-update is disabled' do
+    before { Webdrivers.auto_update = false }
+
+    it 'downloads the binary if one does not exist' do
+      chromedriver.remove
+      chromedriver.update
+      expect(chromedriver.current_version).not_to be_nil
+    end
+
+    it 'does not make any network calls if a binary exists' do
+      chromedriver.remove
+      chromedriver.update
+      chromedriver.reset_network_requests
+      chromedriver.update
+      expect(chromedriver.network_requests).to be(0)
+    end
+  end
+
   context 'when offline' do
     before { allow(chromedriver).to receive(:site_available?).and_return(false) }
 
