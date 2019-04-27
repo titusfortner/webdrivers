@@ -62,6 +62,22 @@ You can also trigger the update in your code, but it is not required:
 Webdrivers::Chromedriver.update
 ```
 
+### Automatic Updates
+
+Automatic updates are enabled by default, which means `webdrivers` will 
+always check for updates before passing the driver to Selenium. 
+If you do not want this, you can disable automatic updates in your 
+project:
+
+```ruby
+Webdrivers.auto_update = false
+```
+
+If a driver binary does not already exist, the gem will download it
+once and then never check for updates as long you have the updates disabled. 
+When you do want to download an updated driver without altering this 
+setting, simply delete the existing driver binary.
+
 ### Proxy
 
 If there is a proxy between you and the Internet then you will need to configure
