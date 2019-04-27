@@ -77,6 +77,7 @@ module Webdrivers
 
         raise StandardError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
+        Webdrivers.logger.debug "Browser version: #{ver}"
         # Google Chrome 73.0.3683.75 -> 73.0.3683.75
         ver[/\d+\.\d+\.\d+\.\d+/]
       end
