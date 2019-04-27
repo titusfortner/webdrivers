@@ -54,6 +54,7 @@ module Webdrivers
         raise StandardError, 'Can not reach site' unless site_available?
 
         url = downloads[desired_version]
+        Webdrivers.logger.debug "Downloading #{url}"
         filename = File.basename url
 
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
@@ -91,13 +92,31 @@ module Webdrivers
         File.join install_dir, file_name
       end
 
+      #
+      # Returns count of network request made to the base url. Used for debugging
+      # purpose only.
+      #
+      def network_requests
+        @network_requests || 0
+      end
+
+      #
+      # Resets network request count to 0.
+      #
+      def reset_network_requests
+        @network_requests = 0
+      end
+
       protected
 
       def get(url, limit = 10)
         raise StandardError, 'Too many HTTP redirects' if limit.zero?
 
+        @network_requests ||= 0
         response = http.get_response(URI(url))
         Webdrivers.logger.debug "Get response: #{response.inspect}"
+        @network_requests += 1
+        Webdrivers.logger.debug "Successful network request ##{@network_requests}"
 
         case response
         when Net::HTTPSuccess
