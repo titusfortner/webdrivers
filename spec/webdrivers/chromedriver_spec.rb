@@ -50,6 +50,9 @@ describe Webdrivers::Chromedriver do
   context 'when using a Chromium version < 70.0.3538' do
     it 'downloads chromedriver 2.46' do
       chromedriver.remove
+      chromedriver.version = nil
+      chromedriver.instance_variable_set('@latest_version', nil)
+
       allow(chromedriver).to receive(:chrome_version).and_return('70.0.0')
       chromedriver.update
 
