@@ -23,7 +23,10 @@ describe Webdrivers::IEdriver do
   end
 
   context 'when offline' do
-    before { allow(iedriver).to receive(:site_available?).and_return(false) }
+    before do
+      iedriver.instance_variable_set('@latest_version', nil)
+      allow(iedriver).to receive(:site_available?).and_return(false)
+    end
 
     it 'raises exception finding latest version' do
       expect { iedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')

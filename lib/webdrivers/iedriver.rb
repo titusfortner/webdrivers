@@ -24,19 +24,15 @@ module Webdrivers
       end
 
       def downloads
-        Webdrivers.logger.debug "Versions previously located on downloads site: #{@downloads.keys}" if @downloads
-
-        @downloads ||= begin
-          doc = Nokogiri::XML.parse(get(base_url))
-          items = doc.css('Key').collect(&:text)
-          items.select! { |item| item.include?('IEDriverServer_Win32') }
-          ds = items.each_with_object({}) do |item, hash|
-            key = normalize item[/([^_]+)\.zip/, 1]
-            hash[key] = "#{base_url}#{item}"
-          end
-          Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
-          ds
+        doc = Nokogiri::XML.parse(get(base_url))
+        items = doc.css('Key').collect(&:text)
+        items.select! { |item| item.include?('IEDriverServer_Win32') }
+        ds = items.each_with_object({}) do |item, hash|
+          key = normalize item[/([^_]+)\.zip/, 1]
+          hash[key] = "#{base_url}#{item}"
         end
+        Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
+        ds
       end
     end
   end

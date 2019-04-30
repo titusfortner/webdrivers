@@ -76,7 +76,10 @@ describe Webdrivers::Chromedriver do
   end
 
   context 'when offline' do
-    before { allow(chromedriver).to receive(:site_available?).and_return(false) }
+    before do
+      chromedriver.instance_variable_set('@latest_version', nil)
+      allow(chromedriver).to receive(:site_available?).and_return(false)
+    end
 
     it 'raises exception finding latest version' do
       expect { chromedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')

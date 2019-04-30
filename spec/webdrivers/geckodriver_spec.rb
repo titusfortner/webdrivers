@@ -47,7 +47,10 @@ describe Webdrivers::Geckodriver do
   end
 
   context 'when offline' do
-    before { allow(geckodriver).to receive(:site_available?).and_return(false) }
+    before do
+      geckodriver.instance_variable_set('@latest_version', nil)
+      allow(geckodriver).to receive(:site_available?).and_return(false)
+    end
 
     it 'raises exception finding latest version' do
       expect { geckodriver.desired_version }.to raise_error(StandardError, 'Can not reach site')

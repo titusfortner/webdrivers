@@ -40,9 +40,11 @@ module Webdrivers
       end
 
       def latest_version
+        return @latest_version if @latest_version
+
         raise StandardError, 'Can not reach site' unless site_available?
 
-        downloads.keys.max
+        @latest_version = downloads.keys.max
       end
 
       def remove
