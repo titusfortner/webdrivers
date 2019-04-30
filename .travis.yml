@@ -1,6 +1,3 @@
-os:
-  - linux
-  - osx
 language: ruby
 cache: bundler
 addons:
@@ -17,6 +14,9 @@ matrix:
     - rvm: 2.5.5
       env: RAKE_TASK=spec
     - rvm: 2.4.6
+      env: RAKE_TASK=spec
+    - rvm: 2.4.6
+      os: osx
       env: RAKE_TASK=spec
     - rvm: 2.4.6
       env: RAKE_TASK=rubocop
