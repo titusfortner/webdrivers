@@ -1,19 +1,31 @@
 require: rubocop-rspec
+
 Metrics/LineLength:
-  Enabled: false
+  Max: 120
+
 Metrics/MethodLength:
   Enabled: false
+
 Metrics/BlockLength:
-  Enabled: false
+  Exclude:
+    - 'spec/**/*'
+
 Metrics/ClassLength:
-  Enabled: false
+  Exclude:
+    - 'lib/webdrivers/common.rb'
+
 Metrics/AbcSize:
-  Enabled: false
+  Exclude:
+    - 'lib/webdrivers/common.rb'
+
 Metrics/CyclomaticComplexity:
-  Enabled: false
+  Max: 8
+
 Style/Documentation:
   Enabled: false
+
 RSpec/ExampleLength:
   Enabled: false
+
 RSpec/MultipleExpectations:
   Enabled: false

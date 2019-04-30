@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'selenium-webdriver'
 
 # v3.151.59 and higher

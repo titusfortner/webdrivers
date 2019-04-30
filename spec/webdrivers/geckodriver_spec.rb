@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Webdrivers::Geckodriver do
@@ -6,7 +8,8 @@ describe Webdrivers::Geckodriver do
   it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
     geckodriver.remove
     allow(geckodriver).to receive(:desired_version).and_return(nil)
-    msg = /^Unable to find the latest version of geckodriver(.exe)?; try downloading manually from (.*)?and place in (.*)?\.webdrivers$/
+    gd = 'Unable to find the latest version of geckodriver'
+    msg = /^#{gd}(.exe)?; try downloading manually from (.*)?and place in (.*)?\.webdrivers$/
     expect { geckodriver.update }.to raise_exception StandardError, msg
   end
 

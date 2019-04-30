@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 
 module Webdrivers
@@ -14,7 +16,7 @@ module Webdrivers
 
       private
 
-      def downloads
+      def downloads # rubocop:disable  Metrics/AbcSize
         doc = Nokogiri::HTML.parse(get(base_url))
         items = doc.css('.py-1 a').collect { |item| item['href'] }
         items.reject! { |item| item.include?('archive') }

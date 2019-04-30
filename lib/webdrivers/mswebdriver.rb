@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Webdrivers
   class MSWebdriver < Common
     class << self

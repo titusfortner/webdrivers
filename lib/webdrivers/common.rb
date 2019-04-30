@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems/package'
 require 'zip'
 
@@ -16,7 +18,8 @@ module Webdrivers
 
         # Can't find desired and no existing binary
         if desired_version.nil?
-          msg = "Unable to find the latest version of #{file_name}; try downloading manually from #{base_url} and place in #{install_dir}"
+          msg = "Unable to find the latest version of #{file_name}; try downloading manually " \
+"from #{base_url} and place in #{install_dir}"
           raise StandardError, msg
         end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'shellwords'
 
@@ -40,7 +42,7 @@ module Webdrivers
         'https://chromedriver.storage.googleapis.com'
       end
 
-      def downloads
+      def downloads # rubocop:disable  Metrics/AbcSize
         doc = Nokogiri::XML.parse(get(base_url))
         items = doc.css('Contents Key').collect(&:text)
         items.select! { |item| item.include?(platform) }
