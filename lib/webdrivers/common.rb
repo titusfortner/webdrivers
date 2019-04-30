@@ -52,22 +52,22 @@ module Webdrivers
 
       def remove
         Webdrivers.logger.debug "Deleting #{binary}"
+        @download_url = nil
         FileUtils.rm_f binary
       end
 
       def download
         raise StandardError, 'Can not reach site' unless site_available?
 
-        url = downloads[desired_version]
-        filename = File.basename url
+        filename = File.basename download_url
 
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
         Dir.chdir install_dir do
           FileUtils.rm_f filename
           File.open(filename, 'wb') do |file|
-            file.print get(url)
+            file.print get(download_url)
           end
-          raise "Could not download #{url}" unless File.exist? filename
+          raise "Could not download #{download_url}" unless File.exist? filename
 
           Webdrivers.logger.debug "Successfully downloaded #{filename}"
           dcf = decompress_file(filename)
@@ -126,6 +126,10 @@ module Webdrivers
       end
 
       private
+
+      def download_url
+        @download_url ||= downloads[desired_version]
+      end
 
       def using_proxy
         Webdrivers.proxy_addr && Webdrivers.proxy_port

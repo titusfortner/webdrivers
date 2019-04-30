@@ -34,24 +34,30 @@ module Webdrivers
 
       private
 
+      def platform
+        if Selenium::WebDriver::Platform.linux?
+          'linux64'
+        elsif Selenium::WebDriver::Platform.mac?
+          'mac64'
+        else
+          'win32'
+        end
+      end
+
       def file_name
-        platform == 'win' ? 'chromedriver.exe' : 'chromedriver'
+        Selenium::WebDriver::Platform.windows? ? 'chromedriver.exe' : 'chromedriver'
       end
 
       def base_url
         'https://chromedriver.storage.googleapis.com'
       end
 
-      def downloads # rubocop:disable  Metrics/AbcSize
-        doc = Nokogiri::XML.parse(get(base_url))
-        items = doc.css('Contents Key').collect(&:text)
-        items.select! { |item| item.include?(platform) }
-        ds = items.each_with_object({}) do |item, hash|
-          key = normalize item[%r{^[^/]+}]
-          hash[key] = "#{base_url}/#{item}"
-        end
-        Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
-        ds
+      def download_url
+        return @download_url if @download_url
+
+        url = "#{base_url}/#{desired_version}/chromedriver_#{platform}.zip"
+        Webdrivers.logger.debug "chromedriver URL: #{url}"
+        @download_url = url
       end
 
       # Returns release version from the currently installed Chrome version
@@ -65,11 +71,11 @@ module Webdrivers
       # Returns currently installed Chrome version
       def chrome_version
         ver = case platform
-              when 'win'
+              when 'win32'
                 chrome_on_windows
-              when /linux/
+              when 'linux64'
                 chrome_on_linux
-              when 'mac'
+              when 'mac64'
                 chrome_on_mac
               else
                 raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
