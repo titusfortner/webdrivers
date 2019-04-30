@@ -17,10 +17,11 @@ describe Webdrivers::MSWebdriver do
   end
 
   context 'when offline' do
-    before { allow(mswebdriver).to receive(:site_available?).and_return(false) }
+    before { allow(Net::HTTP).to receive(:get_response).and_raise(SocketError) }
 
     it 'raises exception downloading' do
-      expect { mswebdriver.download }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
+      expect { mswebdriver.download }.to raise_error(StandardError, msg)
     end
   end
 end

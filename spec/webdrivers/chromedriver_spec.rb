@@ -77,15 +77,17 @@ describe Webdrivers::Chromedriver do
   context 'when offline' do
     before do
       chromedriver.instance_variable_set('@latest_version', nil)
-      allow(chromedriver).to receive(:site_available?).and_return(false)
+      allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
     end
 
     it 'raises exception finding latest version' do
-      expect { chromedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')
+      msg = %r{^Can not reach https://chromedriver.storage.googleapis.com}
+      expect { chromedriver.latest_version }.to raise_error(StandardError, msg)
     end
 
     it 'raises exception downloading' do
-      expect { chromedriver.download }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://chromedriver.storage.googleapis.com'
+      expect { chromedriver.download }.to raise_error(StandardError, msg)
     end
   end
 

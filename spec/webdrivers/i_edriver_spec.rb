@@ -27,15 +27,17 @@ describe Webdrivers::IEdriver do
   context 'when offline' do
     before do
       iedriver.instance_variable_set('@latest_version', nil)
-      allow(iedriver).to receive(:site_available?).and_return(false)
+      allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
     end
 
     it 'raises exception finding latest version' do
-      expect { iedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://selenium-release.storage.googleapis.com/'
+      expect { iedriver.latest_version }.to raise_error(StandardError, msg)
     end
 
     it 'raises exception downloading' do
-      expect { iedriver.download }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://selenium-release.storage.googleapis.com/'
+      expect { iedriver.download }.to raise_error(StandardError, msg)
     end
   end
 end

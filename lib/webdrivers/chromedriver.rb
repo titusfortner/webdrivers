@@ -20,8 +20,6 @@ module Webdrivers
       def latest_version
         return @latest_version if @latest_version
 
-        raise StandardError, 'Can not reach site' unless site_available?
-
         # Versions before 70 do not have a LATEST_RELEASE file
         return Gem::Version.new('2.46') if release_version < '70.0.3538'
 

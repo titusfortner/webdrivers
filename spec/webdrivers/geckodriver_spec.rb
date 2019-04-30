@@ -52,15 +52,17 @@ describe Webdrivers::Geckodriver do
   context 'when offline' do
     before do
       geckodriver.instance_variable_set('@latest_version', nil)
-      allow(geckodriver).to receive(:site_available?).and_return(false)
+      allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
     end
 
     it 'raises exception finding latest version' do
-      expect { geckodriver.desired_version }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://github.com/mozilla/geckodriver/releases'
+      expect { geckodriver.desired_version }.to raise_error(StandardError, msg)
     end
 
     it 'raises exception downloading' do
-      expect { geckodriver.download }.to raise_error(StandardError, 'Can not reach site')
+      msg = 'Can not reach https://github.com/mozilla/geckodriver/releases'
+      expect { geckodriver.download }.to raise_error(StandardError, msg)
     end
   end
 end

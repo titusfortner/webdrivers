@@ -9,10 +9,6 @@ module Webdrivers
       attr_accessor :version
 
       def update
-        unless site_available?
-          return current_version.nil? ? nil : binary
-        end
-
         # Newer not specified or latest not found, so use existing
         return binary if desired_version.nil? && File.exist?(binary)
 
@@ -43,11 +39,7 @@ module Webdrivers
       end
 
       def latest_version
-        return @latest_version if @latest_version
-
-        raise StandardError, 'Can not reach site' unless site_available?
-
-        @latest_version = downloads.keys.max
+        @latest_version ||= downloads.keys.max
       end
 
       def remove
@@ -56,8 +48,6 @@ module Webdrivers
       end
 
       def download
-        raise StandardError, 'Can not reach site' unless site_available?
-
         url = downloads[desired_version]
         filename = File.basename url
 
@@ -99,9 +89,16 @@ module Webdrivers
       protected
 
       def get(url, limit = 10)
+        Webdrivers.logger.debug "Getting URL: #{url}"
+
         raise StandardError, 'Too many HTTP redirects' if limit.zero?
 
-        response = http.get_response(URI(url))
+        begin
+          response = http.get_response(URI(url))
+        rescue SocketError
+          raise StandardError, "Can not reach #{url}"
+        end
+
         Webdrivers.logger.debug "Get response: #{response.inspect}"
 
         case response
@@ -109,7 +106,7 @@ module Webdrivers
           response.body
         when Net::HTTPRedirection
           location = response['location']
-          Webdrivers.logger.debug "Redirected to #{location}"
+          Webdrivers.logger.debug "Redirected to URL: #{location}"
           get(location, limit - 1)
         else
           response.value
@@ -135,16 +132,6 @@ module Webdrivers
         result = File.exist? binary
         Webdrivers.logger.debug "File is already downloaded: #{result}"
         result
-      end
-
-      def site_available?
-        Webdrivers.logger.debug "Looking for Site: #{base_url}"
-        get(base_url)
-        Webdrivers.logger.debug "Found Site: #{base_url}"
-        true
-      rescue StandardError => e
-        Webdrivers.logger.debug e
-        false
       end
 
       def platform
