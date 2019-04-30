@@ -47,19 +47,13 @@ describe Webdrivers::Chromedriver do
     expect(chromedriver.current_version).to be_nil
   end
 
-  if Selenium::WebDriver::Platform.linux? && ENV['TRAVIS']
-    # Ubuntu 14.04 (trusty) is limited to v65
-    context 'when using a Chromium version < 70.0.3538' do
-      before do
-        chromedriver.remove
-        chromedriver.version = nil
-        Selenium::WebDriver::Chrome.path = `which chromium-browser`.strip
-      end
+  context 'when using a Chromium version < 70.0.3538' do
+    it 'downloads chromedriver 2.46' do
+      chromedriver.remove
+      allow(chromedriver).to receive(:chrome_version).and_return('70.0.0')
+      chromedriver.update
 
-      it 'downloads chromedriver 2.46' do
-        chromedriver.update
-        expect(chromedriver.current_version.version[/\d+.\d+/]).to eq('2.46')
-      end
+      expect(chromedriver.current_version.version[/\d+.\d+/]).to eq('2.46')
     end
   end
 
