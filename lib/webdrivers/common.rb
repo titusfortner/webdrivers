@@ -38,7 +38,7 @@ module Webdrivers
         elsif version.nil?
           latest_version
         else
-          Gem::Version.new(version.to_s)
+          normalize_version(version)
         end
       end
 
@@ -206,8 +206,8 @@ module Webdrivers
         desired_version == current_version && File.exist?(binary)
       end
 
-      def normalize(string)
-        Gem::Version.new(string)
+      def normalize_version(version)
+        Gem::Version.new(version.to_s)
       end
     end
   end

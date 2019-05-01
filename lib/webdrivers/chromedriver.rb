@@ -14,7 +14,7 @@ module Webdrivers
         Webdrivers.logger.debug "Current #{binary} version: #{ver}"
 
         # Matches 2.46, 2.46.628411 and 73.0.3683.75
-        normalize ver[/\d+\.\d+(\.\d+)?(\.\d+)?/]
+        normalize_version ver[/\d+\.\d+(\.\d+)?(\.\d+)?/]
       end
 
       def latest_version
@@ -23,16 +23,30 @@ module Webdrivers
         raise StandardError, 'Can not reach site' unless site_available?
 
         # Versions before 70 do not have a LATEST_RELEASE file
-        return Gem::Version.new('2.46') if release_version < '70.0.3538'
+        return normalize_version('2.46') if release_version < normalize_version('70.0.3538')
 
-        # Latest webdriver release for installed Chrome version
-        release_file     = "LATEST_RELEASE_#{release_version}"
-        latest_available = get(URI.join(base_url, release_file))
-        Webdrivers.logger.debug "Latest version available: #{latest_available}"
-        @latest_version = Gem::Version.new(latest_available)
+        latest_applicable = latest_point_release(release_version)
+
+        Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
+        @latest_version = normalize_version(latest_applicable)
       end
 
       private
+
+      def latest_point_release(version)
+        release_file = "LATEST_RELEASE_#{version}"
+        begin
+          normalize_version(get(URI.join(base_url, release_file)))
+        rescue Net::HTTPServerException
+          latest_release = normalize_version(get(URI.join(base_url, 'LATEST_RELEASE')))
+          Webdrivers.logger.debug "Unable to find a driver for: #{version}"
+
+          msg = version > latest_release ? 'you appear to be using a non-production version of Chrome; ' : ''
+          msg = "#{msg}please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known "\
+'chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+          raise StandardError, msg
+        end
+      end
 
       def platform
         if Selenium::WebDriver::Platform.linux?
@@ -65,7 +79,8 @@ module Webdrivers
       # @example
       #   73.0.3683.75 -> 73.0.3683
       def release_version
-        chrome_version[/\d+\.\d+\.\d+/]
+        chrome = normalize_version(chrome_version)
+        normalize_version(chrome.segments[0..2].join('.'))
       end
 
       # Returns currently installed Chrome version
@@ -84,7 +99,7 @@ module Webdrivers
         raise StandardError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
         # Google Chrome 73.0.3683.75 -> 73.0.3683.75
-        ver[/\d+\.\d+\.\d+\.\d+/]
+        normalize_version ver[/\d+\.\d+\.\d+\.\d+/]
       end
 
       def chrome_on_windows

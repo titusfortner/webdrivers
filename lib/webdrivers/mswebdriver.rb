@@ -40,7 +40,7 @@ module Webdrivers
         array.each_with_object({}) do |link, hash|
           next if link.text == 'Insiders'
 
-          key = normalize link.text.scan(/\d+/).first.to_i
+          key = normalize_version link.text.scan(/\d+/).first.to_i
           hash[key] = link['href']
         end
       end

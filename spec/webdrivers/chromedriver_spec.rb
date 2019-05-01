@@ -10,7 +10,7 @@ describe Webdrivers::Chromedriver do
   end
 
   it 'parses chromedriver versions before 2.10' do
-    expect(chromedriver.send(:normalize, '2.9').version).to eq '2.9'
+    expect(chromedriver.send(:normalize_version, '2.9').version).to eq '2.9'
   end
 
   it 'finds latest version' do
@@ -59,6 +59,29 @@ describe Webdrivers::Chromedriver do
       chromedriver.update
 
       expect(chromedriver.current_version.version[/\d+.\d+/]).to eq('2.46')
+    end
+  end
+
+  context 'when using a Chromium version that does not have an associated driver' do
+    before do
+      chromedriver.remove
+      chromedriver.version = nil
+      chromedriver.instance_variable_set('@latest_version', nil)
+    end
+
+    it 'raises an exception for beta version' do
+      allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
+      msg = 'you appear to be using a non-production version of Chrome; please set '\
+'`Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver version: '\
+'https://chromedriver.storage.googleapis.com/index.html'
+      expect { chromedriver.update }.to raise_exception(StandardError, msg)
+    end
+
+    it 'raises an exception for unknown version' do
+      allow(chromedriver).to receive(:chrome_version).and_return('72.0.0')
+      msg = 'please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver '\
+'version: https://chromedriver.storage.googleapis.com/index.html'
+      expect { chromedriver.update }.to raise_exception(StandardError, msg)
     end
   end
 

@@ -11,7 +11,7 @@ module Webdrivers
 
         string = `#{binary} --version`
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize string.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
+        normalize_version string.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
       end
 
       private
@@ -22,7 +22,7 @@ module Webdrivers
         items.reject! { |item| item.include?('archive') }
         items.select! { |item| item.include?(platform) }
         ds = items.each_with_object({}) do |item, hash|
-          key = normalize item[/v(\d+\.\d+\.\d+)/, 1]
+          key = normalize_version item[/v(\d+\.\d+\.\d+)/, 1]
           hash[key] = "https://github.com#{item}"
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"

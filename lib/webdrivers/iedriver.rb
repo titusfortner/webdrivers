@@ -12,7 +12,7 @@ module Webdrivers
 
         string = `#{binary} --version`
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
+        normalize_version string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
       end
 
       private
@@ -30,7 +30,7 @@ module Webdrivers
         items = doc.css('Key').collect(&:text)
         items.select! { |item| item.include?('IEDriverServer_Win32') }
         ds = items.each_with_object({}) do |item, hash|
-          key = normalize item[/([^_]+)\.zip/, 1]
+          key = normalize_version item[/([^_]+)\.zip/, 1]
           hash[key] = "#{base_url}#{item}"
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
