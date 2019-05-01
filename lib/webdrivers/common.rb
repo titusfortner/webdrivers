@@ -63,25 +63,21 @@ module Webdrivers
 
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
         Dir.chdir install_dir do
-          FileUtils.rm_f filename
-          File.open(filename, 'wb') do |file|
+          df = Tempfile.open(['', filename], binmode: true) do |file|
             file.print get(download_url)
+            file
           end
-          raise "Could not download #{download_url}" unless File.exist? filename
 
-          Webdrivers.logger.debug "Successfully downloaded #{filename}"
-          dcf = decompress_file(filename)
+          raise "Could not download #{download_url}" unless File.exist? df.to_path
+
+          Webdrivers.logger.debug "Successfully downloaded #{df.to_path}"
+
+          decompress_file(df.to_path, filename)
           Webdrivers.logger.debug 'Decompression Complete'
-          if dcf
-            Webdrivers.logger.debug "Deleting #{filename}"
-            FileUtils.rm_f filename
-          end
-          if respond_to? :extract_file
-            Webdrivers.logger.debug "Extracting #{dcf}"
-            extract_file(dcf)
-          end
+          Webdrivers.logger.debug "Deleting #{df.to_path}"
+          df.close!
         end
-        raise "Could not decompress #{filename} to get #{binary}" unless File.exist?(binary)
+        raise "Could not decompress #{download_url} to get #{binary}" unless File.exist?(binary)
 
         FileUtils.chmod 'ugo+rx', binary
         Webdrivers.logger.debug "Completed download and processing of #{binary}"
@@ -161,7 +157,7 @@ module Webdrivers
         end
       end
 
-      def decompress_file(filename)
+      def decompress_file(filename, target)
         case filename
         when /tar\.gz$/
           Webdrivers.logger.debug 'Decompressing tar'
@@ -175,7 +171,7 @@ module Webdrivers
           unzip_file(filename)
         else
           Webdrivers.logger.debug 'No Decompression needed'
-          nil
+          FileUtils.cp(filename, File.join(Dir.pwd, target))
         end
       end
 
@@ -189,7 +185,7 @@ module Webdrivers
       end
 
       def unzip_file(filename)
-        Zip::File.open("#{Dir.pwd}/#{filename}") do |zip_file|
+        Zip::File.open(filename) do |zip_file|
           zip_file.each do |f|
             @top_path ||= f.name
             f_path = File.join(Dir.pwd, f.name)
