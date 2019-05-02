@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
 require 'shellwords'
 
 module Webdrivers
@@ -10,20 +9,18 @@ module Webdrivers
         Webdrivers.logger.debug 'Checking current version'
         return nil unless downloaded?
 
-        ver = `#{binary} --version`
-        Webdrivers.logger.debug "Current #{binary} version: #{ver}"
+        version = binary_version
+        return nil if version.nil?
 
         # Matches 2.46, 2.46.628411 and 73.0.3683.75
-        normalize_version ver[/\d+\.\d+(\.\d+)?(\.\d+)?/]
+        normalize_version version[/\d+\.\d+(\.\d+)?(\.\d+)?/]
       end
 
       def latest_version
         return @latest_version if @latest_version
 
-        raise StandardError, 'Can not reach site' unless site_available?
-
         # Versions before 70 do not have a LATEST_RELEASE file
-        return normalize_version('2.46') if release_version < normalize_version('70.0.3538')
+        return normalize_version('2.41') if release_version < normalize_version('70')
 
         latest_applicable = latest_point_release(release_version)
 
@@ -44,7 +41,7 @@ module Webdrivers
           msg = version > latest_release ? 'you appear to be using a non-production version of Chrome; ' : ''
           msg = "#{msg}please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known "\
 'chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
-          raise StandardError, msg
+          raise VersionError, msg
         end
       end
 
@@ -96,7 +93,7 @@ module Webdrivers
                 raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
               end.chomp
 
-        raise StandardError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
+        raise VersionError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
         Webdrivers.logger.debug "Browser version: #{ver}"
         normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
@@ -105,7 +102,7 @@ module Webdrivers
       def chrome_on_windows
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion`.strip
+          return system_call("powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion").strip
         end
 
         # Workaround for Google Chrome when using Jruby on Windows.
@@ -114,39 +111,39 @@ module Webdrivers
           ver = 'powershell (Get-Item -Path ((Get-ItemProperty "HKLM:\\Software\\Microsoft' \
           "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
           '.VersionInfo.ProductVersion'
-          return `#{ver}`.strip
+          return system_call(ver).strip
         end
 
         # Default to Google Chrome
         reg        = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
-        executable = `powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'`.strip
+        executable = system_call("powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'").strip
         Webdrivers.logger.debug "Browser executable: '#{executable}'"
         ps = "(Get-Item (Get-ItemProperty '#{reg}').'(default)').VersionInfo.ProductVersion"
-        `powershell #{ps}`.strip
+        system_call("powershell #{ps}").strip
       end
 
       def chrome_on_linux
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `#{Shellwords.escape browser_binary} --product-version`.strip
+          return system_call("#{Shellwords.escape browser_binary} --product-version").strip
         end
 
         # Default to Google Chrome
-        executable = `which google-chrome`.strip
+        executable = system_call('which google-chrome').strip
         Webdrivers.logger.debug "Browser executable: '#{executable}'"
-        `#{executable} --product-version`.strip
+        system_call("#{executable} --product-version").strip
       end
 
       def chrome_on_mac
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return `#{Shellwords.escape browser_binary} --version`.strip
+          return system_call("#{Shellwords.escape browser_binary} --version").strip
         end
 
         # Default to Google Chrome
         executable = Shellwords.escape '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
         Webdrivers.logger.debug "Browser executable: #{executable}"
-        `#{executable} --version`.strip
+        system_call("#{executable} --version").strip
       end
 
       #
@@ -155,6 +152,11 @@ module Webdrivers
       def browser_binary
         # For Chromium, Brave, or whatever else
         Selenium::WebDriver::Chrome.path
+      end
+
+      def sufficient_binary?
+        super && current_version && (current_version < normalize_version('70.0.3538') ||
+            current_version.segments.first == release_version.segments.first)
       end
     end
   end

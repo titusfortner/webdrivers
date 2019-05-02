@@ -9,6 +9,12 @@ require 'webdrivers/iedriver'
 require 'webdrivers/mswebdriver'
 
 module Webdrivers
+  class ConnectionError < StandardError
+  end
+
+  class VersionError < StandardError
+  end
+
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 

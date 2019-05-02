@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rubygems/package'
+require 'rubygems/version'
 require 'zip'
 
 module Webdrivers
@@ -9,56 +10,47 @@ module Webdrivers
       attr_accessor :version
 
       def update
-        unless site_available?
-          return current_version.nil? ? nil : binary
-        end
-
-        # Newer not specified or latest not found, so use existing
-        return binary if desired_version.nil? && File.exist?(binary)
-
-        # Can't find desired and no existing binary
-        if desired_version.nil?
-          msg = "Unable to find the latest version of #{file_name}; try downloading manually " \
-"from #{base_url} and place in #{install_dir}"
-          raise StandardError, msg
-        end
-
         if correct_binary?
-          Webdrivers.logger.debug 'Expected webdriver version found'
+          Webdrivers.logger.debug 'The desired webdriver version is already on the system'
           return binary
         end
 
-        remove # Remove outdated exe
-        download # Fetch latest
+        remove
+        private_download
       end
 
       def desired_version
-        if version.is_a?(Gem::Version)
-          version
-        elsif version.nil?
-          latest_version
-        else
-          normalize_version(version)
-        end
+        version.nil? ? latest_version : normalize_version(version)
       end
 
       def latest_version
-        return @latest_version if @latest_version
-
-        raise StandardError, 'Can not reach site' unless site_available?
-
-        @latest_version = downloads.keys.max
+        @latest_version ||= downloads.keys.max
       end
 
       def remove
         Webdrivers.logger.debug "Deleting #{binary}"
         @download_url = nil
+        @latest_version = nil
         FileUtils.rm_f binary
       end
 
       def download
-        raise StandardError, 'Can not reach site' unless site_available?
+        Webdrivers.logger.deprecate('#download', '#update')
+        private_download
+      end
 
+      def install_dir
+        Webdrivers.install_dir || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
+      end
+
+      def binary
+        File.join install_dir, file_name
+      end
+
+      private
+
+      # Rename this when deprecating #download as a public method
+      def private_download
         filename = File.basename download_url
 
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
@@ -84,20 +76,17 @@ module Webdrivers
         binary
       end
 
-      def install_dir
-        Webdrivers.install_dir || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
-      end
-
-      def binary
-        File.join install_dir, file_name
-      end
-
-      protected
-
       def get(url, limit = 10)
-        raise StandardError, 'Too many HTTP redirects' if limit.zero?
+        Webdrivers.logger.debug "Getting URL: #{url}"
 
-        response = http.get_response(URI(url))
+        raise ConnectionError, 'Too many HTTP redirects' if limit.zero?
+
+        begin
+          response = http.get_response(URI(url))
+        rescue SocketError
+          raise ConnectionError, "Can not reach #{url}"
+        end
+
         Webdrivers.logger.debug "Get response: #{response.inspect}"
 
         case response
@@ -105,7 +94,7 @@ module Webdrivers
           response.body
         when Net::HTTPRedirection
           location = response['location']
-          Webdrivers.logger.debug "Redirected to #{location}"
+          Webdrivers.logger.debug "Redirected to URL: #{location}"
           get(location, limit - 1)
         else
           response.value
@@ -121,10 +110,8 @@ module Webdrivers
         end
       end
 
-      private
-
       def download_url
-        @download_url ||= downloads[desired_version]
+        @download_url ||= version.nil? ? downloads[downloads.keys.max] : downloads[normalize_version(version)]
       end
 
       def using_proxy
@@ -135,16 +122,6 @@ module Webdrivers
         result = File.exist? binary
         Webdrivers.logger.debug "File is already downloaded: #{result}"
         result
-      end
-
-      def site_available?
-        Webdrivers.logger.debug "Looking for Site: #{base_url}"
-        get(base_url)
-        Webdrivers.logger.debug "Found Site: #{base_url}"
-        true
-      rescue StandardError => e
-        Webdrivers.logger.debug e
-        false
       end
 
       def platform
@@ -197,13 +174,31 @@ module Webdrivers
         @top_path
       end
 
-      # Already have latest version downloaded?
+      # Already have correct version on the system?
       def correct_binary?
-        desired_version == current_version && File.exist?(binary)
+        desired_version == current_version
+      rescue ConnectionError
+        binary if sufficient_binary?
+      end
+
+      def sufficient_binary?
+        downloaded?
       end
 
       def normalize_version(version)
         Gem::Version.new(version.to_s)
+      end
+
+      def binary_version
+        version = system_call("#{binary} --version")
+        Webdrivers.logger.debug "Current version of #{binary} is #{version}"
+        version
+      rescue Errno::ENOENT
+        nil
+      end
+
+      def system_call(call)
+        `#{call}`
       end
     end
   end
