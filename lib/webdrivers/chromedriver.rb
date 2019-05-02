@@ -98,8 +98,8 @@ module Webdrivers
 
         raise StandardError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
-        # Google Chrome 73.0.3683.75 -> 73.0.3683.75
-        normalize_version ver[/\d+\.\d+\.\d+\.\d+/]
+        Webdrivers.logger.debug "Browser version: #{ver}"
+        normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
       end
 
       def chrome_on_windows
@@ -110,7 +110,7 @@ module Webdrivers
 
         # Workaround for Google Chrome when using Jruby on Windows.
         # @see https://github.com/titusfortner/webdrivers/issues/41
-        if RUBY_PLATFORM == 'java' && platform == 'win'
+        if RUBY_PLATFORM == 'java'
           ver = 'powershell (Get-Item -Path ((Get-ItemProperty "HKLM:\\Software\\Microsoft' \
           "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
           '.VersionInfo.ProductVersion'
