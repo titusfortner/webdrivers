@@ -5,125 +5,207 @@ require 'spec_helper'
 describe Webdrivers::Chromedriver do
   let(:chromedriver) { described_class }
 
-  it 'updates' do
-    chromedriver.update
-  end
-
-  it 'parses chromedriver versions before 2.10' do
-    expect(chromedriver.send(:normalize_version, '2.9').version).to eq '2.9'
-  end
-
-  it 'finds latest version' do
-    old_version = Gem::Version.new('2.30')
-    future_version = Gem::Version.new('80.00')
-    latest_version = chromedriver.latest_version
-
-    expect(latest_version).to be > old_version
-    expect(latest_version).to be < future_version
-  end
-
-  it 'downloads latest release for current version of Chrome by default' do
+  before do
     chromedriver.remove
-    chromedriver.download
-    cur_ver    = chromedriver.current_version.version
-    latest_ver = chromedriver.latest_version.version
-    expect(cur_ver).to eq latest_ver
+    chromedriver.version = nil
   end
 
-  it 'downloads specified version by Float' do
-    chromedriver.remove
-    chromedriver.version = 2.29
-    chromedriver.download
-    expect(chromedriver.current_version.version).to include '2.29'
-  end
+  describe '#update' do
+    context 'when evaluating #correct_binary?' do
+      it 'does not download when latest version and current version match' do
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('72.0.0'))
+        allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('72.0.0'))
 
-  it 'downloads specified version by String' do
-    chromedriver.remove
-    chromedriver.version = '73.0.3683.68'
-    chromedriver.download
-    expect(chromedriver.current_version.version).to eq '73.0.3683.68'
-  end
-
-  it 'removes chromedriver' do
-    chromedriver.remove
-    expect(chromedriver.current_version).to be_nil
-  end
-
-  context 'when using a Chromium version < 70.0.3538' do
-    it 'downloads chromedriver 2.46' do
-      chromedriver.remove
-      chromedriver.version = nil
-      chromedriver.instance_variable_set('@latest_version', nil)
-
-      allow(chromedriver).to receive(:chrome_version).and_return('70.0.0')
-      chromedriver.update
-
-      expect(chromedriver.current_version.version[/\d+.\d+/]).to eq('2.46')
-    end
-  end
-
-  context 'when using a Chromium version that does not have an associated driver' do
-    before do
-      chromedriver.remove
-      chromedriver.version = nil
-      chromedriver.instance_variable_set('@latest_version', nil)
-    end
-
-    it 'raises an exception for beta version' do
-      allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
-      msg = 'you appear to be using a non-production version of Chrome; please set '\
-'`Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver version: '\
-'https://chromedriver.storage.googleapis.com/index.html'
-      expect { chromedriver.update }.to raise_exception(StandardError, msg)
-    end
-
-    it 'raises an exception for unknown version' do
-      allow(chromedriver).to receive(:chrome_version).and_return('72.0.0')
-      msg = 'please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver '\
-'version: https://chromedriver.storage.googleapis.com/index.html'
-      expect { chromedriver.update }.to raise_exception(StandardError, msg)
-    end
-  end
-
-  # Workaround for Google Chrome when using Jruby on Windows.
-  # @see https://github.com/titusfortner/webdrivers/issues/41
-  if RUBY_PLATFORM == 'java' && Selenium::WebDriver::Platform.windows?
-    context 'when using Jruby on Windows' do
-      it 'uses Jruby specific workaround to retrieve the Google Chrome version' do
-        chromedriver.remove
         chromedriver.update
+
+        expect(chromedriver.send(:exists?)).to be false
+      end
+
+      it 'does not download when offline, binary exists and is less than v70' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(chromedriver).to receive(:exists?).and_return(true)
+        allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new(69))
+
+        chromedriver.update
+
+        expect(File.exist?(chromedriver.binary)).to be false
+      end
+
+      it 'does not download when offline, binary exists and matches major browser version' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(chromedriver).to receive(:exists?).and_return(true)
+        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
+
+        chromedriver.update
+
+        expect(File.exist?(chromedriver.binary)).to be false
+      end
+
+      it 'raises ConnectionError when offline, and binary does not match major browser version' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(chromedriver).to receive(:exists?).and_return(true)
+        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('72.0.0.0'))
+
+        msg = %r{Can not reach https://chromedriver.storage.googleapis.com}
+        expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
+      end
+
+      it 'raises ConnectionError when offline, and no binary exists' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(chromedriver).to receive(:exists?).and_return(false)
+
+        msg = %r{Can not reach https://chromedriver.storage.googleapis.com}
+        expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
+      end
+    end
+
+    context 'when correct binary is found' do
+      before { allow(chromedriver).to receive(:correct_binary?).and_return(true) }
+
+      it 'does not download' do
+        chromedriver.update
+
+        expect(chromedriver.current_version).to be_nil
+      end
+
+      it 'does not raise exception if offline' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+
+        chromedriver.update
+
+        expect(chromedriver.current_version).to be_nil
+      end
+    end
+
+    context 'when correct binary is not found' do
+      before { allow(chromedriver).to receive(:correct_binary?).and_return(false) }
+
+      it 'downloads binary' do
+        chromedriver.update
+
         expect(chromedriver.current_version).not_to be_nil
+      end
+
+      it 'raises ConnectionError if offline' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+
+        msg = %r{Can not reach https://chromedriver.storage.googleapis.com/}
+        expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
   end
 
-  context 'when offline' do
-    before do
-      chromedriver.instance_variable_set('@latest_version', nil)
-      allow(chromedriver).to receive(:site_available?).and_return(false)
+  describe '#current_version' do
+    it 'returns nil if binary does not exist on the system' do
+      allow(chromedriver).to receive(:binary).and_return('')
+
+      expect(chromedriver.current_version).to be_nil
     end
 
-    it 'raises exception finding latest version' do
-      expect { chromedriver.latest_version }.to raise_error(StandardError, 'Can not reach site')
-    end
+    it 'returns a Gem::Version instance if binary is on the system' do
+      allow(chromedriver).to receive(:exists?).and_return(true)
+      allow(chromedriver).to receive(:system_call).and_return '71.0.3578.137'
 
-    it 'raises exception downloading' do
-      expect { chromedriver.download }.to raise_error(StandardError, 'Can not reach site')
-    end
-  end
-
-  it 'allows setting of install directory' do
-    begin
-      install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
-      Webdrivers.install_dir = install_dir
-      expect(chromedriver.install_dir).to eq install_dir
-    ensure
-      Webdrivers.install_dir = nil
+      expect(chromedriver.current_version).to eq Gem::Version.new('71.0.3578.137')
     end
   end
 
-  it 'returns full location of binary' do
-    install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
-    expect(chromedriver.binary).to match %r{#{install_dir}/chromedriver}
+  describe '#latest_version' do
+    it 'returns 2.41 if the browser version is less than 70' do
+      allow(chromedriver).to receive(:chrome_version).and_return('69.0.0')
+
+      expect(chromedriver.latest_version).to eq(Gem::Version.new('2.41'))
+    end
+
+    it 'returns the correct point release for a production version greater than 70' do
+      allow(chromedriver).to receive(:chrome_version).and_return '71.0.3578.9999'
+
+      expect(chromedriver.latest_version).to eq Gem::Version.new('71.0.3578.137')
+    end
+
+    it 'raises VersionError for beta version' do
+      allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
+      msg = 'you appear to be using a non-production version of Chrome; please set '\
+'`Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver version: '\
+'https://chromedriver.storage.googleapis.com/index.html'
+
+      expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
+    end
+
+    it 'raises VersionError for unknown version' do
+      allow(chromedriver).to receive(:chrome_version).and_return('72.0.9999.0000')
+      msg = 'please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver '\
+'version: https://chromedriver.storage.googleapis.com/index.html'
+
+      expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
+    end
+
+    it 'raises ConnectionError when offline' do
+      allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+
+      msg = %r{^Can not reach https://chromedriver.storage.googleapis.com}
+      expect { chromedriver.latest_version }.to raise_error(Webdrivers::ConnectionError, msg)
+    end
+  end
+
+  describe '#desired_version' do
+    it 'returns #latest_version if version is not specified' do
+      allow(chromedriver).to receive(:latest_version)
+
+      chromedriver.desired_version
+      expect(chromedriver).to have_received(:latest_version)
+    end
+
+    it 'returns the version specified as a Float' do
+      chromedriver.version = 73.0
+
+      expect(chromedriver.desired_version).to eq Gem::Version.new('73.0')
+    end
+
+    it 'returns the version specified as a String' do
+      chromedriver.version = '73.0'
+
+      expect(chromedriver.desired_version).to eq Gem::Version.new('73.0')
+    end
+  end
+
+  describe '#remove' do
+    it 'removes existing chromedriver' do
+      chromedriver.update
+
+      chromedriver.remove
+      expect(chromedriver.current_version).to be_nil
+    end
+
+    it 'does not raise exception if no chromedriver found' do
+      chromedriver.update
+
+      expect { chromedriver.remove }.not_to raise_error
+    end
+  end
+
+  describe '#install_dir' do
+    it 'uses ~/.webdrivers as default value' do
+      expect(chromedriver.install_dir).to include('.webdriver')
+    end
+
+    it 'uses provided value' do
+      begin
+        install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
+        Webdrivers.install_dir = install_dir
+
+        expect(chromedriver.install_dir).to eq install_dir
+      ensure
+        Webdrivers.install_dir = nil
+      end
+    end
+  end
+
+  describe '#binary' do
+    it 'returns full location of binary' do
+      expect(chromedriver.binary).to match("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
+    end
   end
 end

@@ -10,12 +10,21 @@ module Webdrivers
         Webdrivers.logger.debug 'Checking current version'
         return nil unless exists?
 
-        string = `#{binary} --version`
-        Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize_version string.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
+        version = binary_version
+        return nil if version.nil?
+
+        normalize_version version.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
       end
 
       private
+
+      def file_name
+        platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
+      end
+
+      def base_url
+        'https://github.com/mozilla/geckodriver/releases'
+      end
 
       def downloads # rubocop:disable  Metrics/AbcSize
         doc = Nokogiri::HTML.parse(get(base_url))
@@ -28,14 +37,6 @@ module Webdrivers
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
         ds
-      end
-
-      def file_name
-        platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
-      end
-
-      def base_url
-        'https://github.com/mozilla/geckodriver/releases'
       end
     end
   end
