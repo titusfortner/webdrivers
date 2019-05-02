@@ -5,62 +5,171 @@ require 'spec_helper'
 describe Webdrivers::Geckodriver do
   let(:geckodriver) { described_class }
 
-  it 'raises exception if unable to get latest geckodriver and no geckodriver present' do
+  before do
     geckodriver.remove
-    allow(geckodriver).to receive(:desired_version).and_return(nil)
-    gd = 'Unable to find the latest version of geckodriver'
-    msg = /^#{gd}(.exe)?; try downloading manually from (.*)?and place in (.*)?\.webdrivers$/
-    expect { geckodriver.update }.to raise_exception StandardError, msg
+    geckodriver.version = nil
   end
 
-  it 'uses found version of geckodriver if latest release unable to be found' do
-    geckodriver.download
-    allow(geckodriver).to receive(:desired_version).and_return(nil)
-    expect(geckodriver.update).to match(%r{\.webdrivers/geckodriver})
+  describe '#update' do
+    context 'when evaluating #correct_binary?' do
+      it 'does not download when latest version and current version match' do
+        allow(geckodriver).to receive(:latest_version).and_return(Gem::Version.new('0.3.0'))
+        allow(geckodriver).to receive(:current_version).and_return(Gem::Version.new('0.3.0'))
+
+        geckodriver.update
+
+        expect(geckodriver.send(:downloaded?)).to be false
+      end
+
+      it 'does not download when offline, but binary exists' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(geckodriver).to receive(:downloaded?).and_return(true)
+
+        geckodriver.update
+
+        expect(File.exist?(geckodriver.binary)).to be false
+      end
+
+      it 'raises ConnectionError when offline, and no binary exists' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(geckodriver).to receive(:downloaded?).and_return(false)
+
+        expect { geckodriver.update }.to raise_error(Webdrivers::ConnectionError)
+      end
+    end
+
+    context 'when correct binary is found' do
+      before { allow(geckodriver).to receive(:correct_binary?).and_return(true) }
+
+      it 'does not download' do
+        geckodriver.update
+
+        expect(geckodriver.current_version).to be_nil
+      end
+
+      it 'does not raise exception if offline' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+
+        geckodriver.update
+
+        expect(geckodriver.current_version).to be_nil
+      end
+    end
+
+    context 'when correct binary is not found' do
+      before { allow(geckodriver).to receive(:correct_binary?).and_return(false) }
+
+      it 'downloads binary' do
+        geckodriver.update
+
+        expect(geckodriver.current_version).not_to be_nil
+      end
+
+      it 'raises ConnectionError if offline' do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+
+        msg = %r{Can not reach https://github.com/mozilla/geckodriver/releases}
+        expect { geckodriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
+      end
+    end
   end
 
-  it 'finds latest version' do
-    old_version = Gem::Version.new('0.17')
-    future_version = Gem::Version.new('0.30')
-    desired_version = geckodriver.desired_version
+  describe '#current_version' do
+    it 'returns nil if binary does not exist on the system' do
+      allow(geckodriver).to receive(:binary).and_return('')
 
-    expect(desired_version).to be > old_version
-    expect(desired_version).to be < future_version
+      expect(geckodriver.current_version).to be_nil
+    end
+
+    it 'returns a Gem::Version instance if binary is on the system' do
+      allow(geckodriver).to receive(:downloaded?).and_return(true)
+
+      return_value = "geckodriver 0.24.0 ( 2019-01-28)
+
+The source code of this program is available from
+testing/geckodriver in https://hg.mozilla.org/mozilla-central.
+
+This program is subject to the terms of the Mozilla Public License 2.0.
+You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
+
+      allow(geckodriver).to receive(:system_call).and_return return_value
+
+      expect(geckodriver.current_version).to eq Gem::Version.new('0.24.0')
+    end
   end
 
-  it 'downloads latest version by default' do
-    geckodriver.download
-    expect(geckodriver.current_version).to eq geckodriver.desired_version
+  describe '#latest_version' do
+    it 'finds the latest version from parsed hash' do
+      base = 'https://github.com/mozilla/geckodriver/releases/download'
+      hash = {Gem::Version.new('0.1.0') => "#{base}/v0.1.0/geckodriver-v0.1.0-macos.tar.gz",
+              Gem::Version.new('0.2.0') => "#{base}/v0.2.0/geckodriver-v0.2.0-macos.tar.gz",
+              Gem::Version.new('0.3.0') => "#{base}/v0.3.0/geckodriver-v0.3.0-macos.tar.gz"}
+      allow(geckodriver).to receive(:downloads).and_return(hash)
+
+      expect(geckodriver.latest_version).to eq Gem::Version.new('0.3.0')
+    end
+
+    it 'correctly parses the downloads page' do
+      expect(geckodriver.send(:downloads)).not_to be_empty
+    end
   end
 
-  it 'downloads specified version' do
-    begin
+  describe '#desired_version' do
+    it 'returns #latest_version if version is not specified' do
+      allow(geckodriver).to receive(:latest_version)
+
+      geckodriver.desired_version
+      expect(geckodriver).to have_received(:latest_version)
+    end
+
+    it 'returns the version specified as a Float' do
+      geckodriver.version = 0.12
+
+      expect(geckodriver.desired_version).to eq Gem::Version.new('0.12')
+    end
+
+    it 'returns the version specified as a String' do
+      geckodriver.version = '0.12.1'
+
+      expect(geckodriver.desired_version).to eq Gem::Version.new('0.12.1')
+    end
+  end
+
+  describe '#remove' do
+    it 'removes existing geckodriver' do
+      geckodriver.update
+
       geckodriver.remove
-      geckodriver.version = '0.17.0'
-      geckodriver.download
-      expect(geckodriver.current_version.version).to eq '0.17.0'
-    ensure
-      geckodriver.version = nil
+      expect(geckodriver.current_version).to be_nil
+    end
+
+    it 'does not raise exception if no geckodriver found' do
+      geckodriver.update
+
+      expect { geckodriver.remove }.not_to raise_error
     end
   end
 
-  it 'removes geckodriver' do
-    geckodriver.remove
-    expect(geckodriver.current_version).to be_nil
+  describe '#install_dir' do
+    it 'uses ~/.webdrivers as default value' do
+      expect(geckodriver.install_dir).to include('.webdriver')
+    end
+
+    it 'uses provided value' do
+      begin
+        install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
+        Webdrivers.install_dir = install_dir
+
+        expect(geckodriver.install_dir).to eq install_dir
+      ensure
+        Webdrivers.install_dir = nil
+      end
+    end
   end
 
-  context 'when offline' do
-    before do
-      geckodriver.instance_variable_set('@latest_version', nil)
-      allow(geckodriver).to receive(:site_available?).and_return(false)
-    end
-
-    it 'raises exception finding latest version' do
-      expect { geckodriver.desired_version }.to raise_error(StandardError, 'Can not reach site')
-    end
-
-    it 'raises exception downloading' do
-      expect { geckodriver.download }.to raise_error(StandardError, 'Can not reach site')
+  describe '#binary' do
+    it 'returns full location of binary' do
+      expect(geckodriver.binary).to eq("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
     end
   end
 end

@@ -1,5 +1,8 @@
 require: rubocop-rspec
 
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Layout/EndOfLine:
   EnforcedStyle: lf
 
@@ -14,11 +17,12 @@ Metrics/BlockLength:
     - 'spec/**/*'
 
 Metrics/ClassLength:
-  Max: 110
+  Max: 112
   Exclude:
     - 'lib/webdrivers/common.rb'
 
 Metrics/AbcSize:
+  Max: 16
   Exclude:
     - 'lib/webdrivers/common.rb'
 

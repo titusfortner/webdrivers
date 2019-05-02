@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
-require 'rubygems/version'
 
 module Webdrivers
   class IEdriver < Common
@@ -10,9 +9,10 @@ module Webdrivers
         Webdrivers.logger.debug 'Checking current version'
         return nil unless downloaded?
 
-        string = `#{binary} --version`
-        Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize_version string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
+        version = binary_version
+        return nil if version.nil?
+
+        normalize_version version.match(/IEDriverServer.exe (\d\.\d+\.\d+)/)[1]
       end
 
       private
