@@ -11,9 +11,10 @@ module Webdrivers
         Webdrivers.logger.debug 'Checking current version'
         return nil unless exists?
 
-        string = `#{binary} --version`
-        Webdrivers.logger.debug "Current version of #{binary} is #{string}"
-        normalize_version string.match(/IEDriverServer.exe (\d\.\d+\.\d*\.\d*)/)[1]
+        version = binary_version
+        return nil if version.nil?
+
+        normalize_version version.match(/IEDriverServer.exe (\d\.\d+\.\d+)/)[1]
       end
 
       private

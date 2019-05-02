@@ -48,6 +48,6 @@ describe Webdrivers do
   it 'raises an exception when net_http_ssl_fix is called.' do
     err = 'Webdrivers.net_http_ssl_fix is no longer available.' \
       ' Please see https://github.com/titusfortner/webdrivers#ssl_connect-errors.'
-    expect { described_class.net_http_ssl_fix }.to raise_error(StandardError, err)
+    expect { described_class.net_http_ssl_fix }.to raise_error(RuntimeError, err)
   end
 end
