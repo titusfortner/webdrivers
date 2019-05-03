@@ -6,8 +6,10 @@ require 'selenium-webdriver'
 if ::Selenium::WebDriver::Service.respond_to? :driver_path=
   ::Selenium::WebDriver::Chrome::Service.driver_path  = proc { ::Webdrivers::Chromedriver.update }
   ::Selenium::WebDriver::Firefox::Service.driver_path = proc { ::Webdrivers::Geckodriver.update }
-  ::Selenium::WebDriver::Edge::Service.driver_path    = proc { ::Webdrivers::MSWebdriver.update }
   ::Selenium::WebDriver::IE::Service.driver_path      = proc { ::Webdrivers::IEdriver.update }
+  unless Webdrivers::MSWebdriver.ignore
+    ::Selenium::WebDriver::Edge::Service.driver_path = proc { ::Webdrivers::MSWebdriver.update }
+  end
 else
   # v3.141.0 and lower
   module Selenium
