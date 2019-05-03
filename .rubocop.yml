@@ -1,5 +1,8 @@
 require: rubocop-rspec
 
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
 Metrics/LineLength:
   Max: 120
 
