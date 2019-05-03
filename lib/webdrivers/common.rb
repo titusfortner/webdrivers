@@ -51,9 +51,19 @@ module Webdrivers
       end
 
       def remove
+        max_attempts  = 3
+        attempts_made = 0
+        delay         = 0.5
         Webdrivers.logger.debug "Deleting #{binary}"
         @download_url = nil
-        FileUtils.rm_f binary
+
+        begin
+          attempts_made += 1
+          File.delete binary if File.exist? binary
+        rescue Errno::EACCES # Solves an intermittent file locking issue on Windows
+          sleep(delay)
+          retry if File.exist?(binary) && attempts_made <= max_attempts
+        end
       end
 
       def download
