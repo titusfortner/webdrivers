@@ -1,0 +1,23 @@
+build: off
+cache:
+  - vendor/bundle
+environment:
+  matrix:
+    - RUBY_VERSION: 24
+      RAKE_TASK: spec
+    - RUBY_VERSION: 24
+      RAKE_TASK: rubocop
+    - RUBY_VERSION: 25
+      RAKE_TASK: spec
+    - RUBY_VERSION: 26
+      RAKE_TASK: spec
+install:
+  - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
+  - bundle config --local path vendor/bundle
+  - bundle install
+before_test:
+  - ruby -v
+  - gem -v
+  - bundle -v
+test_script:
+  - bundle exec rake %RAKE_TASK%
