@@ -63,6 +63,7 @@ module Webdrivers
         rescue Errno::EACCES # Solves an intermittent file locking issue on Windows
           sleep(delay)
           retry if File.exist?(binary) && attempts_made <= max_attempts
+          raise
         end
       end
 
