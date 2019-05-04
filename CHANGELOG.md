@@ -1,3 +1,10 @@
+### 3.8.1 (2019-05-04)
+* Downloads chromedriver with direct URL instead of parsing the downloads page
+* Raises exception if version of Chrome does not have a known version of the driver (issue #79)
+* Fixed bug warning of non-initialized variables (issue #62)
+* Fixed bug with threads/processes colliding by downloading to temp files
+* Fixed bug for file locking issue on Windows
+
 ### 3.8.0 (2019-04-17)
 * Add support for `selenium-webdriver` v4. See [#69](https://github.com/titusfortner/webdrivers/pull/69).
 * Remove dependency on `net_http_ssl_fix` gem. `Webdrivers.net_http_ssl_fix` now raises an exception and points to other solutions. See [#60](https://github.com/titusfortner/webdrivers/pull/60) and [#68](https://github.com/titusfortner/webdrivers/pull/68).
