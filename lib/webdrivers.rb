@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'webdrivers/selenium'
 require 'webdrivers/logger'
 require 'webdrivers/common'
 require 'webdrivers/chromedriver'
 require 'webdrivers/geckodriver'
 require 'webdrivers/iedriver'
 require 'webdrivers/mswebdriver'
+require 'webdrivers/selenium'
 
 module Webdrivers
   class ConnectionError < StandardError

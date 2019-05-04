@@ -5,30 +5,42 @@ require 'nokogiri'
 module Webdrivers
   class MSWebdriver < Common
     class << self
+      attr_accessor :ignore
+
+      def current_version
+        raise NotImplementedError, 'Unable to programatically determine the version of most MicrosoftWebDriver.exe'
+      end
+
       def windows_version
-        Webdrivers.logger.debug 'Checking current version'
+        return @windows_version if @windows_version
 
         # current_version() from other webdrivers returns the version from the webdriver EXE.
         # Unfortunately, MicrosoftWebDriver.exe does not have an option to get the version.
         # To work around it we query the currently installed version of Microsoft Edge instead
         # and compare it to the list of available downloads.
         version = system_call('powershell (Get-AppxPackage -Name Microsoft.MicrosoftEdge).Version')
-        raise 'Failed to check Microsoft Edge version.' if version.empty? # Package name changed?
+        raise VersionError, 'Failed to check Microsoft Edge version' if version.empty? # Package name changed?
 
-        Webdrivers.logger.debug "Current version of Microsoft Edge is #{version.dup.chomp!}"
+        Webdrivers.logger.debug "Current version of Microsoft Edge is #{version}"
 
-        build = version.split('.')[1] # "41.16299.248.0" => "16299"
-        Webdrivers.logger.debug "Expecting MicrosoftWebDriver.exe version #{build}"
-        Gem::Version.new(build)
+        @windows_version = Gem::Version.new(version)
       end
 
-      # Webdriver binaries for Microsoft Edge are not backwards compatible.
-      # For this reason, instead of downloading the latest binary we download the correct one for the
-      # currently installed browser version.
-      alias version windows_version
+      def latest_version
+        return @latest_version if @latest_version
 
-      def version=(*)
-        raise 'Version can not be set for MSWebdriver because it is dependent on the version of Edge'
+        if windows_version.segments.first > 44
+          raise VersionError, 'Webdrivers is unable to provide this driver; Run this command: '\
+          '`DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0` '\
+          'as discussed here: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads; '\
+          'Also please set `Webdrivers::MSWebdriver.ignore = true`'
+        end
+
+        version = windows_version.segments[1]
+
+        Webdrivers.logger.debug "Desired build of Microsoft WebDriver is #{version}"
+
+        @latest_version = Gem::Version.new(version)
       end
 
       private
@@ -42,7 +54,7 @@ module Webdrivers
       end
 
       def download_url
-        @download_url ||= downloads[windows_version]
+        @download_url ||= downloads[Gem::Version.new windows_version.segments[1]]
       end
 
       def downloads
@@ -53,6 +65,14 @@ module Webdrivers
           key = normalize_version link.text.scan(/\d+/).first.to_i
           hash[key] = link['href']
         end
+      end
+
+      # Assume we have the latest if we are offline and file exists
+      def correct_binary?
+        get(base_url)
+        false
+      rescue ConnectionError
+        File.exist?(binary)
       end
     end
   end

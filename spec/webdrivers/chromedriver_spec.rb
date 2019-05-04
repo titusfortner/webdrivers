@@ -205,7 +205,7 @@ describe Webdrivers::Chromedriver do
 
   describe '#binary' do
     it 'returns full location of binary' do
-      expect(chromedriver.binary).to eq("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
+      expect(chromedriver.binary).to match("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
     end
   end
 end

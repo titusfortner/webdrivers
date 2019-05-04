@@ -169,7 +169,7 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
   describe '#binary' do
     it 'returns full location of binary' do
-      expect(geckodriver.binary).to eq("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
+      expect(geckodriver.binary).to match("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
     end
   end
 end
