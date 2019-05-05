@@ -19,6 +19,8 @@ module Webdrivers
         @latest_version ||= if System.valid_cache?(file_name)
                               normalize_version(System.cached_version(file_name))
                             else
+                              Webdrivers.logger.warn 'Driver caching is turned off in this version, but will '\
+                              'be enabled by default in 4.x. Set the value now with `Webdrivers#cache_time=` in seconds'
                               version = downloads.keys.max
                               System.cache_version(file_name, version)
                               version

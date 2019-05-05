@@ -22,7 +22,7 @@ module Webdrivers
     attr_writer :cache_time
 
     def cache_time
-      @cache_time || 86_400
+      @cache_time || 0
     end
 
     def logger

@@ -135,6 +135,7 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
 
     it 'does not make network call if cache is valid' do
+      allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('geckodriver', '0.23.0')
       allow(Webdrivers::Network).to receive(:get)
 
@@ -144,7 +145,6 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
 
     it 'makes a network call if cache is expired' do
-      allow(Webdrivers).to receive(:cache_time).and_return(0)
       Webdrivers::System.cache_version('geckodriver', '0.23.0')
       url = 'https://github.com/mozilla/geckodriver/releases/tag/v0.24.0'
       allow(Webdrivers::Network).to receive(:get_url).and_return(url)

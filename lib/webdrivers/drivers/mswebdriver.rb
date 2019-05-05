@@ -7,6 +7,14 @@ module Webdrivers
     class << self
       attr_accessor :ignore
 
+      def update
+        old = 'Webdrivers::MSWebdriver'
+        url = 'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads'
+        new = "Microsoft Edge v18+ where the driver is included in the system (see: #{url})"
+        Webdrivers.logger.deprecate(old, new)
+        super
+      end
+
       def current_version
         raise NotImplementedError, 'Unable to programatically determine the version of most MicrosoftWebDriver.exe'
       end

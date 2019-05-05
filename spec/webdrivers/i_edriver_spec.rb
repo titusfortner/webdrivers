@@ -115,6 +115,7 @@ describe Webdrivers::IEdriver do
     end
 
     it 'does not make network call if cache is valid' do
+      allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('IEDriverServer', '3.4.0')
       allow(Webdrivers::Network).to receive(:get)
 
@@ -124,7 +125,6 @@ describe Webdrivers::IEdriver do
     end
 
     it 'makes a network call if cache is expired' do
-      allow(Webdrivers).to receive(:cache_time).and_return(0)
       Webdrivers::System.cache_version('IEDriverServer', '3.4.0')
       base = 'https://selenium-release.storage.googleapis.com/'
       hash = {Gem::Version.new('3.4.0') => "#{base}/3.4/IEDriverServer_Win32_3.4.0.zip",
