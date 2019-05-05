@@ -22,7 +22,13 @@ module Webdrivers
         # Versions before 70 do not have a LATEST_RELEASE file
         return normalize_version('2.41') if release_version < normalize_version('70')
 
-        latest_applicable = latest_point_release(release_version)
+        latest_applicable = if System.valid_cache?(file_name)
+                              System.cached_version(file_name)
+                            else
+                              version = latest_point_release(release_version)
+                              System.cache_version(file_name, version)
+                              version
+                            end
 
         Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
         @latest_version = normalize_version(latest_applicable)

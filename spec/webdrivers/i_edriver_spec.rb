@@ -106,6 +106,37 @@ describe Webdrivers::IEdriver do
     it 'correctly parses the downloads page' do
       expect(iedriver.send(:downloads)).not_to be_empty
     end
+
+    it 'creates cached file' do
+      allow(Webdrivers::Network).to receive(:get).and_return('3.4.0')
+
+      iedriver.latest_version
+      expect(File.exist?("#{Webdrivers::System.install_dir}/IEDriverServer.version")).to eq true
+    end
+
+    it 'does not make network call if cache is valid' do
+      Webdrivers::System.cache_version('IEDriverServer', '3.4.0')
+      allow(Webdrivers::Network).to receive(:get)
+
+      expect(iedriver.latest_version).to eq Gem::Version.new('3.4.0')
+
+      expect(Webdrivers::Network).not_to have_received(:get)
+    end
+
+    it 'makes a network call if cache is expired' do
+      allow(Webdrivers).to receive(:cache_time).and_return(0)
+      Webdrivers::System.cache_version('IEDriverServer', '3.4.0')
+      base = 'https://selenium-release.storage.googleapis.com/'
+      hash = {Gem::Version.new('3.4.0') => "#{base}/3.4/IEDriverServer_Win32_3.4.0.zip",
+              Gem::Version.new('3.5.0') => "#{base}/3.5/IEDriverServer_Win32_3.5.0.zip",
+              Gem::Version.new('3.5.1') => "#{base}/3.5/IEDriverServer_Win32_3.5.1.zip"}
+      allow(iedriver).to receive(:downloads).and_return(hash)
+      allow(Webdrivers::System).to receive(:valid_cache?)
+
+      expect(iedriver.latest_version).to eq Gem::Version.new('3.5.1')
+      expect(iedriver).to have_received(:downloads)
+      expect(Webdrivers::System).to have_received(:valid_cache?)
+    end
   end
 
   describe '#required_version=' do

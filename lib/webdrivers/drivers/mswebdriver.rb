@@ -23,7 +23,7 @@ module Webdrivers
 
         Webdrivers.logger.debug "Current version of Microsoft Edge is #{version}"
 
-        @windows_version = Gem::Version.new(version)
+        @windows_version = normalize_version(version)
       end
 
       def latest_version
@@ -40,7 +40,7 @@ module Webdrivers
 
         Webdrivers.logger.debug "Desired build of Microsoft WebDriver is #{version}"
 
-        @latest_version = Gem::Version.new(version)
+        @latest_version = normalize_version(version)
       end
 
       private
@@ -54,7 +54,7 @@ module Webdrivers
       end
 
       def download_url
-        @download_url ||= downloads[Gem::Version.new windows_version.segments[1]]
+        @download_url ||= downloads[normalize_version windows_version.segments[1]]
       end
 
       def downloads

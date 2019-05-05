@@ -19,7 +19,7 @@ module Webdrivers
       end
 
       def required_version
-        Gem::Version.new @required_version
+        normalize_version @required_version
       end
 
       def update
@@ -40,19 +40,16 @@ module Webdrivers
         desired_version.version.empty? ? latest_version : normalize_version(desired_version)
       end
 
-      def latest_version
-        @latest_version ||= downloads.keys.max
-      end
-
       def remove
         @download_url = nil
         @latest_version = nil
+        System.delete "#{System.install_dir}/#{file_name.gsub('.exe', '')}.version"
         System.delete driver_path
       end
 
       def download
         Webdrivers.logger.deprecate('#download', '#update')
-        System.download
+        System.download(download_url, driver_path)
       end
 
       def binary
@@ -94,7 +91,7 @@ module Webdrivers
       end
 
       def normalize_version(version)
-        Gem::Version.new(version.to_s)
+        Gem::Version.new(version.nil? ? nil : version.to_s)
       end
 
       def binary_version

@@ -26,6 +26,25 @@ module Webdrivers
         Webdrivers.install_dir || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
       end
 
+      def cache_version(file_name, version)
+        FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
+
+        File.open("#{install_dir}/#{file_name.gsub('.exe', '')}.version", 'w+') do |file|
+          file.print(version)
+        end
+      end
+
+      def cached_version(file_name)
+        File.open("#{install_dir}/#{file_name.gsub('.exe', '')}.version", 'r', &:read)
+      end
+
+      def valid_cache?(file_name)
+        file = "#{install_dir}/#{file_name.gsub('.exe', '')}.version"
+        return false unless File.exist?(file)
+
+        Time.now - File.mtime(file) < Webdrivers.cache_time
+      end
+
       def download(url, target)
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
 

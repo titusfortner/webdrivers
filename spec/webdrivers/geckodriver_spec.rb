@@ -126,6 +126,35 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
       expect(geckodriver.latest_version).to eq Gem::Version.new('0.24.0')
     end
+
+    it 'creates cached file' do
+      allow(Webdrivers::Network).to receive(:get).and_return('0.24.0')
+
+      geckodriver.latest_version
+      expect(File.exist?("#{Webdrivers::System.install_dir}/geckodriver.version")).to eq true
+    end
+
+    it 'does not make network call if cache is valid' do
+      Webdrivers::System.cache_version('geckodriver', '0.23.0')
+      allow(Webdrivers::Network).to receive(:get)
+
+      expect(geckodriver.latest_version).to eq Gem::Version.new('0.23.0')
+
+      expect(Webdrivers::Network).not_to have_received(:get)
+    end
+
+    it 'makes a network call if cache is expired' do
+      allow(Webdrivers).to receive(:cache_time).and_return(0)
+      Webdrivers::System.cache_version('geckodriver', '0.23.0')
+      url = 'https://github.com/mozilla/geckodriver/releases/tag/v0.24.0'
+      allow(Webdrivers::Network).to receive(:get_url).and_return(url)
+      allow(Webdrivers::System).to receive(:valid_cache?)
+
+      expect(geckodriver.latest_version).to eq Gem::Version.new('0.24.0')
+
+      expect(Webdrivers::Network).to have_received(:get_url)
+      expect(Webdrivers::System).to have_received(:valid_cache?)
+    end
   end
 
   describe '#required_version=' do

@@ -95,6 +95,17 @@ describe Webdrivers::Chromedriver do
         expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
+
+    it 'makes a network call if cached driver does not match the browser' do
+      Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+      allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')
+      allow(Webdrivers::System).to receive(:download)
+
+      chromedriver.update
+
+      expect(Webdrivers::Network).to have_received(:get)
+    end
   end
 
   describe '#current_version' do
@@ -149,6 +160,34 @@ describe Webdrivers::Chromedriver do
 
       msg = %r{^Can not reach https://chromedriver.storage.googleapis.com}
       expect { chromedriver.latest_version }.to raise_error(Webdrivers::ConnectionError, msg)
+    end
+
+    it 'creates cached file' do
+      allow(Webdrivers::Network).to receive(:get).and_return('71.0.3578.137')
+
+      chromedriver.latest_version
+      expect(File.exist?("#{Webdrivers::System.install_dir}/chromedriver.version")).to eq true
+    end
+
+    it 'does not make network call if cache is valid' do
+      Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(Webdrivers::Network).to receive(:get)
+
+      expect(chromedriver.latest_version).to eq Gem::Version.new('71.0.3578.137')
+
+      expect(Webdrivers::Network).not_to have_received(:get)
+    end
+
+    it 'makes a network call if cache is expired' do
+      allow(Webdrivers).to receive(:cache_time).and_return(0)
+      Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')
+      allow(Webdrivers::System).to receive(:valid_cache?)
+
+      expect(chromedriver.latest_version).to eq Gem::Version.new('73.0.3683.68')
+
+      expect(Webdrivers::Network).to have_received(:get)
+      expect(Webdrivers::System).to have_received(:valid_cache?)
     end
   end
 
