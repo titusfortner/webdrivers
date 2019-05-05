@@ -72,7 +72,7 @@ module Webdrivers
         get(base_url)
         false
       rescue ConnectionError
-        File.exist?(binary)
+        File.exist?(driver_path)
       end
     end
   end

@@ -8,7 +8,7 @@ describe Webdrivers::MSWebdriver do
   before do
     allow(mswebdriver).to receive(:system_call).and_return('41.16299.248.0')
     mswebdriver.remove
-    mswebdriver.version = nil
+    mswebdriver.required_version = nil
   end
 
   describe '#install_dir' do
@@ -55,24 +55,17 @@ describe Webdrivers::MSWebdriver do
     end
   end
 
-  describe '#desired_version' do
-    it 'returns #latest_version if version is not specified' do
-      allow(mswebdriver).to receive(:latest_version)
-      mswebdriver.desired_version
-
-      expect(mswebdriver).to have_received(:latest_version)
-    end
-
+  describe '#required_version' do
     it 'returns the version specified as a Float' do
-      mswebdriver.version = 0.12
+      mswebdriver.required_version = 0.12
 
-      expect(mswebdriver.desired_version).to eq Gem::Version.new('0.12')
+      expect(mswebdriver.required_version).to eq Gem::Version.new('0.12')
     end
 
     it 'returns the version specified as a String' do
-      mswebdriver.version = '0.12.1'
+      mswebdriver.required_version = '0.12.1'
 
-      expect(mswebdriver.desired_version).to eq Gem::Version.new('0.12.1')
+      expect(mswebdriver.required_version).to eq Gem::Version.new('0.12.1')
     end
   end
 
@@ -81,7 +74,7 @@ describe Webdrivers::MSWebdriver do
       mswebdriver.update
 
       mswebdriver.remove
-      expect(File.exist?(mswebdriver.binary)).to eq false
+      expect(File.exist?(mswebdriver.driver_path)).to eq false
     end
 
     it 'does not raise exception if no mswebdriver found' do
@@ -97,12 +90,12 @@ describe Webdrivers::MSWebdriver do
       mswebdriver.update
 
       expect(mswebdriver).to have_received(:downloads)
-      expect(File.exist?(mswebdriver.binary)).to eq true
+      expect(File.exist?(mswebdriver.driver_path)).to eq true
     end
 
     it 'does not download binary if one exists and offline' do
       allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
-      allow(File).to receive(:exist?).with(mswebdriver.binary).and_return(true)
+      allow(File).to receive(:exist?).with(mswebdriver.driver_path).and_return(true)
       allow(mswebdriver).to receive(:download_url)
 
       mswebdriver.update
@@ -121,9 +114,9 @@ describe Webdrivers::MSWebdriver do
     end
   end
 
-  describe '#binary' do
+  describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(mswebdriver.binary).to eq("#{File.join(ENV['HOME'])}/.webdrivers/MicrosoftWebDriver.exe")
+      expect(mswebdriver.driver_path).to eq("#{File.join(ENV['HOME'])}/.webdrivers/MicrosoftWebDriver.exe")
     end
   end
 end

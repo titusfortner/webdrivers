@@ -7,7 +7,7 @@ describe Webdrivers::IEdriver do
 
   before do
     iedriver.remove
-    iedriver.version = nil
+    iedriver.required_version = nil
   end
 
   describe '#update' do
@@ -27,7 +27,7 @@ describe Webdrivers::IEdriver do
 
         iedriver.update
 
-        expect(File.exist?(iedriver.binary)).to be false
+        expect(File.exist?(iedriver.driver_path)).to be false
       end
 
       it 'raises ConnectionError when offline, and no binary exists' do
@@ -62,7 +62,7 @@ describe Webdrivers::IEdriver do
       it 'downloads binary' do
         iedriver.update
 
-        expect(File.exist?(iedriver.binary)).to eq true
+        expect(File.exist?(iedriver.driver_path)).to eq true
       end
 
       it 'raises ConnectionError if offline' do
@@ -76,7 +76,7 @@ describe Webdrivers::IEdriver do
 
   describe '#current_version' do
     it 'returns nil if binary does not exist on the system' do
-      allow(iedriver).to receive(:binary).and_return('')
+      allow(iedriver).to receive(:driver_path).and_return('')
 
       expect(iedriver.current_version).to be_nil
     end
@@ -108,24 +108,17 @@ describe Webdrivers::IEdriver do
     end
   end
 
-  describe '#desired_version' do
-    it 'returns #latest_version if version is not specified' do
-      allow(iedriver).to receive(:latest_version)
-      iedriver.desired_version
-
-      expect(iedriver).to have_received(:latest_version)
-    end
-
+  describe '#required_version=' do
     it 'returns the version specified as a Float' do
-      iedriver.version = 0.12
+      iedriver.required_version = 0.12
 
-      expect(iedriver.desired_version).to eq Gem::Version.new('0.12')
+      expect(iedriver.required_version).to eq Gem::Version.new('0.12')
     end
 
     it 'returns the version specified as a String' do
-      iedriver.version = '0.12.1'
+      iedriver.required_version = '0.12.1'
 
-      expect(iedriver.desired_version).to eq Gem::Version.new('0.12.1')
+      expect(iedriver.required_version).to eq Gem::Version.new('0.12.1')
     end
   end
 
@@ -161,9 +154,9 @@ describe Webdrivers::IEdriver do
     end
   end
 
-  describe '#binary' do
+  describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(iedriver.binary).to eq("#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe")
+      expect(iedriver.driver_path).to eq("#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe")
     end
   end
 end

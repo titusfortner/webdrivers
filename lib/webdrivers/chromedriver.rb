@@ -28,6 +28,16 @@ module Webdrivers
         @latest_version = normalize_version(latest_applicable)
       end
 
+      # Returns currently installed Chrome version
+      def chrome_version
+        ver = send("chrome_on#{platform}").chomp
+
+        raise VersionError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
+
+        Webdrivers.logger.debug "Browser version: #{ver}"
+        normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
+      end
+
       private
 
       def latest_point_release(version)
@@ -39,7 +49,7 @@ module Webdrivers
           Webdrivers.logger.debug "Unable to find a driver for: #{version}"
 
           msg = version > latest_release ? 'you appear to be using a non-production version of Chrome; ' : ''
-          msg = "#{msg}please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known "\
+          msg = "#{msg}please set `Webdrivers::Chromedriver.required_version = <desired driver version>` to an known "\
 'chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
           raise VersionError, msg
         end
@@ -50,8 +60,10 @@ module Webdrivers
           'linux64'
         elsif Selenium::WebDriver::Platform.mac?
           'mac64'
-        else
+        elsif Selenium::WebDriver::Platform.windows?
           'win32'
+        else
+          raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
         end
       end
 
@@ -66,7 +78,13 @@ module Webdrivers
       def download_url
         return @download_url if @download_url
 
-        url = "#{base_url}/#{desired_version}/chromedriver_#{platform}.zip"
+        version = if required_version.version.empty?
+                    latest_version
+                  else
+                    normalize_version(required_version)
+                  end
+
+        url = "#{base_url}/#{version}/chromedriver_#{platform}.zip"
         Webdrivers.logger.debug "chromedriver URL: #{url}"
         @download_url = url
       end
@@ -80,26 +98,7 @@ module Webdrivers
         normalize_version(chrome.segments[0..2].join('.'))
       end
 
-      # Returns currently installed Chrome version
-      def chrome_version
-        ver = case platform
-              when 'win32'
-                chrome_on_windows
-              when 'linux64'
-                chrome_on_linux
-              when 'mac64'
-                chrome_on_mac
-              else
-                raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
-              end.chomp
-
-        raise VersionError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
-
-        Webdrivers.logger.debug "Browser version: #{ver}"
-        normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
-      end
-
-      def chrome_on_windows
+      def chrome_on_win32
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
           return system_call("powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion").strip
@@ -115,14 +114,14 @@ module Webdrivers
         end
 
         # Default to Google Chrome
-        reg        = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
+        reg = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
         executable = system_call("powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'").strip
         Webdrivers.logger.debug "Browser executable: '#{executable}'"
         ps = "(Get-Item (Get-ItemProperty '#{reg}').'(default)').VersionInfo.ProductVersion"
         system_call("powershell #{ps}").strip
       end
 
-      def chrome_on_linux
+      def chrome_on_linux64
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
           return system_call("#{Shellwords.escape browser_binary} --product-version").strip
@@ -134,7 +133,7 @@ module Webdrivers
         system_call("#{executable} --product-version").strip
       end
 
-      def chrome_on_mac
+      def chrome_on_mac64
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
           return system_call("#{Shellwords.escape browser_binary} --version").strip
