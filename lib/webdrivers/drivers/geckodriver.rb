@@ -15,6 +15,10 @@ module Webdrivers
         normalize_version version.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
       end
 
+      def latest_version
+        @latest_version ||= Gem::Version.new(Network.get_url("#{base_url}/latest")[/[^v]*$/])
+      end
+
       private
 
       def file_name
@@ -25,18 +29,23 @@ module Webdrivers
         'https://github.com/mozilla/geckodriver/releases'
       end
 
-      def downloads # rubocop:disable  Metrics/AbcSize
-        doc = Nokogiri::HTML.parse(Network.get(base_url))
-        items = doc.css('.py-1 a').collect { |item| item['href'] }
-        items.reject! { |item| item.include?('archive') }
-        platform = System.platform == 'linux' ? "linux#{System.bitsize}" : System.platform
-        items.select! { |item| item.include?(platform) }
-        ds = items.each_with_object({}) do |item, hash|
-          key = normalize_version item[/v(\d+\.\d+\.\d+)/, 1]
-          hash[key] = "https://github.com#{item}"
+      def download_url
+        @download_url ||= required_version.version.empty? ? direct_url(latest_version) : direct_url(required_version)
+      end
+
+      def direct_url(version)
+        "#{base_url}/download/v#{version}/geckodriver-v#{version}-#{platform_ext}"
+      end
+
+      def platform_ext
+        case System.platform
+        when 'linux'
+          "linux#{System.bitsize}.tar.gz"
+        when 'mac'
+          'macos.tar.gz'
+        when 'win'
+          "win#{System.bitsize}.zip"
         end
-        Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
-        ds
       end
     end
   end
