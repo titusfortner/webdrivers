@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'webdrivers/logger'
+require 'webdrivers/network'
 require 'webdrivers/common'
 require 'webdrivers/drivers/chromedriver'
 require 'webdrivers/drivers/geckodriver'
