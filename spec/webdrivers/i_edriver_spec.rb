@@ -22,7 +22,7 @@ describe Webdrivers::IEdriver do
       end
 
       it 'does not download when offline, but binary exists' do
-        allow(iedriver).to receive(:system_call).and_return('something IEDriverServer.exe 3.5.1 something else')
+        allow(Webdrivers::System).to receive(:call).and_return('something IEDriverServer.exe 3.5.1 something else')
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(iedriver).to receive(:exists?).and_return(true)
 
@@ -87,7 +87,7 @@ describe Webdrivers::IEdriver do
 
       return_value = 'something IEDriverServer.exe 3.5.1 something else'
 
-      allow(iedriver).to receive(:system_call).and_return return_value
+      allow(Webdrivers::System).to receive(:call).with("#{iedriver.driver_path} --version").and_return return_value
 
       expect(iedriver.current_version).to eq Gem::Version.new('3.5.1')
     end
@@ -138,7 +138,7 @@ describe Webdrivers::IEdriver do
 
   describe '#install_dir' do
     it 'uses ~/.webdrivers as default value' do
-      expect(iedriver.install_dir).to include('.webdriver')
+      expect(Webdrivers::System.install_dir).to include('.webdriver')
     end
 
     it 'uses provided value' do
@@ -146,7 +146,7 @@ describe Webdrivers::IEdriver do
         install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
         Webdrivers.install_dir = install_dir
 
-        expect(iedriver.install_dir).to eq install_dir
+        expect(Webdrivers::System.install_dir).to eq install_dir
       ensure
         Webdrivers.install_dir = nil
       end

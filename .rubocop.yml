@@ -14,24 +14,20 @@ Metrics/LineLength:
     - '\s+# rubocop:disable'
 
 Metrics/MethodLength:
-  Enabled: false
+  Max: 20
 
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
 
 Metrics/ClassLength:
-  Max: 113
-  Exclude:
-    - 'lib/webdrivers/common.rb'
-
-Metrics/AbcSize:
-  Max: 16
-  Exclude:
-    - 'lib/webdrivers/common.rb'
+  Max: 102
 
 Metrics/CyclomaticComplexity:
   Max: 8
+
+Metrics/AbcSize:
+  Max: 16
 
 Style/Documentation:
   Enabled: false

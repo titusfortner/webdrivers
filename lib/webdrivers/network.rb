@@ -13,6 +13,10 @@ module Webdrivers
         end
       end
 
+      def get_url(url, limit = 10)
+        get_response(url, limit).uri.to_s
+      end
+
       def get_response(url, limit = 10)
         raise StandardError, 'Too many HTTP redirects' if limit.zero?
 

@@ -31,7 +31,7 @@ module Webdrivers
 
       # Returns currently installed Chrome version
       def chrome_version
-        ver = send("chrome_on_#{platform}").chomp
+        ver = send("chrome_on_#{System.platform}").chomp
 
         raise VersionError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
 
@@ -56,20 +56,8 @@ module Webdrivers
         end
       end
 
-      def platform
-        if Selenium::WebDriver::Platform.linux?
-          'linux64'
-        elsif Selenium::WebDriver::Platform.mac?
-          'mac64'
-        elsif Selenium::WebDriver::Platform.windows?
-          'win32'
-        else
-          raise NotImplementedError, 'Your OS is not supported by webdrivers gem.'
-        end
-      end
-
       def file_name
-        Selenium::WebDriver::Platform.windows? ? 'chromedriver.exe' : 'chromedriver'
+        System.platform == 'win' ? 'chromedriver.exe' : 'chromedriver'
       end
 
       def base_url
@@ -85,7 +73,8 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        url = "#{base_url}/#{version}/chromedriver_#{platform}.zip"
+        file_name = System.platform == 'win' ? 'windows32' : "#{System.platform}64"
+        url = "#{base_url}/#{version}/chromedriver_#{file_name}.zip"
         Webdrivers.logger.debug "chromedriver URL: #{url}"
         @download_url = url
       end
@@ -99,10 +88,10 @@ module Webdrivers
         normalize_version(chrome.segments[0..2].join('.'))
       end
 
-      def chrome_on_win32
+      def chrome_on_win
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return system_call("powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion").strip
+          return System.call("powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion").strip
         end
 
         # Workaround for Google Chrome when using Jruby on Windows.
@@ -111,39 +100,39 @@ module Webdrivers
           ver = 'powershell (Get-Item -Path ((Get-ItemProperty "HKLM:\\Software\\Microsoft' \
           "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
           '.VersionInfo.ProductVersion'
-          return system_call(ver).strip
+          return System.call(ver).strip
         end
 
         # Default to Google Chrome
         reg = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
-        executable = system_call("powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'").strip
+        executable = System.call("powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'").strip
         Webdrivers.logger.debug "Browser executable: '#{executable}'"
         ps = "(Get-Item (Get-ItemProperty '#{reg}').'(default)').VersionInfo.ProductVersion"
-        system_call("powershell #{ps}").strip
+        System.call("powershell #{ps}").strip
       end
 
-      def chrome_on_linux64
+      def chrome_on_linux
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return system_call("#{Shellwords.escape browser_binary} --product-version").strip
+          return System.call("#{Shellwords.escape browser_binary} --product-version").strip
         end
 
         # Default to Google Chrome
-        executable = system_call('which google-chrome').strip
+        executable = System.call('which google-chrome').strip
         Webdrivers.logger.debug "Browser executable: '#{executable}'"
-        system_call("#{executable} --product-version").strip
+        System.call("#{executable} --product-version").strip
       end
 
-      def chrome_on_mac64
+      def chrome_on_mac
         if browser_binary
           Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return system_call("#{Shellwords.escape browser_binary} --version").strip
+          return System.call("#{Shellwords.escape browser_binary} --version").strip
         end
 
         # Default to Google Chrome
         executable = Shellwords.escape '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
         Webdrivers.logger.debug "Browser executable: #{executable}"
-        system_call("#{executable} --version").strip
+        System.call("#{executable} --version").strip
       end
 
       #
