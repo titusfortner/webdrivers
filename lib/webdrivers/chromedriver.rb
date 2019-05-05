@@ -22,7 +22,7 @@ module Webdrivers
           # Versions before 70 do not have a LATEST_RELEASE file
           return normalize_version('2.41') if release_version < normalize_version('70')
 
-          latest_applicable = latest_point_release(release_version)
+          latest_applicable = with_cache(file_name) { latest_point_release(release_version) }
 
           Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
           normalize_version(latest_applicable)
@@ -73,7 +73,7 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        file_name = System.platform == 'win' ? 'windows32' : "#{System.platform}64"
+        file_name = System.platform == 'win' ? 'win32' : "#{System.platform}64"
         url = "#{base_url}/#{version}/chromedriver_#{file_name}.zip"
         Webdrivers.logger.debug "chromedriver URL: #{url}"
         @download_url = url

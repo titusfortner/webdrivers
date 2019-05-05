@@ -17,6 +17,12 @@ module Webdrivers
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 
+    attr_writer :cache_time
+
+    def cache_time
+      @cache_time || 0
+    end
+
     def logger
       @logger ||= Webdrivers::Logger.new
     end
@@ -34,6 +40,7 @@ end
   class Common
     class << self
       attr_writer :required_version
+      attr_reader :cache_warning
 
       def version
         Webdrivers.logger.deprecate("#{self.class}#version", "#{self.class}#required_version")
@@ -46,7 +53,7 @@ end
       end
 
       def required_version
-        Gem::Version.new @required_version
+        normalize_version @required_version
       end
 
       def update
@@ -67,13 +74,10 @@ end
         desired_version.version.empty? ? latest_version : normalize_version(desired_version)
       end
 
-      def latest_version
-        @latest_version ||= downloads.keys.max
-      end
-
       def remove
         @download_url = nil
         @latest_version = nil
+        System.delete "#{System.install_dir}/#{file_name.gsub('.exe', '')}.version"
         System.delete driver_path
       end
 
@@ -120,7 +124,7 @@ end
       end
 
       def normalize_version(version)
-        Gem::Version.new(version.to_s)
+        Gem::Version.new(version&.to_s)
       end
 
       def binary_version
@@ -130,6 +134,21 @@ end
       rescue Errno::ENOENT
         Webdrivers.logger.debug "No Such File or Directory: #{driver_path}"
         nil
+      end
+
+      def with_cache(file_name)
+        if System.valid_cache?(file_name)
+          normalize_version System.cached_version(file_name)
+        else
+          unless cache_warning
+            Webdrivers.logger.warn 'Driver caching is turned off in this version, but will be '\
+                                  'enabled by default in 4.x. Set the value with `Webdrivers#cache_time=` in seconds'
+            @cache_warning = true
+          end
+          version = yield
+          System.cache_version(file_name, version)
+          normalize_version version
+        end
       end
     end
   end

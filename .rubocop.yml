@@ -1,3 +1,6 @@
+AllCops:
+  TargetRubyVersion: 2.4.6
+
 require:
   - rubocop-rspec
   - rubocop-performance
@@ -21,13 +24,15 @@ Metrics/BlockLength:
     - 'spec/**/*'
 
 Metrics/ClassLength:
-  Max: 102
+  Max: 116
 
 Metrics/CyclomaticComplexity:
   Max: 8
 
 Metrics/AbcSize:
   Max: 16
+  Exclude:
+    - 'lib/webdrivers/chromedriver.rb'
 
 Style/Documentation:
   Enabled: false

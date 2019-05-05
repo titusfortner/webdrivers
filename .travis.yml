@@ -20,5 +20,5 @@ matrix:
       env: RAKE_TASK=spec
     - rvm: 2.4.6
       env: RAKE_TASK=rubocop
-    - rvm: jruby-9.2.0.0
+    - rvm: jruby-9.2.7.0
       env: RAKE_TASK=spec

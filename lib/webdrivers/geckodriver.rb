@@ -17,7 +17,7 @@ module Webdrivers
       end
 
       def latest_version
-        @latest_version ||= Gem::Version.new(Network.get_url("#{base_url}/latest")[/[^v]*$/])
+        @latest_version ||= with_cache(file_name) { normalize_version(Network.get_url("#{base_url}/latest")[/[^v]*$/]) }
       end
 
       private

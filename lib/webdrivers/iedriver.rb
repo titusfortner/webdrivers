@@ -17,6 +17,10 @@ module Webdrivers
         normalize_version version.match(/IEDriverServer.exe (\d\.\d+\.\d+)/)[1]
       end
 
+      def latest_version
+        @latest_version ||= with_cache(file_name) { downloads.keys.max }
+      end
+
       private
 
       def file_name
