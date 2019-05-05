@@ -3,6 +3,7 @@
 require 'rubygems/package'
 require 'zip'
 require 'webdrivers/logger'
+require 'webdrivers/network'
 require 'selenium-webdriver'
 
 module Webdrivers
@@ -114,7 +115,7 @@ end
         FileUtils.mkdir_p(install_dir) unless File.exist?(install_dir)
         Dir.chdir install_dir do
           df = Tempfile.open(['', filename], binmode: true) do |file|
-            file.print get(download_url)
+            file.print Network.get(download_url)
             file
           end
 
@@ -134,50 +135,12 @@ end
         driver_path
       end
 
-      def get(url, limit = 10)
-        Webdrivers.logger.debug "Getting URL: #{url}"
-
-        raise ConnectionError, 'Too many HTTP redirects' if limit.zero?
-
-        begin
-          response = http.get_response(URI(url))
-        rescue SocketError
-          raise ConnectionError, "Can not reach #{url}"
-        end
-
-        Webdrivers.logger.debug "Get response: #{response.inspect}"
-
-        case response
-        when Net::HTTPSuccess
-          response.body
-        when Net::HTTPRedirection
-          location = response['location']
-          Webdrivers.logger.debug "Redirected to URL: #{location}"
-          get(location, limit - 1)
-        else
-          response.value
-        end
-      end
-
-      def http
-        if using_proxy
-          Net::HTTP.Proxy(Webdrivers.proxy_addr, Webdrivers.proxy_port,
-                          Webdrivers.proxy_user, Webdrivers.proxy_pass)
-        else
-          Net::HTTP
-        end
-      end
-
       def download_url
         @download_url ||= if required_version.version.empty?
                             downloads[downloads.keys.max]
                           else
                             downloads[normalize_version(required_version)]
                           end
-      end
-
-      def using_proxy
-        Webdrivers.proxy_addr && Webdrivers.proxy_port
       end
 
       def exists?

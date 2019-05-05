@@ -4,7 +4,7 @@ require 'spec_helper'
 
 class FakeDriver < Webdrivers::Common
   def self.http_object
-    http
+    Webdrivers::Network.http
   end
 end
 
