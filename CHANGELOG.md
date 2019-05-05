@@ -1,3 +1,12 @@
+### 3.9.0 (2019-05-07)
+* Make public methods more obvious and deprecate unnecessary methods (issue #36)
+* Allow geckodriver binaries to be downloaded directly (issue #30)
+* Allow drivers to be cached to reduce unnecessary network calls (issue #29)
+* MSWebdriver class is removed as no longer supported 
+* Refactored to minimize network calls (issue #80)
+* Fix warnings about instance variables not initialized
+* Add support for managing specific drivers (issue #95)
+
 ### 3.8.1 (2019-05-04)
 * Downloads chromedriver with direct URL instead of parsing the downloads page
 * Raises exception if version of Chrome does not have a known version of the driver (issue #79)
