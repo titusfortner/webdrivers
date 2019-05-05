@@ -2,6 +2,7 @@
 
 require 'webdrivers/logger'
 require 'webdrivers/network'
+require 'webdrivers/system'
 require 'webdrivers/common'
 require 'webdrivers/drivers/chromedriver'
 require 'webdrivers/drivers/geckodriver'

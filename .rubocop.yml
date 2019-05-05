@@ -17,14 +17,10 @@ Metrics/BlockLength:
     - 'spec/**/*'
 
 Metrics/ClassLength:
-  Max: 112
-  Exclude:
-    - 'lib/webdrivers/common.rb'
+  Max: 110
 
 Metrics/AbcSize:
   Max: 16
-  Exclude:
-    - 'lib/webdrivers/common.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 8

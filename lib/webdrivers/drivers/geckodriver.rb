@@ -18,7 +18,7 @@ module Webdrivers
       private
 
       def file_name
-        platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
+        System.platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
       end
 
       def base_url
@@ -29,6 +29,7 @@ module Webdrivers
         doc = Nokogiri::HTML.parse(Network.get(base_url))
         items = doc.css('.py-1 a').collect { |item| item['href'] }
         items.reject! { |item| item.include?('archive') }
+        platform = System.platform == 'linux' ? "linux#{System.bitsize}" : System.platform
         items.select! { |item| item.include?(platform) }
         ds = items.each_with_object({}) do |item, hash|
           key = normalize_version item[/v(\d+\.\d+\.\d+)/, 1]

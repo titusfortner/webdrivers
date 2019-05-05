@@ -106,7 +106,9 @@ describe Webdrivers::Chromedriver do
 
     it 'returns a Gem::Version instance if binary is on the system' do
       allow(chromedriver).to receive(:downloaded?).and_return(true)
-      allow(chromedriver).to receive(:system_call).and_return '71.0.3578.137'
+      allow(Webdrivers::System).to receive(:call)
+        .with("#{chromedriver.driver_path} --version")
+        .and_return '71.0.3578.137'
 
       expect(chromedriver.current_version).to eq Gem::Version.new('71.0.3578.137')
     end
@@ -181,7 +183,7 @@ describe Webdrivers::Chromedriver do
 
   describe '#install_dir' do
     it 'uses ~/.webdrivers as default value' do
-      expect(chromedriver.install_dir).to include('.webdriver')
+      expect(Webdrivers::System.install_dir).to include('.webdriver')
     end
 
     it 'uses provided value' do
@@ -189,7 +191,7 @@ describe Webdrivers::Chromedriver do
         install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
         Webdrivers.install_dir = install_dir
 
-        expect(chromedriver.install_dir).to eq install_dir
+        expect(Webdrivers::System.install_dir).to eq install_dir
       ensure
         Webdrivers.install_dir = nil
       end

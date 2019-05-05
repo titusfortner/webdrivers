@@ -6,14 +6,15 @@ describe Webdrivers::MSWebdriver do
   let(:mswebdriver) { described_class }
 
   before do
-    allow(mswebdriver).to receive(:system_call).and_return('41.16299.248.0')
+    allow(Webdrivers::System).to receive(:call).and_return '41.16299.248.0'
+
     mswebdriver.remove
     mswebdriver.required_version = nil
   end
 
   describe '#install_dir' do
     it 'uses ~/.webdrivers as default value' do
-      expect(mswebdriver.install_dir).to include('.webdriver')
+      expect(Webdrivers::System.install_dir).to include('.webdriver')
     end
 
     it 'raises ConnectionError if offline and no binary is found' do
@@ -107,7 +108,7 @@ describe Webdrivers::MSWebdriver do
         install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
         Webdrivers.install_dir = install_dir
 
-        expect(mswebdriver.install_dir).to eq install_dir
+        expect(Webdrivers::System.install_dir).to eq install_dir
       ensure
         Webdrivers.install_dir = nil
       end

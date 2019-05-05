@@ -18,7 +18,7 @@ module Webdrivers
         # Unfortunately, MicrosoftWebDriver.exe does not have an option to get the version.
         # To work around it we query the currently installed version of Microsoft Edge instead
         # and compare it to the list of available downloads.
-        version = system_call('powershell (Get-AppxPackage -Name Microsoft.MicrosoftEdge).Version')
+        version = System.call('powershell (Get-AppxPackage -Name Microsoft.MicrosoftEdge).Version')
         raise VersionError, 'Failed to check Microsoft Edge version' if version.empty? # Package name changed?
 
         Webdrivers.logger.debug "Current version of Microsoft Edge is #{version}"

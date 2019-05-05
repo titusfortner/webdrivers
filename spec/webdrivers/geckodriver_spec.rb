@@ -92,7 +92,7 @@ testing/geckodriver in https://hg.mozilla.org/mozilla-central.
 This program is subject to the terms of the Mozilla Public License 2.0.
 You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
-      allow(geckodriver).to receive(:system_call).and_return return_value
+      allow(Webdrivers::System).to receive(:call).with("#{geckodriver.driver_path} --version").and_return return_value
 
       expect(geckodriver.current_version).to eq Gem::Version.new('0.24.0')
     end
@@ -145,7 +145,7 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
   describe '#install_dir' do
     it 'uses ~/.webdrivers as default value' do
-      expect(geckodriver.install_dir).to include('.webdriver')
+      expect(Webdrivers::System.install_dir).to include('.webdriver')
     end
 
     it 'uses provided value' do
@@ -153,7 +153,7 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
         install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
         Webdrivers.install_dir = install_dir
 
-        expect(geckodriver.install_dir).to eq install_dir
+        expect(Webdrivers::System.install_dir).to eq install_dir
       ensure
         Webdrivers.install_dir = nil
       end
