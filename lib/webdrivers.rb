@@ -2,10 +2,10 @@
 
 require 'webdrivers/logger'
 require 'webdrivers/common'
-require 'webdrivers/chromedriver'
-require 'webdrivers/geckodriver'
-require 'webdrivers/iedriver'
-require 'webdrivers/mswebdriver'
+require 'webdrivers/drivers/chromedriver'
+require 'webdrivers/drivers/geckodriver'
+require 'webdrivers/drivers/iedriver'
+require 'webdrivers/drivers/mswebdriver'
 require 'webdrivers/selenium'
 
 module Webdrivers

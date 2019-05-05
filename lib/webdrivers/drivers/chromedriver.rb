@@ -43,9 +43,9 @@ module Webdrivers
       def latest_point_release(version)
         release_file = "LATEST_RELEASE_#{version}"
         begin
-          normalize_version(get(URI.join(base_url, release_file)))
+          normalize_version(Network.get(URI.join(base_url, release_file)))
         rescue Net::HTTPServerException
-          latest_release = normalize_version(get(URI.join(base_url, 'LATEST_RELEASE')))
+          latest_release = normalize_version(Network.get(URI.join(base_url, 'LATEST_RELEASE')))
           Webdrivers.logger.debug "Unable to find a driver for: #{version}"
 
           msg = version > latest_release ? 'you appear to be using a non-production version of Chrome; ' : ''

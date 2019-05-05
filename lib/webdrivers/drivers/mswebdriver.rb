@@ -58,7 +58,7 @@ module Webdrivers
       end
 
       def downloads
-        array = Nokogiri::HTML(get(base_url)).xpath("//li[@class='driver-download']/a")
+        array = Nokogiri::HTML(Network.get(base_url)).xpath("//li[@class='driver-download']/a")
         array.each_with_object({}) do |link, hash|
           next if link.text == 'Insiders'
 
@@ -69,7 +69,7 @@ module Webdrivers
 
       # Assume we have the latest if we are offline and file exists
       def correct_binary?
-        get(base_url)
+        Network.get(base_url)
         false
       rescue ConnectionError
         File.exist?(driver_path)

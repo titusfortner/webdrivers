@@ -26,7 +26,7 @@ module Webdrivers
       end
 
       def downloads
-        doc = Nokogiri::XML.parse(get(base_url))
+        doc = Nokogiri::XML.parse(Network.get(base_url))
         items = doc.css('Key').collect(&:text)
         items.select! { |item| item.include?('IEDriverServer_Win32') }
         ds = items.each_with_object({}) do |item, hash|
