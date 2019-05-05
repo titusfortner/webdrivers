@@ -7,7 +7,7 @@ describe Webdrivers::Geckodriver do
 
   before do
     geckodriver.remove
-    geckodriver.version = nil
+    geckodriver.required_version = nil
   end
 
   describe '#update' do
@@ -22,12 +22,13 @@ describe Webdrivers::Geckodriver do
       end
 
       it 'does not download when offline, but binary exists' do
+        allow(geckodriver).to receive(:system_call).and_return('geckodriver 0.24.0 ( 2019-01-28)')
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(geckodriver).to receive(:exists?).and_return(true)
 
         geckodriver.update
 
-        expect(File.exist?(geckodriver.binary)).to be false
+        expect(File.exist?(geckodriver.driver_path)).to be false
       end
 
       it 'raises ConnectionError when offline, and no binary exists' do
@@ -76,7 +77,7 @@ describe Webdrivers::Geckodriver do
 
   describe '#current_version' do
     it 'returns nil if binary does not exist on the system' do
-      allow(geckodriver).to receive(:binary).and_return('')
+      allow(geckodriver).to receive(:driver_path).and_return('')
 
       expect(geckodriver.current_version).to be_nil
     end
@@ -114,24 +115,17 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
   end
 
-  describe '#desired_version' do
-    it 'returns #latest_version if version is not specified' do
-      allow(geckodriver).to receive(:latest_version)
-
-      geckodriver.desired_version
-      expect(geckodriver).to have_received(:latest_version)
-    end
-
+  describe '#required_version=' do
     it 'returns the version specified as a Float' do
-      geckodriver.version = 0.12
+      geckodriver.required_version = 0.12
 
-      expect(geckodriver.desired_version).to eq Gem::Version.new('0.12')
+      expect(geckodriver.required_version).to eq Gem::Version.new('0.12')
     end
 
     it 'returns the version specified as a String' do
-      geckodriver.version = '0.12.1'
+      geckodriver.required_version = '0.12.1'
 
-      expect(geckodriver.desired_version).to eq Gem::Version.new('0.12.1')
+      expect(geckodriver.required_version).to eq Gem::Version.new('0.12.1')
     end
   end
 
@@ -144,8 +138,6 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
 
     it 'does not raise exception if no geckodriver found' do
-      geckodriver.update
-
       expect { geckodriver.remove }.not_to raise_error
     end
   end
@@ -167,9 +159,9 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
   end
 
-  describe '#binary' do
+  describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(geckodriver.binary).to match("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
+      expect(geckodriver.driver_path).to match("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
     end
   end
 end
