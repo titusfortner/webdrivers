@@ -45,16 +45,16 @@ driver will be downloaded and passed to Selenium.
 
 ```ruby
 # Chrome
-Webdrivers::Chromedriver.version = '2.46'
+Webdrivers::Chromedriver.required_version = '2.46'
 
 # Firefox
-Webdrivers::Geckodriver.version  = '0.23.0'
+Webdrivers::Geckodriver.required_version  = '0.23.0'
 
 # Microsoft Internet Explorer
-Webdrivers::IEdriver.version     = '3.14.0'
+Webdrivers::IEdriver.required_version     = '3.14.0'
 
 # Microsoft Edge
-Webdrivers::MSWebdriver.version  = '17134'
+Webdrivers::MSWebdriver.required_version  = '17134'
 ```
 
 You can also trigger the update in your code, but it is not required:
@@ -113,7 +113,7 @@ The version of `chromedriver` will depend on the version of Chrome you are using
 
  * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. More information [here](http://chromedriver.chromium.org/downloads/version-selection).
  * For versions <=  69, `chromedriver` version 2.46 will be downloaded.
- * For beta versions, you'll have to set the desired beta version of `chromedriver` using `Webdrivers::Chromedriver.version`.
+ * For beta versions, you'll have to set the desired beta version of `chromedriver` using `Webdrivers::Chromedriver.required_version`.
  
 The gem, by default, looks for the Google Chrome version. You can override this by providing a path to the Chromium binary:
 

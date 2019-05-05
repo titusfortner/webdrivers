@@ -7,7 +7,7 @@ describe Webdrivers::Chromedriver do
 
   before do
     chromedriver.remove
-    chromedriver.version = nil
+    chromedriver.required_version = nil
   end
 
   describe '#update' do
@@ -28,7 +28,7 @@ describe Webdrivers::Chromedriver do
 
         chromedriver.update
 
-        expect(File.exist?(chromedriver.binary)).to be false
+        expect(File.exist?(chromedriver.driver_path)).to be false
       end
 
       it 'does not download when offline, binary exists and matches major browser version' do
@@ -39,7 +39,7 @@ describe Webdrivers::Chromedriver do
 
         chromedriver.update
 
-        expect(File.exist?(chromedriver.binary)).to be false
+        expect(File.exist?(chromedriver.driver_path)).to be false
       end
 
       it 'raises ConnectionError when offline, and binary does not match major browser version' do
@@ -99,7 +99,7 @@ describe Webdrivers::Chromedriver do
 
   describe '#current_version' do
     it 'returns nil if binary does not exist on the system' do
-      allow(chromedriver).to receive(:binary).and_return('')
+      allow(chromedriver).to receive(:driver_path).and_return('')
 
       expect(chromedriver.current_version).to be_nil
     end
@@ -128,7 +128,7 @@ describe Webdrivers::Chromedriver do
     it 'raises VersionError for beta version' do
       allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
       msg = 'you appear to be using a non-production version of Chrome; please set '\
-'`Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver version: '\
+'`Webdrivers::Chromedriver.required_version = <desired driver version>` to an known chromedriver version: '\
 'https://chromedriver.storage.googleapis.com/index.html'
 
       expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
@@ -136,8 +136,8 @@ describe Webdrivers::Chromedriver do
 
     it 'raises VersionError for unknown version' do
       allow(chromedriver).to receive(:chrome_version).and_return('72.0.9999.0000')
-      msg = 'please set `Webdrivers::Chromedriver.version = <desired driver version>` to an known chromedriver '\
-'version: https://chromedriver.storage.googleapis.com/index.html'
+      msg = 'please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
+'to an known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
 
       expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
@@ -150,24 +150,17 @@ describe Webdrivers::Chromedriver do
     end
   end
 
-  describe '#desired_version' do
-    it 'returns #latest_version if version is not specified' do
-      allow(chromedriver).to receive(:latest_version)
-
-      chromedriver.desired_version
-      expect(chromedriver).to have_received(:latest_version)
-    end
-
+  describe '#required_version=' do
     it 'returns the version specified as a Float' do
-      chromedriver.version = 73.0
+      chromedriver.required_version = 73.0
 
-      expect(chromedriver.desired_version).to eq Gem::Version.new('73.0')
+      expect(chromedriver.required_version).to eq Gem::Version.new('73.0')
     end
 
     it 'returns the version specified as a String' do
-      chromedriver.version = '73.0'
+      chromedriver.required_version = '73.0'
 
-      expect(chromedriver.desired_version).to eq Gem::Version.new('73.0')
+      expect(chromedriver.required_version).to eq Gem::Version.new('73.0')
     end
   end
 
@@ -180,8 +173,6 @@ describe Webdrivers::Chromedriver do
     end
 
     it 'does not raise exception if no chromedriver found' do
-      chromedriver.update
-
       expect { chromedriver.remove }.not_to raise_error
     end
   end
@@ -203,9 +194,9 @@ describe Webdrivers::Chromedriver do
     end
   end
 
-  describe '#binary' do
+  describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(chromedriver.binary).to match("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
+      expect(chromedriver.driver_path).to match("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
     end
   end
 end

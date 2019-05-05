@@ -31,12 +31,26 @@ end
 
   class Common
     class << self
-      attr_accessor :version
+      attr_writer :required_version
+
+      def version
+        Webdrivers.logger.deprecate("#{self.class}#version", "#{self.class}#required_version")
+        required_version
+      end
+
+      def version=(version)
+        Webdrivers.logger.deprecate("#{self.class}#version=", "#{self.class}#required_version=")
+        self.required_version = version
+      end
+
+      def required_version
+        Gem::Version.new @required_version
+      end
 
       def update
         if correct_binary?
           Webdrivers.logger.debug 'The required webdriver version is already on the system'
-          return binary
+          return driver_path
         end
 
         remove
@@ -44,7 +58,11 @@ end
       end
 
       def desired_version
-        version.nil? ? latest_version : normalize_version(version)
+        old = "#{self.class}#desired_version"
+        new = "#{self.class}#required_version or #{self.class}#latest_version"
+        Webdrivers.logger.deprecate(old, new)
+
+        desired_version.version.empty? ? latest_version : normalize_version(desired_version)
       end
 
       def latest_version
@@ -52,19 +70,19 @@ end
       end
 
       def remove
-        max_attempts  = 3
+        max_attempts = 3
         attempts_made = 0
-        delay         = 0.5
-        Webdrivers.logger.debug "Deleting #{binary}"
+        delay = 0.5
+        Webdrivers.logger.debug "Deleting #{driver_path}"
         @download_url = nil
         @latest_version = nil
 
         begin
           attempts_made += 1
-          File.delete binary if File.exist? binary
+          File.delete driver_path if File.exist? driver_path
         rescue Errno::EACCES # Solves an intermittent file locking issue on Windows
           sleep(delay)
-          retry if File.exist?(binary) && attempts_made <= max_attempts
+          retry if File.exist?(driver_path) && attempts_made <= max_attempts
           raise
         end
       end
@@ -79,6 +97,11 @@ end
       end
 
       def binary
+        Webdrivers.logger.deprecate('#binary', '#driver_path')
+        driver_path
+      end
+
+      def driver_path
         File.join install_dir, file_name
       end
 
@@ -104,11 +127,11 @@ end
           Webdrivers.logger.debug "Deleting #{df.to_path}"
           df.close!
         end
-        raise "Could not decompress #{download_url} to get #{binary}" unless File.exist?(binary)
+        raise "Could not decompress #{download_url} to get #{driver_path}" unless File.exist?(driver_path)
 
-        FileUtils.chmod 'ugo+rx', binary
-        Webdrivers.logger.debug "Completed download and processing of #{binary}"
-        binary
+        FileUtils.chmod 'ugo+rx', driver_path
+        Webdrivers.logger.debug "Completed download and processing of #{driver_path}"
+        driver_path
       end
 
       def get(url, limit = 10)
@@ -146,7 +169,11 @@ end
       end
 
       def download_url
-        @download_url ||= version.nil? ? downloads[downloads.keys.max] : downloads[normalize_version(version)]
+        @download_url ||= if required_version.version.empty?
+                            downloads[downloads.keys.max]
+                          else
+                            downloads[normalize_version(required_version)]
+                          end
       end
 
       def using_proxy
@@ -154,7 +181,7 @@ end
       end
 
       def exists?
-        result = File.exist? binary
+        result = File.exist? driver_path
         Webdrivers.logger.debug "File already exists: #{result}"
         result
       end
@@ -210,9 +237,13 @@ end
       end
 
       def correct_binary?
-        desired_version == current_version
+        current_version == if required_version.version.empty?
+                             latest_version
+                           else
+                             normalize_version(required_version)
+                           end
       rescue ConnectionError
-        binary if sufficient_binary?
+        driver_path if sufficient_binary?
       end
 
       def sufficient_binary?
@@ -224,14 +255,16 @@ end
       end
 
       def binary_version
-        version = system_call("#{binary} --version")
-        Webdrivers.logger.debug "Current version of #{binary} is #{version}"
+        version = system_call("#{driver_path} --version")
+        Webdrivers.logger.debug "Current version of #{driver_path} is #{version}"
         version
       rescue Errno::ENOENT
+        Webdrivers.logger.debug "No Such File or Directory: #{driver_path}"
         nil
       end
 
       def system_call(call)
+        Webdrivers.logger.debug "making System call: #{call}"
         `#{call}`
       end
     end
