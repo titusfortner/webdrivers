@@ -142,9 +142,9 @@ module Webdrivers
         Webdrivers.proxy_addr && Webdrivers.proxy_port
       end
 
-      def downloaded?
+      def exists?
         result = File.exist? binary
-        Webdrivers.logger.debug "File is already downloaded: #{result}"
+        Webdrivers.logger.debug "File already exists: #{result}"
         result
       end
 
@@ -208,7 +208,7 @@ module Webdrivers
         @top_path
       end
 
-      # Already have latest version downloaded?
+      # Already have latest version?
       def correct_binary?
         desired_version == current_version && File.exist?(binary)
       end
