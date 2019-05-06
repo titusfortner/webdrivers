@@ -38,7 +38,7 @@ module Webdrivers
         release_file = "LATEST_RELEASE_#{version}"
         begin
           normalize_version(get(URI.join(base_url, release_file)))
-        rescue Net::HTTPServerException
+        rescue (Net::HTTPClientException rescue Net::HTTPServerException) # rubocop:disable Style/RescueModifier,Naming/RescuedExceptionsVariableName
           latest_release = normalize_version(get(URI.join(base_url, 'LATEST_RELEASE')))
           Webdrivers.logger.debug "Unable to find a driver for: #{version}"
 
