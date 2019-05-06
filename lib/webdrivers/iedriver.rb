@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 require 'rubygems/version'
+require 'webdrivers/common'
 
 module Webdrivers
   class IEdriver < Common
@@ -35,6 +36,21 @@ module Webdrivers
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
         ds
+      end
+    end
+  end
+end
+
+if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+  ::Selenium::WebDriver::IE::Service.driver_path = proc { ::Webdrivers::IEdriver.update }
+else
+  # v3.141.0 and lower
+  module Selenium
+    module WebDriver
+      module IE
+        def self.driver_path
+          @driver_path ||= Webdrivers::IEdriver.update
+        end
       end
     end
   end

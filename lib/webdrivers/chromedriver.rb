@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 require 'shellwords'
+require 'webdrivers/common'
 
 module Webdrivers
   class Chromedriver < Common
@@ -155,6 +156,21 @@ module Webdrivers
       def browser_binary
         # For Chromium, Brave, or whatever else
         Selenium::WebDriver::Chrome.path
+      end
+    end
+  end
+end
+
+if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+  ::Selenium::WebDriver::Chrome::Service.driver_path = proc { ::Webdrivers::Chromedriver.update }
+else
+  # v3.141.0 and lower
+  module Selenium
+    module WebDriver
+      module Chrome
+        def self.driver_path
+          @driver_path ||= Webdrivers::Chromedriver.update
+        end
       end
     end
   end

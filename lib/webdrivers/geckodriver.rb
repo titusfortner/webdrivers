@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
+require 'webdrivers/common'
 
 module Webdrivers
   class Geckodriver < Common
@@ -35,6 +36,21 @@ module Webdrivers
 
       def base_url
         'https://github.com/mozilla/geckodriver/releases'
+      end
+    end
+  end
+end
+
+if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+  ::Selenium::WebDriver::Firefox::Service.driver_path = proc { ::Webdrivers::Geckodriver.update }
+else
+  # v3.141.0 and lower
+  module Selenium
+    module WebDriver
+      module Firefox
+        def self.driver_path
+          @driver_path ||= Webdrivers::Geckodriver.update
+        end
       end
     end
   end
