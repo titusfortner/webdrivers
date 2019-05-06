@@ -7,7 +7,7 @@ module Webdrivers
     class << self
       def current_version
         Webdrivers.logger.debug 'Checking current version'
-        return nil unless downloaded?
+        return nil unless exists?
 
         string = `#{binary} --version`
         Webdrivers.logger.debug "Current version of #{binary} is #{string}"
