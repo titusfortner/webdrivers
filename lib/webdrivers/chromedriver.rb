@@ -19,17 +19,17 @@ module Webdrivers
       end
 
       def latest_version
-        return @latest_version if @latest_version
+        @latest_version ||= begin
+          raise StandardError, 'Can not reach site' unless site_available?
 
-        raise StandardError, 'Can not reach site' unless site_available?
+          # Versions before 70 do not have a LATEST_RELEASE file
+          return normalize_version('2.46') if release_version < normalize_version('70.0.3538')
 
-        # Versions before 70 do not have a LATEST_RELEASE file
-        return normalize_version('2.46') if release_version < normalize_version('70.0.3538')
+          latest_applicable = latest_point_release(release_version)
 
-        latest_applicable = latest_point_release(release_version)
-
-        Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
-        @latest_version = normalize_version(latest_applicable)
+          Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
+          normalize_version(latest_applicable)
+        end
       end
 
       private
