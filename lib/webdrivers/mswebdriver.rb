@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'webdrivers/common'
+
 module Webdrivers
   class MSWebdriver < Common
     class << self
@@ -53,6 +55,21 @@ module Webdrivers
       # argument to check the current version.
       def correct_binary?
         File.exist?(binary)
+      end
+    end
+  end
+end
+
+if ::Selenium::WebDriver::Service.respond_to? :driver_path=
+  ::Selenium::WebDriver::Edge::Service.driver_path = proc { ::Webdrivers::MSWebdriver.update }
+else
+  # v3.141.0 and lower
+  module Selenium
+    module WebDriver
+      module Edge
+        def self.driver_path
+          @driver_path ||= Webdrivers::MSWebdriver.update
+        end
       end
     end
   end
