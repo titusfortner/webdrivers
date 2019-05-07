@@ -4,16 +4,20 @@ module Webdrivers
   class Network
     class << self
       def get(url, limit = 10)
+        Webdrivers.logger.debug "Making network call to #{url}"
+
         response = get_response(url, limit)
         case response
         when Net::HTTPSuccess
           response.body
         else
-          response.value
+          raise StandardError, "#{response.class::EXCEPTION_TYPE}: #{response.code} \"#{response.message}\" with #{url}"
         end
       end
 
       def get_url(url, limit = 10)
+        Webdrivers.logger.debug "Making network call to #{url}"
+
         get_response(url, limit).uri.to_s
       end
 

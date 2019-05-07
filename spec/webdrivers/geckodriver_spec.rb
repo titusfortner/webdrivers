@@ -73,6 +73,25 @@ describe Webdrivers::Geckodriver do
         expect { geckodriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
+
+    it 'finds the required version from parsed downloads page' do
+      base = 'https://github.com/mozilla/geckodriver/releases/download'
+      url = %r{#{base}\/v0\.2\.0\/geckodriver-v0\.2\.0-.*\.tar\.gz}
+
+      allow(Webdrivers::System).to receive(:download).with(url, geckodriver.driver_path)
+
+      geckodriver.required_version = '0.2.0'
+      geckodriver.update
+
+      expect(Webdrivers::System).to have_received(:download).with(url, geckodriver.driver_path)
+    end
+
+    it 'does something when a wrong version is supplied' do
+      geckodriver.required_version = '0.2.0'
+
+      msg = /Net::HTTPServerException: 404 "Not Found"/
+      expect { geckodriver.update }.to raise_error(StandardError, msg)
+    end
   end
 
   describe '#current_version' do
@@ -100,18 +119,13 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
   end
 
   describe '#latest_version' do
-    it 'finds the latest version from parsed hash' do
-      base = 'https://github.com/mozilla/geckodriver/releases/download'
-      hash = {Gem::Version.new('0.1.0') => "#{base}/v0.1.0/geckodriver-v0.1.0-macos.tar.gz",
-              Gem::Version.new('0.2.0') => "#{base}/v0.2.0/geckodriver-v0.2.0-macos.tar.gz",
-              Gem::Version.new('0.3.0') => "#{base}/v0.3.0/geckodriver-v0.3.0-macos.tar.gz"}
-      allow(geckodriver).to receive(:downloads).and_return(hash)
+    it 'finds the latest version directly' do
+      url = 'https://github.com/mozilla/geckodriver/releases/tag/v0.24.0'
+      allow(Webdrivers::Network).to receive(:get_url).and_return(url)
 
-      expect(geckodriver.latest_version).to eq Gem::Version.new('0.3.0')
-    end
+      geckodriver.update
 
-    it 'correctly parses the downloads page' do
-      expect(geckodriver.send(:downloads)).not_to be_empty
+      expect(geckodriver.latest_version).to eq Gem::Version.new('0.24.0')
     end
   end
 
