@@ -8,7 +8,7 @@ describe Webdrivers::MSWebdriver do
   it 'gives deprecation for using it' do
     msg = /WARN Webdrivers Microsoft WebDriver for the Edge browser is no longer supported by Webdrivers gem/
 
-    if Selenium::WebDriver::VERSION > '3.141.0'
+    if defined?(Selenium::WebDriver::VERSION) && Selenium::WebDriver::VERSION > '3.141.0'
       expect { Selenium::WebDriver::Edge::Service.driver_path }.to output(msg).to_stdout_from_any_process
     else
       expect { Selenium::WebDriver::Edge.driver_path }.to output(msg).to_stdout_from_any_process

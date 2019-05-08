@@ -13,7 +13,7 @@ end
 module Selenium
   module WebDriver
     module Edge
-      if Selenium::WebDriver::VERSION > '3.141.0'
+      if defined?(Selenium::WebDriver::VERSION) && Selenium::WebDriver::VERSION > '3.141.0'
         class Service < WebDriver::Service
           class << self
             alias se_driver_path driver_path
