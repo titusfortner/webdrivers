@@ -13,7 +13,6 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [chromedriver](http://chromedriver.chromium.org/)
 * [geckodriver](https://github.com/mozilla/geckodriver)
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
-* [MicrosoftWebDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
 ## Usage
 
@@ -30,6 +29,12 @@ require 'webdrivers'
 The drivers will now be automatically downloaded or updated when you launch a browser
 through Selenium. 
 
+If you want webdrivers to only manage specific drivers you can specify as follows:
+```ruby
+require 'webdrivers/chromedriver'
+require 'webdrivers/iedriver'
+```
+
 ### Download Location
 
 The default download location is `~/.webdrivers` directory, and this is configurable:
@@ -40,8 +45,8 @@ The default download location is `~/.webdrivers` directory, and this is configur
 
 ### Version Pinning
 
-If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise, the latest (stable) 
-driver will be downloaded and passed to Selenium.
+If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise, 
+the latest (stable) driver will be downloaded and passed to Selenium.
 
 ```ruby
 # Chrome
@@ -57,7 +62,7 @@ Webdrivers::IEdriver.required_version     = '3.14.0'
 Webdrivers::MSWebdriver.required_version  = '17134'
 ```
 
-You can also trigger the update in your code, but it is not required:
+You can explicitly trigger the update in your code, but this will happen automatically when the driver is initialized:
 
 ```ruby
 Webdrivers::Chromedriver.update
@@ -107,33 +112,32 @@ Webdrivers.logger.level = :DEBUG
 
 ### Browser Specific Notes
 
-#### When using Chrome/Chromium
+#### Chrome/Chromium
 
 The version of `chromedriver` will depend on the version of Chrome you are using it with:
 
- * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. More information [here](http://chromedriver.chromium.org/downloads/version-selection).
+ * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. 
+ More information [here](http://chromedriver.chromium.org/downloads/version-selection).
  * For versions <=  69, `chromedriver` version 2.46 will be downloaded.
- * For beta versions, you'll have to set the desired beta version of `chromedriver` using `Webdrivers::Chromedriver.required_version`.
+ * For beta versions, you'll have to set the desired beta version of `chromedriver` 
+ using `Webdrivers::Chromedriver.required_version`.
  
-The gem, by default, looks for the Google Chrome version. You can override this by providing a path to the Chromium binary:
+The gem, by default, looks for the Google Chrome version. You can override this by providing a path to the 
+Chromium binary:
 
 ```ruby
 Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 ```
 
-This is also required if Google Chrome is not installed in its [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
+This is also required if Google Chrome is not installed in its 
+[default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
-#### When using Microsoft Edge
+#### Microsoft Edge
 
-After updating Microsoft Edge on Windows 10, you will need to delete the existing binary (`%USERPROFILE%/.webdrivers/MicrosoftWebDriver.exe`) to
-to be able to download the latest version through this gem.
+Microsoft Edge support has been removed for now, as it is currently unreliable.
 
-This is because `MicrosoftWebDriver.exe` is not backwards compatible and it does not have an argument to retrieve 
-the current version. We work around this limitation by querying the current Edge version from the registry and 
-fetching the corresponding binary IF a file does not already exist. If a file does exist, the gem assumes it is the 
-expected version and skips the download process.
-
-If you continue with the outdated binary, Selenium will throw an error: `unable to connect to MicrosoftWebDriver localhost:17556`.
+To use Microsoft Edge, please visit the 
+[Downloads and Installation page](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads)
 
 ## Wiki
 
@@ -150,5 +154,5 @@ Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfo
 
 ## Copyright
 
-Copyright (c) 2017 Titus Fortner
+Copyright (c) 2017-2019 Titus Fortner
 See LICENSE for details
