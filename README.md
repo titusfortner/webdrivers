@@ -29,6 +29,8 @@ require 'webdrivers'
 The drivers will now be automatically downloaded or updated when you launch a browser
 through Selenium. 
 
+### Specific Drivers
+
 If you want webdrivers to only manage specific drivers you can specify as follows:
 ```ruby
 require 'webdrivers/chromedriver'
@@ -67,6 +69,15 @@ You can explicitly trigger the update in your code, but this will happen automat
 ```ruby
 Webdrivers::Chromedriver.update
 ```
+
+### Caching Drivers
+
+You can set Webdrivers to only look for updates if the previous check was longer ago than a specified number of seconds.
+```ruby
+Webdrivers.cache_time = 86_400
+```
+
+The default in 3.9 is zero, and the default for 4.x will be 24 hours (86,400 seconds)
 
 ### Proxy
 
