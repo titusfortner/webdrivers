@@ -2,6 +2,7 @@
 
 require 'shellwords'
 require 'webdrivers/common'
+require 'webdrivers/chrome_finder'
 
 module Webdrivers
   class Chromedriver < Common
@@ -42,12 +43,7 @@ module Webdrivers
       #
       # @return [Gem::Version]
       def chrome_version
-        ver = send("chrome_on_#{System.platform}").chomp
-
-        raise VersionError, 'Failed to find Chrome binary or its version.' if ver.nil? || ver.empty?
-
-        Webdrivers.logger.debug "Browser version: #{ver}"
-        normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
+        normalize_version ChromeFinder.version
       end
 
       #
@@ -108,61 +104,6 @@ module Webdrivers
       def release_version
         chrome = normalize_version(chrome_version)
         normalize_version(chrome.segments[0..2].join('.'))
-      end
-
-      def chrome_on_win
-        if browser_binary
-          Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return System.call("powershell (Get-ItemProperty '#{browser_binary}').VersionInfo.ProductVersion").strip
-        end
-
-        # Workaround for Google Chrome when using Jruby on Windows.
-        # @see https://github.com/titusfortner/webdrivers/issues/41
-        if RUBY_PLATFORM == 'java'
-          ver = 'powershell (Get-Item -Path ((Get-ItemProperty "HKLM:\\Software\\Microsoft' \
-          "\\Windows\\CurrentVersion\\App` Paths\\chrome.exe\").\\'(default)\\'))" \
-          '.VersionInfo.ProductVersion'
-          return System.call(ver).strip
-        end
-
-        # Default to Google Chrome
-        reg = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
-        executable = System.call("powershell (Get-ItemProperty '#{reg}' -Name '(default)').'(default)'").strip
-        Webdrivers.logger.debug "Browser executable: '#{executable}'"
-        ps = "(Get-Item (Get-ItemProperty '#{reg}').'(default)').VersionInfo.ProductVersion"
-        System.call("powershell #{ps}").strip
-      end
-
-      def chrome_on_linux
-        if browser_binary
-          Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return System.call("#{Shellwords.escape browser_binary} --product-version").strip
-        end
-
-        # Default to Google Chrome
-        executable = System.call('which google-chrome').strip
-        Webdrivers.logger.debug "Browser executable: '#{executable}'"
-        System.call("#{executable} --product-version").strip
-      end
-
-      def chrome_on_mac
-        if browser_binary
-          Webdrivers.logger.debug "Browser executable: '#{browser_binary}'"
-          return System.call("#{Shellwords.escape browser_binary} --version").strip
-        end
-
-        # Default to Google Chrome
-        executable = Shellwords.escape '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-        Webdrivers.logger.debug "Browser executable: #{executable}"
-        System.call("#{executable} --version").strip
-      end
-
-      #
-      # Returns user defined browser executable path from Selenium::WebDrivers::Chrome#path.
-      #
-      def browser_binary
-        # For Chromium, Brave, or whatever else
-        Selenium::WebDriver::Chrome.path
       end
 
       def sufficient_binary?
