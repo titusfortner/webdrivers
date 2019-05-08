@@ -67,7 +67,7 @@ module Webdrivers
       def download_url
         return @download_url if @download_url
 
-        version = if required_version.version.empty?
+        version = if required_version == EMPTY_VERSION
                     latest_version
                   else
                     normalize_version(required_version)

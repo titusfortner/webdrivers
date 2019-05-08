@@ -31,7 +31,11 @@ module Webdrivers
       end
 
       def download_url
-        @download_url ||= required_version.version.empty? ? direct_url(latest_version) : direct_url(required_version)
+        @download_url ||= if required_version == EMPTY_VERSION
+                            direct_url(latest_version)
+                          else
+                            direct_url(required_version)
+                          end
       end
 
       def direct_url(version)

@@ -71,7 +71,7 @@ end
         new = "#{self.class}#required_version or #{self.class}#latest_version"
         Webdrivers.logger.deprecate(old, new)
 
-        desired_version.version.empty? ? latest_version : normalize_version(desired_version)
+        desired_version == EMPTY_VERSION ? latest_version : normalize_version(desired_version)
       end
 
       def remove
@@ -98,7 +98,7 @@ end
       private
 
       def download_url
-        @download_url ||= if required_version.version.empty?
+        @download_url ||= if required_version == EMPTY_VERSION
                             downloads[downloads.keys.max]
                           else
                             downloads[normalize_version(required_version)]
@@ -110,7 +110,7 @@ end
       end
 
       def correct_binary?
-        current_version == if required_version.version.empty?
+        current_version == if required_version == EMPTY_VERSION
                              latest_version
                            else
                              normalize_version(required_version)
@@ -124,7 +124,7 @@ end
       end
 
       def normalize_version(version)
-        Gem::Version.new(version&.to_s)
+        Gem::Version.new(version.to_s)
       end
 
       def binary_version
@@ -150,6 +150,8 @@ end
           normalize_version version
         end
       end
+
+      EMPTY_VERSION = Gem::Version.new('')
     end
   end
 end
