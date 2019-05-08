@@ -39,10 +39,20 @@ module Webdrivers
       end
 
       def valid_cache?(file_name)
-        file = "#{install_dir}/#{file_name.gsub('.exe', '')}.version"
-        return false unless File.exist?(file)
+        driver_file = "#{install_dir}/#{file_name.gsub('.exe', '')}"
+        cache_file = "#{driver_file}.version"
+        return false unless File.exist?(cache_file)
 
-        Time.now - File.mtime(file) < Webdrivers.cache_time
+        return false if Time.now - File.mtime(cache_file) < Webdrivers.cache_time
+
+        begin
+          Selenium::WebDriver::Wait.new(timeout: 30, interval: 0.1).until do
+            File.exist?(driver_file)
+          end
+          return true
+        rescue TimeoutError
+          return false
+        end
       end
 
       def download(url, target)
