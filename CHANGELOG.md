@@ -1,3 +1,7 @@
+### 3.9.1 (2019-05-09)
+* Fix bug throwing nil warnings (issue #107)
+* Fix bug preventing running on older versions of Selenium
+
 ### 3.9.0 (2019-05-07)
 * Make public methods more obvious and deprecate unnecessary methods (issue #36)
 * Allow geckodriver binaries to be downloaded directly (issue #30)
