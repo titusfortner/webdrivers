@@ -7,6 +7,10 @@ require 'webdrivers/common'
 module Webdrivers
   class IEdriver < Common
     class << self
+      #
+      # Returns current IEDriverServer.exe version.
+      #
+      # @return [Gem::Version]
       def current_version
         Webdrivers.logger.debug 'Checking current version'
         return nil unless exists?
@@ -17,6 +21,10 @@ module Webdrivers
         normalize_version version.match(/IEDriverServer.exe (\d\.\d+\.\d+)/)[1]
       end
 
+      #
+      # Returns latest available IEDriverServer.exe version.
+      #
+      # @return [Gem::Version]
       def latest_version
         @latest_version ||= with_cache(file_name) { downloads.keys.max }
       end

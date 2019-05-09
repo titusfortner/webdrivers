@@ -4,6 +4,9 @@ require 'rubygems/package'
 require 'zip'
 
 module Webdrivers
+  #
+  # @api private
+  #
   class System
     class << self
       def delete(file)
