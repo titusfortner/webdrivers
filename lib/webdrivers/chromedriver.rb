@@ -6,6 +6,10 @@ require 'webdrivers/common'
 module Webdrivers
   class Chromedriver < Common
     class << self
+      #
+      # Returns current chromedriver version.
+      #
+      # @return [Gem::Version]
       def current_version
         Webdrivers.logger.debug 'Checking current version'
         return nil unless exists?
@@ -17,6 +21,10 @@ module Webdrivers
         normalize_version version[/\d+\.\d+(\.\d+)?(\.\d+)?/]
       end
 
+      #
+      # Returns latest available chromedriver version.
+      #
+      # @return [Gem::Version]
       def latest_version
         @latest_version ||= begin
           # Versions before 70 do not have a LATEST_RELEASE file
@@ -29,7 +37,10 @@ module Webdrivers
         end
       end
 
-      # Returns currently installed Chrome version
+      #
+      # Returns currently installed Chrome/Chromium version.
+      #
+      # @return [Gem::Version]
       def chrome_version
         ver = send("chrome_on_#{System.platform}").chomp
 

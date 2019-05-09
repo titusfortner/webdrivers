@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Webdrivers
+  #
+  # @api private
+  #
   class Network
     class << self
       def get(url, limit = 10)

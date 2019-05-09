@@ -19,6 +19,9 @@ module Webdrivers
 
     attr_writer :cache_time
 
+    #
+    # Returns the amount of time (Seconds) the gem waits between two update checks.
+    #
     def cache_time
       @cache_time || 0
     end
@@ -27,6 +30,18 @@ module Webdrivers
       @logger ||= Webdrivers::Logger.new
     end
 
+    #
+    # Provides a convenient way to configure the gem.
+    #
+    # @example Configure proxy and cache_time
+    #   Webdrivers.configure do |config|
+    #     config.proxy_addr = 'myproxy_address.com'
+    #     config.proxy_port = '8080'
+    #     config.proxy_user = 'username'
+    #     config.proxy_pass = 'password'
+    #     config.cache_time = 604_800 # 7 days
+    #   end
+    #
     def configure
       yield self
     end
@@ -52,10 +67,18 @@ end
         self.required_version = version
       end
 
+      #
+      # Returns the user defined required version.
+      #
+      # @return [Gem::Version]
       def required_version
         normalize_version @required_version
       end
 
+      #
+      # Triggers an update check.
+      #
+      # @return [String] Path to the driver binary.
       def update
         if correct_binary?
           Webdrivers.logger.debug 'The required webdriver version is already on the system'
@@ -74,6 +97,9 @@ end
         desired_version == EMPTY_VERSION ? latest_version : normalize_version(desired_version)
       end
 
+      #
+      # Deletes the existing driver binary.
+      #
       def remove
         @download_url = nil
         @latest_version = nil
@@ -91,6 +117,10 @@ end
         driver_path
       end
 
+      #
+      # Returns path to the driver binary.
+      #
+      # @return [String]
       def driver_path
         File.join System.install_dir, file_name
       end

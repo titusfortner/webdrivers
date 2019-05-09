@@ -6,6 +6,10 @@ require 'webdrivers/common'
 module Webdrivers
   class Geckodriver < Common
     class << self
+      #
+      # Returns current geckodriver version.
+      #
+      # @return [Gem::Version]
       def current_version
         Webdrivers.logger.debug 'Checking current version'
         return nil unless exists?
@@ -16,6 +20,10 @@ module Webdrivers
         normalize_version version.match(/geckodriver (\d+\.\d+\.\d+)/)[1]
       end
 
+      #
+      # Returns latest available geckodriver version.
+      #
+      # @return [Gem::Version]
       def latest_version
         @latest_version ||= with_cache(file_name) { normalize_version(Network.get_url("#{base_url}/latest")[/[^v]*$/]) }
       end
