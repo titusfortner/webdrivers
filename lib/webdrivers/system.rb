@@ -94,7 +94,7 @@ module Webdrivers
           Webdrivers.logger.debug 'No Decompression needed'
           FileUtils.cp(tempfile, File.join(Dir.pwd, file_name))
         end
-        raise "Could not decompress #{url} to get #{target}" unless File.exist?(target)
+        raise "Could not decompress #{file_name} to get #{target}" unless File.exist?(File.basename(target))
       end
 
       def untarbz2_file(filename)
