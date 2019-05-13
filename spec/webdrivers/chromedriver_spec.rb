@@ -5,10 +5,7 @@ require 'spec_helper'
 describe Webdrivers::Chromedriver do
   let(:chromedriver) { described_class }
 
-  before do
-    chromedriver.remove
-    chromedriver.required_version = nil
-  end
+  before { chromedriver.remove }
 
   describe '#update' do
     context 'when evaluating #correct_binary?' do
@@ -33,6 +30,19 @@ describe Webdrivers::Chromedriver do
 
       it 'does not download when offline, binary exists and matches major browser version' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
+        allow(chromedriver).to receive(:exists?).and_return(true)
+        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
+
+        chromedriver.update
+
+        expect(File.exist?(chromedriver.driver_path)).to be false
+      end
+
+      it 'does not download when get raises exception, binary exists and matches major browser version' do
+        client_error = instance_double(Net::HTTPNotFound, class: Net::HTTPNotFound, code: 404, message: '')
+
+        allow(Webdrivers::Network).to receive(:get_response).and_return(client_error)
         allow(chromedriver).to receive(:exists?).and_return(true)
         allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
@@ -140,17 +150,19 @@ describe Webdrivers::Chromedriver do
 
     it 'raises VersionError for beta version' do
       allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
-      msg = 'you appear to be using a non-production version of Chrome; please set '\
-'`Webdrivers::Chromedriver.required_version = <desired driver version>` to an known chromedriver version: '\
-'https://chromedriver.storage.googleapis.com/index.html'
+      msg = 'Unable to find latest point release version for 100.0.0. '\
+'You appear to be using a non-production version of Chrome. '\
+'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
+'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
 
       expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
 
     it 'raises VersionError for unknown version' do
       allow(chromedriver).to receive(:chrome_version).and_return('72.0.9999.0000')
-      msg = 'please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
-'to an known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+      msg = 'Unable to find latest point release version for 72.0.9999. '\
+'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
+'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
 
       expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
@@ -192,6 +204,8 @@ describe Webdrivers::Chromedriver do
   end
 
   describe '#required_version=' do
+    after { chromedriver.required_version = nil }
+
     it 'returns the version specified as a Float' do
       chromedriver.required_version = 73.0
 

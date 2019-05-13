@@ -42,18 +42,25 @@ module Webdrivers
       private
 
       def latest_point_release(version)
-        release_file = "LATEST_RELEASE_#{version}"
-        begin
-          normalize_version(Network.get(URI.join(base_url, release_file)))
-        rescue StandardError
+        normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+      rescue NetworkError
+        msg = "Unable to find latest point release version for #{version}."
+        msg = begin
           latest_release = normalize_version(Network.get(URI.join(base_url, 'LATEST_RELEASE')))
-          Webdrivers.logger.debug "Unable to find a driver for: #{version}"
-
-          msg = version > latest_release ? 'you appear to be using a non-production version of Chrome; ' : ''
-          msg = "#{msg}please set `Webdrivers::Chromedriver.required_version = <desired driver version>` to an known "\
-'chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
-          raise VersionError, msg
+          if version > latest_release
+            "#{msg} You appear to be using a non-production version of Chrome."
+          else
+            msg
+          end
+              rescue NetworkError
+                "#{msg} A network issue is preventing determination of latest chromedriver release."
         end
+
+        msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
+'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+
+        Webdrivers.logger.debug msg
+        raise VersionError, msg
       end
 
       def file_name
