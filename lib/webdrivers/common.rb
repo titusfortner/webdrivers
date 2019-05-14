@@ -129,6 +129,14 @@ end
         File.join System.install_dir, file_name
       end
 
+      #
+      # Performs an update check and then runs the execuable
+      # with the provided *args*
+      def run(*args)
+        update
+        exec driver_path, *args
+      end
+
       private
 
       def download_url

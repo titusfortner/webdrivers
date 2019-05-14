@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
-require 'webdrivers/common'
+require_relative 'common'
 
 module Webdrivers
   class Geckodriver < Common
