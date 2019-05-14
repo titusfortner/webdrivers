@@ -1,4 +1,4 @@
-### 3.9.1 (2019-05-14)
+### 3.9.2 (2019-05-14)
 * Allow webdrivers to handle network mocking ([#116](https://github.com/titusfortner/webdrivers/pull/116))
 * Fix a Windows specific bug when decompressing the driver packages ([#114](https://github.com/titusfortner/webdrivers/pull/114))
 
