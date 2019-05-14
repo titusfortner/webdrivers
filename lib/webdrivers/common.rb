@@ -2,9 +2,9 @@
 
 require 'rubygems/package'
 require 'zip'
-require 'webdrivers/logger'
-require 'webdrivers/network'
-require 'webdrivers/system'
+require_relative 'logger'
+require_relative 'network'
+require_relative 'system'
 require 'selenium-webdriver'
 
 module Webdrivers

@@ -1,0 +1,6 @@
+#! /usr/bin/env ruby
+
+require_relative '../lib/webdrivers/chromedriver'
+
+Webdrivers::Chromedriver.update 
+exec Webdrivers::Chromedriver.driver_path, *ARGV
