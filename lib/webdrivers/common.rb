@@ -14,6 +14,9 @@ module Webdrivers
   class VersionError < StandardError
   end
 
+  class NetworkError < StandardError
+  end
+
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 
@@ -81,7 +84,8 @@ end
       # @return [String] Path to the driver binary.
       def update
         if correct_binary?
-          Webdrivers.logger.debug 'The required webdriver version is already on the system'
+          msg = required_version != EMPTY_VERSION ?  'The required webdriver version' : 'A working webdriver version'
+          Webdrivers.logger.debug "#{msg} is already on the system"
           return driver_path
         end
 
@@ -145,7 +149,7 @@ end
                            else
                              normalize_version(required_version)
                            end
-      rescue ConnectionError
+      rescue ConnectionError, VersionError
         driver_path if sufficient_binary?
       end
 

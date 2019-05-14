@@ -14,7 +14,7 @@ module Webdrivers
         when Net::HTTPSuccess
           response.body
         else
-          raise StandardError, "#{response.class::EXCEPTION_TYPE}: #{response.code} \"#{response.message}\" with #{url}"
+          raise NetworkError, "#{response.class::EXCEPTION_TYPE}: #{response.code} \"#{response.message}\" with #{url}"
         end
       end
 
@@ -25,7 +25,7 @@ module Webdrivers
       end
 
       def get_response(url, limit = 10)
-        raise StandardError, 'Too many HTTP redirects' if limit.zero?
+        raise ConnectionError, 'Too many HTTP redirects' if limit.zero?
 
         begin
           response = http.get_response(URI(url))
