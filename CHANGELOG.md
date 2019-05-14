@@ -1,3 +1,7 @@
+### 3.9.1 (2019-05-14)
+* Allow webdrivers to handle network mocking ([#116](https://github.com/titusfortner/webdrivers/pull/116))
+* Fix a Windows specific bug when decompressing the driver packages ([#114](https://github.com/titusfortner/webdrivers/pull/114))
+
 ### 3.9.1 (2019-05-09)
 * Fix bug throwing nil warnings (issue #107)
 * Fix bug preventing running on older versions of Selenium
