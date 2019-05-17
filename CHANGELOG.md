@@ -1,6 +1,11 @@
+### 3.9.3 (2019-05-17)
+* Fix a Windows specific bug when decompressing the driver packages 
+([#118](https://github.com/titusfortner/webdrivers/pull/118), thanks Eduardo Gutierrez)
+
 ### 3.9.2 (2019-05-14)
 * Allow webdrivers to handle network mocking ([#116](https://github.com/titusfortner/webdrivers/pull/116))
-* Fix a Windows specific bug when decompressing the driver packages ([#114](https://github.com/titusfortner/webdrivers/pull/114))
+* Fix a Windows specific bug when decompressing the driver packages 
+([#114](https://github.com/titusfortner/webdrivers/pull/114))
 
 ### 3.9.1 (2019-05-09)
 * Fix bug throwing nil warnings (issue #107)
@@ -24,20 +29,27 @@
 
 ### 3.8.0 (2019-04-17)
 * Add support for `selenium-webdriver` v4. See [#69](https://github.com/titusfortner/webdrivers/pull/69).
-* Remove dependency on `net_http_ssl_fix` gem. `Webdrivers.net_http_ssl_fix` now raises an exception and points to other solutions. See [#60](https://github.com/titusfortner/webdrivers/pull/60) and [#68](https://github.com/titusfortner/webdrivers/pull/68).
+* Remove dependency on `net_http_ssl_fix` gem. `Webdrivers.net_http_ssl_fix` now raises an exception and 
+points to other solutions. See [#60](https://github.com/titusfortner/webdrivers/pull/60) and 
+[#68](https://github.com/titusfortner/webdrivers/pull/68) (thanks Samuel Williams & Maik Arnold).
 
 ### 3.7.2 (2019-04-01)
-* Fix bugs in methods that retrieve Chrome/Chromium version. See [#43](https://github.com/titusfortner/webdrivers/pull/43) and [#52](https://github.com/titusfortner/webdrivers/issues/52).
-* Add workaround for a Jruby bug when retrieving Chrome version on Windows. See [#41](https://github.com/titusfortner/webdrivers/issues/41).
+* Fix bugs in methods that retrieve Chrome/Chromium version. 
+See [#43](https://github.com/titusfortner/webdrivers/pull/43) 
+and [#52](https://github.com/titusfortner/webdrivers/issues/52) (Thanks Ochko). 
+* Add workaround for a Jruby bug when retrieving Chrome version on Windows. 
+See [#41](https://github.com/titusfortner/webdrivers/issues/41).
 * Update README with more information.
 
 ### 3.7.1 (2019-03-25)
-* Use `Selenium::WebDriver::Chrome#path` to check for a user given browser executable before defaulting to Google Chrome. Addresses [#38](https://github.com/titusfortner/webdrivers/issues/38).
+* Use `Selenium::WebDriver::Chrome#path` to check for a user given browser executable 
+before defaulting to Google Chrome. Addresses [#38](https://github.com/titusfortner/webdrivers/issues/38).
 * Download `chromedriver` v2.46 if Chrome/Chromium version is less than 70.
 
 ### 3.7.0 (2019-03-19)
 
-* `chromedriver` version now matches the installed Chrome version. See [#32](https://github.com/titusfortner/webdrivers/pull/32).
+* `chromedriver` version now matches the installed Chrome version. 
+See [#32](https://github.com/titusfortner/webdrivers/pull/32).
 
 ### 3.6.0 (2018-12-30)
 
