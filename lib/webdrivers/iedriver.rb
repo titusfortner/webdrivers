@@ -29,14 +29,18 @@ module Webdrivers
         @latest_version ||= with_cache(file_name) { downloads.keys.max }
       end
 
+      #
+      # Returns url with domain for calls to get this driver.
+      #
+      # @return [String]
+      def base_url
+        'https://selenium-release.storage.googleapis.com/'
+      end
+
       private
 
       def file_name
         'IEDriverServer.exe'
-      end
-
-      def base_url
-        'https://selenium-release.storage.googleapis.com/'
       end
 
       def downloads

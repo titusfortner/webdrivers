@@ -28,14 +28,18 @@ module Webdrivers
         @latest_version ||= with_cache(file_name) { normalize_version(Network.get_url("#{base_url}/latest")[/[^v]*$/]) }
       end
 
+      #
+      # Returns url with domain for calls to get this driver.
+      #
+      # @return [String]
+      def base_url
+        'https://github.com/mozilla/geckodriver/releases'
+      end
+
       private
 
       def file_name
         System.platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
-      end
-
-      def base_url
-        'https://github.com/mozilla/geckodriver/releases'
       end
 
       def download_url

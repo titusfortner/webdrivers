@@ -50,6 +50,14 @@ module Webdrivers
         normalize_version ver[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
       end
 
+      #
+      # Returns url with domain for calls to get this driver.
+      #
+      # @return [String]
+      def base_url
+        'https://chromedriver.storage.googleapis.com'
+      end
+
       private
 
       def latest_point_release(version)
@@ -76,10 +84,6 @@ module Webdrivers
 
       def file_name
         System.platform == 'win' ? 'chromedriver.exe' : 'chromedriver'
-      end
-
-      def base_url
-        'https://chromedriver.storage.googleapis.com'
       end
 
       def download_url
