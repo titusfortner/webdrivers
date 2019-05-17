@@ -20,13 +20,20 @@ module Webdrivers
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
 
-    attr_writer :cache_time
-
     #
     # Returns the amount of time (Seconds) the gem waits between two update checks.
     #
     def cache_time
       @cache_time || 0
+    end
+
+    #
+    # Set the amount of time (Seconds) the gem waits between two update checks. Disable
+    # Common.cache_warning.
+    #
+    def cache_time=(value)
+      Common.cache_warning = true
+      @cache_time = value
     end
 
     def logger
@@ -58,7 +65,7 @@ end
   class Common
     class << self
       attr_writer :required_version
-      attr_reader :cache_warning
+      attr_accessor :cache_warning
 
       def version
         Webdrivers.logger.deprecate("#{self.class}#version", "#{self.class}#required_version")
