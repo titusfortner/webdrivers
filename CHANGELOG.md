@@ -1,5 +1,5 @@
 ### 3.9.3 (2019-05-17)
-* Fix a Windows specific bug when decompressing the driver packages 
+* Fix the bug that warned users about setting cache time when it was already set 
 ([#118](https://github.com/titusfortner/webdrivers/pull/118), thanks Eduardo Gutierrez)
 
 ### 3.9.2 (2019-05-14)
