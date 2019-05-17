@@ -19,22 +19,13 @@ module Webdrivers
 
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
-    attr_writer :install_dir
+    attr_writer :install_dir, :cache_time
 
     #
     # Returns the amount of time (Seconds) the gem waits between two update checks.
     #
     def cache_time
       @cache_time || ENV['WD_CACHE_TIME'].to_i
-    end
-
-    #
-    # Set the amount of time (Seconds) the gem waits between two update checks. Disable
-    # Common.cache_warning.
-    #
-    def cache_time=(value)
-      Common.cache_warning = true
-      @cache_time = value
     end
 
     #
@@ -74,17 +65,6 @@ end
   class Common
     class << self
       attr_writer :required_version
-      attr_accessor :cache_warning
-
-      def version
-        Webdrivers.logger.deprecate("#{self.class}#version", "#{self.class}#required_version")
-        required_version
-      end
-
-      def version=(version)
-        Webdrivers.logger.deprecate("#{self.class}#version=", "#{self.class}#required_version=")
-        self.required_version = version
-      end
 
       #
       # Returns the user defined required version.
@@ -109,14 +89,6 @@ end
         System.download(download_url, driver_path)
       end
 
-      def desired_version
-        old = "#{self.class}#desired_version"
-        new = "#{self.class}#required_version or #{self.class}#latest_version"
-        Webdrivers.logger.deprecate(old, new)
-
-        desired_version == EMPTY_VERSION ? latest_version : normalize_version(desired_version)
-      end
-
       #
       # Deletes the existing driver binary.
       #
@@ -125,16 +97,6 @@ end
         @latest_version = nil
         System.delete "#{System.install_dir}/#{file_name.gsub('.exe', '')}.version"
         System.delete driver_path
-      end
-
-      def download
-        Webdrivers.logger.deprecate('#download', '#update')
-        System.download(download_url, driver_path)
-      end
-
-      def binary
-        Webdrivers.logger.deprecate('#binary', '#driver_path')
-        driver_path
       end
 
       #
@@ -190,11 +152,6 @@ end
         if System.valid_cache?(file_name)
           normalize_version System.cached_version(file_name)
         else
-          unless Common.cache_warning
-            Webdrivers.logger.warn 'Driver caching is turned off in this version, but will be '\
-                                  'enabled by default in 4.x. Set the value with `Webdrivers#cache_time=` in seconds'
-            Common.cache_warning = true
-          end
           version = yield
           System.cache_version(file_name, version)
           normalize_version version
