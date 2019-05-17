@@ -5,7 +5,7 @@ $LOAD_PATH.push File.expand_path('../lib', __dir__)
 Gem::Specification.new do |s|
   s.name        = 'webdrivers'
   s.version     = '3.9.4'
-  s.authors     = ['Titus Fortner', 'Lakshya Kapoor']
+  s.authors     = ['Titus Fortner', 'Lakshya Kapoor', 'Thomas Walpole']
   s.email       = %w[titusfortner@gmail.com kapoorlakshya@gmail.com]
   s.homepage    = 'https://github.com/titusfortner/webdrivers'
   s.summary     = 'Easy download and use of browser drivers.'

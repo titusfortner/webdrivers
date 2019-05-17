@@ -31,9 +31,10 @@ through Selenium.
 
 ### Specific Drivers
 
-If you want webdrivers to only manage specific drivers you can specify as follows:
+If you want webdrivers to only manage specific drivers you can specify one or more as follows:
 ```ruby
 require 'webdrivers/chromedriver'
+require 'webdrivers/firefox'
 require 'webdrivers/iedriver'
 ```
 
@@ -60,11 +61,8 @@ Webdrivers::Chromedriver.required_version = '2.46'
 # Firefox
 Webdrivers::Geckodriver.required_version  = '0.23.0'
 
-# Microsoft Internet Explorer
+# Internet Explorer
 Webdrivers::IEdriver.required_version     = '3.14.0'
-
-# Microsoft Edge
-Webdrivers::MSWebdriver.required_version  = '17134'
 ```
 
 You can explicitly trigger the update in your code, but this will happen
@@ -86,10 +84,7 @@ Webdrivers.cache_time = 86_400
 Alternatively, you can define this value via the `WD_CACHE_TIME` environment
 variable. 
 
-The default in v3.9 is zero, and the default for 4.x will be 
-24 hours (86,400 seconds). If you see a warning about the cache time not
-being set, manually set the cache time to `86_400` or whatever you want 
-to turn off the warning.
+The default is set to 24 hours (86,400 seconds).
 
 ### Proxy
 
@@ -205,9 +200,5 @@ see LICENSE.txt for full details and copyright.
 
 ## Contributing
 
-Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers). Run `bundle exec rake` and squash the commits in your PRs.
-
-## Copyright
-
-Copyright (c) 2017-2019 Titus Fortner
-See LICENSE for details
+Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers). 
+Run `bundle exec rake` and squash the commits in your PRs.
