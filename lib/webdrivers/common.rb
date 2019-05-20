@@ -181,10 +181,10 @@ end
         if System.valid_cache?(file_name)
           normalize_version System.cached_version(file_name)
         else
-          unless cache_warning
+          unless Common.cache_warning
             Webdrivers.logger.warn 'Driver caching is turned off in this version, but will be '\
                                   'enabled by default in 4.x. Set the value with `Webdrivers#cache_time=` in seconds'
-            @cache_warning = true
+            Common.cache_warning = true
           end
           version = yield
           System.cache_version(file_name, version)
