@@ -1,3 +1,7 @@
+### 3.9.4 (2019-05-20)
+* Fix bug from bug fix that warned users about setting cache time when it was already set (issue #118) 
+* make #base_url public for easier mocking (issue #113)
+
 ### 3.9.3 (2019-05-17)
 * Fix the bug that warned users about setting cache time when it was already set 
 ([#118](https://github.com/titusfortner/webdrivers/pull/118), thanks Eduardo Gutierrez)
