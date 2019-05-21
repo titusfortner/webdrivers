@@ -1,11 +1,17 @@
+### 4.0.0.rc2 (2019-05-21)
+* Fix a bug with `WD_CACHE_TIME` when using the rake tasks (issue [#123](https://github.com/titusfortner/webdrivers/pull/123))
+
 ### 4.0.0.rc1 (2019-05-20)
-* locate Chrome binary the same way as chromedriver to ensure the correct browser version is obtained by default 
-* add rake tasts for update, remove and version
-* removed all deprecated code
+* Locate Chrome binary the same way as chromedriver to ensure the correct browser version is 
+obtained by default (issue [#45](https://github.com/titusfortner/webdrivers/issues/45))
+* Add rake tasks for update, remove and version 
+(issues [#28](https://github.com/titusfortner/webdrivers/issues/28) 
+[#77](https://github.com/titusfortner/webdrivers/issues/77))
+* Removed all deprecated code
 
 ### 3.9.4 (2019-05-20)
-* Fix bug from bug fix that warned users about setting cache time when it was already set (issue #118) 
-* make #base_url public for easier mocking (issue #109)
+* Fix bug from bug fix that warned users about setting cache time when it was already set (issue [#118](https://github.com/titusfortner/webdrivers/pull/118)) 
+* Make #base_url public for easier mocking (issue [#109](https://github.com/titusfortner/webdrivers/issues/109))
 
 ### 3.9.3 (2019-05-17)
 * Fix the bug that warned users about setting cache time when it was already set 
