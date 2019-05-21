@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path('../lib', __dir__)
+lib = File.expand_path('lib', __dir__)
+$:.unshift lib unless $:.include?(lib)
+require "webdrivers/version"
 
 Gem::Specification.new do |s|
   s.name        = 'webdrivers'
-  s.version     = '3.9.4'
+  s.version     = Webdrivers::VERSION
   s.authors     = ['Titus Fortner', 'Lakshya Kapoor', 'Thomas Walpole']
   s.email       = %w[titusfortner@gmail.com kapoorlakshya@gmail.com]
   s.homepage    = 'https://github.com/titusfortner/webdrivers'

@@ -6,6 +6,7 @@ require 'webdrivers/logger'
 require 'webdrivers/network'
 require 'webdrivers/system'
 require 'selenium-webdriver'
+require 'webdrivers/version'
 
 module Webdrivers
   class ConnectionError < StandardError
