@@ -26,7 +26,7 @@ module Webdrivers
     # Returns the amount of time (Seconds) the gem waits between two update checks.
     #
     def cache_time
-      @cache_time || ENV['WD_CACHE_TIME'].to_i
+      (@cache_time || ENV['WD_CACHE_TIME']).to_i
     end
 
     #

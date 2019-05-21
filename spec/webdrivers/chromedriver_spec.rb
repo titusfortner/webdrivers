@@ -141,6 +141,13 @@ describe Webdrivers::Chromedriver do
         expect(Webdrivers.cache_time).to be(999)
       end
     end
+
+    context 'when Webdrivers.cache_time is set' do
+      it 'returns cache time as a Integer' do
+        Webdrivers.cache_time = '999'
+        expect(Webdrivers.cache_time).to be_an_instance_of(Integer)
+      end
+    end
   end
 
   describe '#current_version' do
