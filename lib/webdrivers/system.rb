@@ -45,7 +45,7 @@ module Webdrivers
         file = "#{install_dir}/#{file_name.gsub('.exe', '')}.version"
         return false unless File.exist?(file)
 
-        Time.now - File.mtime(file) < Webdrivers.cache_time
+        Time.now - File.mtime(file) < Webdrivers.cache_time.to_i
       end
 
       def download(url, target)
