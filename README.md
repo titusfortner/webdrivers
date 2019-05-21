@@ -192,7 +192,11 @@ To use Microsoft Edge, please visit the
 
 ## Wiki
 
-Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki) for solutions to commonly reported issues.
+Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki) 
+for solutions to commonly reported issues.
+
+Join us in the `#webdrivers-gem` channel on [Slack](https://seleniumhq.herokuapp.com/)
+if you prefer a live discussion instead.
 
 ## License
 
