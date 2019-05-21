@@ -1,3 +1,8 @@
+### 4.0.0.rc1 (2019-05-20)
+* locate Chrome binary the same way as chromedriver to ensure the correct browser version is obtained by default 
+* add rake tasts for update, remove and version
+* removed all deprecated code
+
 ### 3.9.4 (2019-05-20)
 * Fix bug from bug fix that warned users about setting cache time when it was already set (issue #118) 
 * make #base_url public for easier mocking (issue #109)
