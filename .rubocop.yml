@@ -22,6 +22,7 @@ Metrics/MethodLength:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+    - 'lib/webdrivers/tasks/*.rake'
 
 Metrics/ClassLength:
   Max: 116

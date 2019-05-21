@@ -18,13 +18,14 @@ module Webdrivers
   end
 
   class << self
-    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass, :install_dir
+    attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
+    attr_writer :install_dir
 
     #
     # Returns the amount of time (Seconds) the gem waits between two update checks.
     #
     def cache_time
-      @cache_time || 0
+      @cache_time || ENV['WD_CACHE_TIME'].to_i
     end
 
     #
@@ -34,6 +35,14 @@ module Webdrivers
     def cache_time=(value)
       Common.cache_warning = true
       @cache_time = value
+    end
+
+    #
+    # Returns the install (download) directory path for the drivers.
+    #
+    # @return [String]
+    def install_dir
+      @install_dir || ENV['WD_INSTALL_DIR'] || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
     end
 
     def logger
