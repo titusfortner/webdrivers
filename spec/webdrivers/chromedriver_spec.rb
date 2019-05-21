@@ -116,6 +116,31 @@ describe Webdrivers::Chromedriver do
 
       expect(Webdrivers::Network).to have_received(:get).twice
     end
+
+    context 'when required version is 0' do
+      it 'downloads the latest version' do
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('72.0.3626.7'))
+        chromedriver.required_version = 0
+        chromedriver.update
+        expect(chromedriver.current_version.version).to eq('72.0.3626.7')
+      end
+    end
+
+    context 'when required version is nil' do
+      it 'downloads the latest version' do
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('72.0.3626.7'))
+        chromedriver.required_version = nil
+        chromedriver.update
+        expect(chromedriver.current_version.version).to eq('72.0.3626.7')
+      end
+    end
+
+    context 'when ENV variable WD_CACHE_TIME is set' do
+      it 'uses cache time value from ENV variable' do
+        allow(ENV).to receive(:[]).with('WD_CACHE_TIME').and_return('999')
+        expect(Webdrivers.cache_time).to be(999)
+      end
+    end
   end
 
   describe '#current_version' do
@@ -234,17 +259,24 @@ describe Webdrivers::Chromedriver do
 
   describe '#install_dir' do
     it 'uses ~/.webdrivers as default value' do
-      expect(Webdrivers::System.install_dir).to include('.webdriver')
+      expect(Webdrivers.install_dir).to include('.webdriver')
     end
 
     it 'uses provided value' do
       begin
-        install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
+        install_dir            = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
         Webdrivers.install_dir = install_dir
 
-        expect(Webdrivers::System.install_dir).to eq install_dir
+        expect(Webdrivers.install_dir).to eq install_dir
       ensure
         Webdrivers.install_dir = nil
+      end
+    end
+
+    context 'when ENV variable WD_INSTALL_DIR is set' do
+      it 'uses path from the ENV variable' do
+        allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('custom_dir')
+        expect(Webdrivers.install_dir).to be('custom_dir')
       end
     end
   end

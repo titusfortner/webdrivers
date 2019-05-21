@@ -26,7 +26,7 @@ module Webdrivers
       end
 
       def install_dir
-        Webdrivers.install_dir || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
+        Webdrivers.install_dir
       end
 
       def cache_version(file_name, version)
