@@ -134,20 +134,6 @@ describe Webdrivers::Chromedriver do
         expect(chromedriver.current_version.version).to eq('72.0.3626.7')
       end
     end
-
-    context 'when ENV variable WD_CACHE_TIME is set' do
-      it 'uses cache time value from ENV variable' do
-        allow(ENV).to receive(:[]).with('WD_CACHE_TIME').and_return('999')
-        expect(Webdrivers.cache_time).to be(999)
-      end
-    end
-
-    context 'when Webdrivers.cache_time is set' do
-      it 'returns cache time as a Integer' do
-        Webdrivers.cache_time = '999'
-        expect(Webdrivers.cache_time).to be_an_instance_of(Integer)
-      end
-    end
   end
 
   describe '#current_version' do
@@ -261,30 +247,6 @@ describe Webdrivers::Chromedriver do
 
     it 'does not raise exception if no chromedriver found' do
       expect { chromedriver.remove }.not_to raise_error
-    end
-  end
-
-  describe '#install_dir' do
-    it 'uses ~/.webdrivers as default value' do
-      expect(Webdrivers.install_dir).to include('.webdriver')
-    end
-
-    it 'uses provided value' do
-      begin
-        install_dir            = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
-        Webdrivers.install_dir = install_dir
-
-        expect(Webdrivers.install_dir).to eq install_dir
-      ensure
-        Webdrivers.install_dir = nil
-      end
-    end
-
-    context 'when ENV variable WD_INSTALL_DIR is set' do
-      it 'uses path from the ENV variable' do
-        allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('custom_dir')
-        expect(Webdrivers.install_dir).to be('custom_dir')
-      end
     end
   end
 
