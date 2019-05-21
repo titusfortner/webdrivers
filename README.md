@@ -122,9 +122,10 @@ Other solutions are documented on the RubyGems [website](https://guides.rubygems
 
 ### Rake tasks
 
-Each driver has its own set of `rake` tasks that you can call once before 
-executing the tests.  These are especially useful if you're running tests
-in parallel and want to avoid performing an update check per thread.
+Each driver has its own set of `rake` tasks (with `Railtie` support) that
+you can call once before executing the tests.  These are especially 
+useful if you're running tests in parallel and want to avoid performing 
+an update check per thread.
 
 ```bash
 $ bundle exec rake -T
