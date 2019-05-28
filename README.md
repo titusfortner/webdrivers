@@ -14,11 +14,15 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [geckodriver](https://github.com/mozilla/geckodriver)
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
 
+Support for [`msedgedriver`](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+will be added once the next Microsoft Edge version (v75) is released. More information is available 
+[here](https://developer.microsoft.com/en-us/microsoft-edge/).
+
 ## Usage
 
 In your Gemfile: 
 
-`gem 'webdrivers', '~> 3.0'`
+`gem 'webdrivers', '~> 4.0'`
 
 In your project:
 
@@ -34,7 +38,7 @@ through Selenium.
 If you want webdrivers to only manage specific drivers you can specify one or more as follows:
 ```ruby
 require 'webdrivers/chromedriver'
-require 'webdrivers/firefox'
+require 'webdrivers/geckodriver'
 require 'webdrivers/iedriver'
 ```
 
@@ -151,7 +155,7 @@ $ bundle exec rake webdrivers:chromedriver:update[2.46] webdrivers:geckodriver:u
 
 Please note that these tasks do not use any of the configurations from your
 project (code) and only respect the `ENV` variables and the version (optional)
-passed to the `rake` task.
+passed to the `rake` tasks.
 
 ### Logging
 
@@ -170,11 +174,11 @@ The version of `chromedriver` will depend on the version of Chrome you are using
  * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. 
  More information [here](http://chromedriver.chromium.org/downloads/version-selection).
  * For versions <=  69, `chromedriver` version 2.41 will be downloaded.
- * For beta versions, you'll have to set the desired beta version of `chromedriver` 
+ * For beta versions, you'll have to require the beta version of `chromedriver` 
  using `Webdrivers::Chromedriver.required_version`.
  
-The gem, by default, looks for the Google Chrome version. You can override this by providing a path to the 
-Chromium binary:
+The gem looks for the Chrome/Chromium version that `chromedriver` will use by default. 
+You can override this behavior by providing a path to the browser binary you want to use:
 
 ```ruby
 Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
@@ -183,12 +187,18 @@ Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 This is also required if Google Chrome is not installed in its 
 [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
+##### Heroku/CircleCI Users
+
+Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium.
+
 #### Microsoft Edge
 
-Microsoft Edge support has been removed for now, as it is currently unreliable.
+Microsoft Edge support for v18 and older has been removed for now, as it is currently 
+unreliable. To use Microsoft Edge, please visit the [Downloads and Installation page](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads). 
 
-To use Microsoft Edge, please visit the 
-[Downloads and Installation page](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads)
+Support for [`msedgedriver`](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+will be added once the next Microsoft Edge version (v75) is released. More information is available 
+[here](https://developer.microsoft.com/en-us/microsoft-edge/).
 
 ## Wiki
 
@@ -196,7 +206,7 @@ Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki)
 for solutions to commonly reported issues.
 
 Join us in the `#webdrivers-gem` channel on [Slack](https://seleniumhq.herokuapp.com/)
-if you prefer a live discussion instead.
+if you have any questions.
 
 ## License
 

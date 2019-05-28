@@ -1,3 +1,9 @@
+### 4.0.0 (2019-05-28)
+
+No changes since rc2. Please report any issues [here](https://github.com/titusfortner/webdrivers/issues)
+or join us in the `#webdrivers-gem` channel on [Slack](https://seleniumhq.herokuapp.com/) if you 
+have questions.
+
 ### 4.0.0.rc2 (2019-05-21)
 * Fix a bug with `WD_CACHE_TIME` when using the rake tasks (issue [#123](https://github.com/titusfortner/webdrivers/pull/123))
 
