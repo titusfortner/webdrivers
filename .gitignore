@@ -5,3 +5,4 @@ pkg/*
 chromedriver.log
 /.idea/
 coverage/
+gemfiles/Gemfile.*.lock
