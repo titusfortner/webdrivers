@@ -147,10 +147,8 @@ rake webdrivers:iedriver:version              # Print current IEDriverServer ver
 If you are not using Rails, you'll need to load them into your Rakefile like this:
 
 ```ruby
-gem_dir = Gem::Specification.find_by_name('webdrivers').gem_dir
-load "#{gem_dir}/lib/webdrivers/tasks/chromedriver.rake"
-load "#{gem_dir}/lib/webdrivers/tasks/geckodriver.rake"
-load "#{gem_dir}/lib/webdrivers/tasks/iedriver.rake"
+require 'webdrivers'
+load 'webdrivers/Rakefile'
 ```
 
 These tasks respect the `WD_INSTALL_DIR` and `WD_CACHE_TIME` environment
