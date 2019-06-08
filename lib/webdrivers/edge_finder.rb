@@ -32,7 +32,9 @@ module Webdrivers
 
       def mac_location
         directories = ['', File.expand_path('~')]
-        files = ['/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary']
+        files = ['/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary',
+                 '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev',
+                 '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge']
 
         directories.each do |dir|
           files.each do |file|
