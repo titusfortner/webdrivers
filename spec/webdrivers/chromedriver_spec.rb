@@ -252,7 +252,9 @@ describe Webdrivers::Chromedriver do
 
   describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(chromedriver.driver_path).to match("#{File.join(ENV['HOME'])}/.webdrivers/chromedriver")
+      expected_bin = "chromedriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
+      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expect(chromedriver.driver_path).to eq(expected_path)
     end
   end
 end

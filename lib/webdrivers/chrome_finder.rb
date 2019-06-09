@@ -29,7 +29,7 @@ module Webdrivers
             # Escape space and parenthesis with backticks.
             option = option.gsub(/([\s()])/, '`\1') if RUBY_PLATFORM == 'java'
 
-            return System.escape_path option
+            return System.escape_path(option)
           end
         end
       end
@@ -42,7 +42,7 @@ module Webdrivers
         directories.each do |dir|
           files.each do |file|
             option = "#{dir}/#{file}"
-            return System.escape_path option if File.exist?(option)
+            return System.escape_path(option) if File.exist?(option)
           end
         end
       end
@@ -54,7 +54,7 @@ module Webdrivers
         directories.each do |dir|
           files.each do |file|
             option = "#{dir}/#{file}"
-            return System.escape_path option if File.exist?(option)
+            return System.escape_path(option) if File.exist?(option)
           end
         end
       end

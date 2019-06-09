@@ -186,7 +186,8 @@ describe Webdrivers::IEdriver do
 
   describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(iedriver.driver_path).to eq("#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe")
+      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe")
+      expect(iedriver.driver_path).to eq(expected_path)
     end
   end
 end

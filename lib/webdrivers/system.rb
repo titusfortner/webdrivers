@@ -149,6 +149,12 @@ module Webdrivers
         Webdrivers.logger.debug "making System call: #{cmd}"
         `#{cmd}`
       end
+
+      def escape_path(path)
+        return path.tr('/', '\\') if platform == 'win' # Windows
+
+        Shellwords.escape(path) # Linux and macOS
+      end
     end
   end
 end
