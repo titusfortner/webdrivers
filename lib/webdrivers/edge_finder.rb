@@ -14,20 +14,16 @@ module Webdrivers
       end
 
       def win_location
-        return Selenium::WebDriver::Edge.path unless Selenium::WebDriver::Edge.path.nil?
+        envs = %w[LOCALAPPDATA PROGRAMFILES PROGRAMFILES(X86)]
+        directories = ['\\Microsoft\\Edge SxS\\Application', '\\Microsoft\\Edge Dev\\Application']
+        file = 'msedge.exe'
 
-        # TODO: Need to figure out what these are
-        raise 'Not yet implemented'
-        # envs = %w[LOCALAPPDATA PROGRAMFILES PROGRAMFILES(X86)]
-        # directories = ['\\Google\\Chrome\\Application', '\\Chromium\\Application']
-        # file = 'chrome.exe'
-        #
-        # directories.each do |dir|
-        #   envs.each do |root|
-        #     option = "#{ENV[root]}\\#{dir}\\#{file}"
-        #     return option if File.exist?(option)
-        #   end
-        # end
+        directories.each do |dir|
+          envs.each do |root|
+            option = "#{ENV[root]}\\#{dir}\\#{file}"
+            return option if File.exist?(option)
+          end
+        end
       end
 
       def mac_location
