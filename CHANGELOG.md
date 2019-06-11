@@ -1,3 +1,8 @@
+### 4.0.1 (2019-06-12)
+* Cache time now defaults to 86,400 Seconds (24 hours). Please note the special exception for `chromedriver` in the [README](https://github.com/titusfortner/webdrivers#special-exception-for-chromedriver) (issue [#132](https://github.com/titusfortner/webdrivers/issues/132))
+* Properly escape Chrome binary path when using JRuby on Windows (issue [#130](https://github.com/titusfortner/webdrivers/issues/130))
+* Allow use of `selenium-webdriver` v4 (pre-releases only)
+
 ### 4.0.0 (2019-05-28)
 
 No changes since rc2. Please report any issues [here](https://github.com/titusfortner/webdrivers/issues)

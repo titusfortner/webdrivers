@@ -89,6 +89,13 @@ Alternatively, you can define this value via the `WD_CACHE_TIME` environment
 variable, which takes precedence over the `Webdrivers.cache_time` value. 
 **Only set one to avoid confusion**.
 
+##### Special exception for chromedriver
+
+Cache time will be respected as long as a `chromedriver` binary exists and the major versions of 
+Chrome and `chromedriver` match. For example, if you update Chrome to v76 and `chromedriver` is 
+still at v75, `webdrivers` will ignore the cache time and update `chromedriver` to make sure you're 
+using a compatible version.
+
 ### Proxy
 
 If there is a proxy between you and the Internet then you will need to configure
