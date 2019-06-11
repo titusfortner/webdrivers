@@ -26,6 +26,8 @@ Metrics/BlockLength:
 
 Metrics/ClassLength:
   Max: 116
+  Exclude:
+    - 'lib/webdrivers/system.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 8

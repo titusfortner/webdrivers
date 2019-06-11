@@ -3,21 +3,39 @@ cache:
   - vendor/bundle
 environment:
   matrix:
-    - RUBY_VERSION: 24
+    - RUBY_VERSION: Ruby24
+      RUBY_BIN: ruby
       RAKE_TASK: spec
-    - RUBY_VERSION: 24
+      SCRIPT_CONTEXT: bundle exec
+    - RUBY_VERSION: Ruby24
+      RUBY_BIN: ruby
       RAKE_TASK: rubocop
-    - RUBY_VERSION: 25
+      SCRIPT_CONTEXT: bundle exec
+    - RUBY_VERSION: Ruby25
+      RUBY_BIN: ruby
       RAKE_TASK: spec
-    - RUBY_VERSION: 26
+      SCRIPT_CONTEXT: bundle exec
+    - RUBY_VERSION: Ruby26
+      RUBY_BIN: ruby
       RAKE_TASK: spec
+      SCRIPT_CONTEXT: bundle exec
+    - RUBY_VERSION: jruby-9.2.7.0
+      RUBY_BIN: jruby
+      RAKE_TASK: spec
+      SCRIPT_CONTEXT: jruby -G -S
 install:
-  - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
-  - bundle config --local path vendor/bundle
-  - bundle install
+  - ps: |
+      if ($env:RUBY_BIN -eq 'jruby')
+      {
+        support\install_jruby.ps1
+      }
+  - set PATH=C:\%RUBY_VERSION%\bin;%PATH%
+  - '%RUBY_BIN% -S gem update --system'
+  - '%RUBY_BIN% -S gem install bundler'
+  - '%RUBY_BIN% -S bundle install'
 before_test:
-  - ruby -v
-  - gem -v
-  - bundle -v
+  - '%RUBY_BIN% -v'
+  - '%RUBY_BIN% -S gem -v'
+  - '%RUBY_BIN% -S bundle -v'
 test_script:
-  - bundle exec rake %RAKE_TASK%
+  - '%SCRIPT_CONTEXT% rake %RAKE_TASK%'

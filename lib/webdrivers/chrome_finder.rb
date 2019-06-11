@@ -23,7 +23,13 @@ module Webdrivers
         directories.each do |dir|
           envs.each do |root|
             option = "#{ENV[root]}\\#{dir}\\#{file}"
-            return option if File.exist?(option)
+            next unless File.exist?(option)
+
+            # Fix for JRuby on Windows - #41 and #130.
+            # Escape space and parenthesis with backticks.
+            option = option.gsub(/([\s()])/, '`\1') if RUBY_PLATFORM == 'java'
+
+            return System.escape_path(option)
           end
         end
       end
@@ -36,7 +42,7 @@ module Webdrivers
         directories.each do |dir|
           files.each do |file|
             option = "#{dir}/#{file}"
-            return option if File.exist?(option)
+            return System.escape_path(option) if File.exist?(option)
           end
         end
       end
@@ -48,7 +54,7 @@ module Webdrivers
         directories.each do |dir|
           files.each do |file|
             option = "#{dir}/#{file}"
-            return option if File.exist?(option)
+            return System.escape_path(option) if File.exist?(option)
           end
         end
       end
@@ -58,11 +64,11 @@ module Webdrivers
       end
 
       def linux_version(location)
-        System.call("#{Shellwords.escape location} --product-version")&.strip
+        System.call("#{location} --product-version")&.strip
       end
 
       def mac_version(location)
-        System.call("#{Shellwords.escape location} --version")&.strip
+        System.call("#{location} --version")&.strip
       end
     end
   end

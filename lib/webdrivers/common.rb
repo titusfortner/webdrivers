@@ -105,7 +105,7 @@ end
       #
       # @return [String]
       def driver_path
-        File.join System.install_dir, file_name
+        System.escape_path File.join(System.install_dir, file_name)
       end
 
       private

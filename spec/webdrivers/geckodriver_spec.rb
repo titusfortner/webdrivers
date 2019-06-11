@@ -204,7 +204,9 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
   describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(geckodriver.driver_path).to match("#{File.join(ENV['HOME'])}/.webdrivers/geckodriver")
+      expected_bin = "geckodriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
+      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expect(geckodriver.driver_path).to eq(expected_path)
     end
   end
 end
