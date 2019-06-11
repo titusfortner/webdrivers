@@ -18,15 +18,19 @@ module Webdrivers
   class NetworkError < StandardError
   end
 
+  DEFAULT_CACHE_TIME = 86_400 # 24 hours
+
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
     attr_writer :install_dir, :cache_time
 
     #
     # Returns the amount of time (Seconds) the gem waits between two update checks.
+    # @note Value from the environment variable "WD_CACHE_TIME" takes precedence over Webdrivers.cache_time. If neither
+    # are set, it defaults to 86,400 Seconds (24 hours).
     #
     def cache_time
-      (@cache_time || ENV['WD_CACHE_TIME']).to_i
+      (ENV['WD_CACHE_TIME'] || @cache_time || DEFAULT_CACHE_TIME).to_i
     end
 
     #

@@ -114,7 +114,7 @@ describe Webdrivers::Chromedriver do
 
       chromedriver.update
 
-      expect(Webdrivers::Network).to have_received(:get).twice
+      expect(Webdrivers::Network).to have_received(:get).once
     end
 
     context 'when required version is 0' do

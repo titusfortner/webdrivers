@@ -82,13 +82,12 @@ You can set Webdrivers to only look for updates if the previous check
 was longer ago than a specified number of seconds.
 
 ```ruby
-Webdrivers.cache_time = 86_400
+Webdrivers.cache_time = 86_400 # Default: 86,400 Seconds (24 hours)
 ```
 
 Alternatively, you can define this value via the `WD_CACHE_TIME` environment
-variable. 
-
-The default is set to 24 hours (86,400 seconds).
+variable, which takes precedence over the `Webdrivers.cache_time` value. 
+**Only set one to avoid confusion**.
 
 ### Proxy
 
