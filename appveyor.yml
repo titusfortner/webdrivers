@@ -25,6 +25,11 @@ environment:
       RUBY_BIN: jruby
       RAKE_TASK: spec
       SCRIPT_CONTEXT: jruby -G -S
+    - RUBY_VERSION: Ruby26
+      RUBY_BIN: ruby
+      RAKE_TASK: spec
+      SCRIPT_CONTEXT: bundle exec
+      BUNDLE_GEMFILE: gemfiles/Gemfile.edge
 install:
   - ps: if ($env:RUBY_BIN -eq 'jruby') { support\install_jruby.ps1 }
   - ps: support\install_msedge.ps1
