@@ -5,7 +5,7 @@ module Webdrivers
     class << self
       def version
         location = Selenium::WebDriver::EdgeChrome.path || send("#{System.platform}_location")
-        version = send("#{System.platform}_version", System.escape_path(location))
+        version = send("#{System.platform}_version", System.escape_path(location)) if location
 
         raise VersionError, 'Failed to find Edge binary or its version.' if version.nil? || version.empty?
 
@@ -29,6 +29,7 @@ module Webdrivers
             return option
           end
         end
+        nil
       end
 
       def mac_location
@@ -43,6 +44,7 @@ module Webdrivers
             return option if File.exist?(option)
           end
         end
+        nil
       end
 
       def linux_location
