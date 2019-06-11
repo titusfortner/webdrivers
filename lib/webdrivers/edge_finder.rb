@@ -5,7 +5,7 @@ module Webdrivers
     class << self
       def version
         location = Selenium::WebDriver::EdgeChrome.path || send("#{System.platform}_location")
-        version = send("#{System.platform}_version", location)
+        version = send("#{System.platform}_version", System.escape_path(location))
 
         raise VersionError, 'Failed to find Edge binary or its version.' if version.nil? || version.empty?
 
@@ -21,7 +21,12 @@ module Webdrivers
         directories.each do |dir|
           envs.each do |root|
             option = "#{ENV[root]}\\#{dir}\\#{file}"
-            return option if File.exist?(option)
+            next unless File.exist?(option)
+
+            # Escape space and parenthesis with backticks.
+            option = option.gsub(/([\s()])/, '`\1') if RUBY_PLATFORM == 'java'
+
+            return option
           end
         end
       end
@@ -49,11 +54,11 @@ module Webdrivers
       end
 
       def linux_version(location)
-        System.call("#{Shellwords.escape location} --product-version")&.strip
+        System.call("#{location} --product-version")&.strip
       end
 
       def mac_version(location)
-        System.call("#{Shellwords.escape location} --version")&.strip
+        System.call("#{location} --version")&.strip
       end
     end
   end

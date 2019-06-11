@@ -254,7 +254,9 @@ describe Webdrivers::Edgedriver do
 
   describe '#driver_path' do
     it 'returns full location of binary' do
-      expect(edgedriver.driver_path).to match("#{File.join(ENV['HOME'])}/.webdrivers/msedgedriver")
+      expected_bin = "msedgedriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
+      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expect(edgedriver.driver_path).to eq(expected_path)
     end
   end
 end
