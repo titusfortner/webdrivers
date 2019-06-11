@@ -16,8 +16,12 @@ describe Webdrivers do
       end
     end
 
-    context 'when Webdrivers.cache_time is set as a String' do
+    context 'when Webdrivers.cache_time is set' do
       before { described_class.cache_time = '999' }
+
+      it 'returns user defined cache time' do
+        expect(described_class.cache_time).to eq(999)
+      end
 
       it 'returns cache time as an Integer' do
         expect(described_class.cache_time).to be_an_instance_of(Integer)
