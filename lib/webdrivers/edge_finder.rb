@@ -15,7 +15,7 @@ module Webdrivers
 
       def win_location
         envs = %w[LOCALAPPDATA PROGRAMFILES PROGRAMFILES(X86)]
-        directories = ['\\Microsoft\\Edge SxS\\Application', '\\Microsoft\\Edge Dev\\Application']
+        directories = ['\\Microsoft\\Edge Dev\\Application', '\\Microsoft\\Edge SxS\\Application']
         file = 'msedge.exe'
 
         directories.each do |dir|
@@ -34,9 +34,9 @@ module Webdrivers
 
       def mac_location
         directories = ['', File.expand_path('~')]
-        files = ['/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary',
+        files = ['/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
                  '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev',
-                 '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge']
+                 '/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary']
 
         directories.each do |dir|
           files.each do |file|
