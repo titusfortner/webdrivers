@@ -31,7 +31,14 @@ require 'webdrivers'
 ```
 
 The drivers will now be automatically downloaded or updated when you launch a browser
-through Selenium. 
+through Selenium.
+
+### Configuration
+
+Configuration options can be set any time before your tests run but we recommend setting them in a test helper, e.g.:
+
+- `spec/support/javascript_driver.rb` for RSpec specs
+- `test/application_system_test_case.rb` for Rails 5.1+ system tests
 
 ### Specific Drivers
 
