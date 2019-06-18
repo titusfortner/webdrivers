@@ -19,8 +19,6 @@ namespace :webdrivers do
     desc 'Remove and download updated chromedriver if necessary'
     task :update, [:version] do |_, args|
       args.with_defaults(version: 0)
-      Webdrivers.cache_time                     = ENV.fetch('WD_CACHE_TIME', 86_400)
-      Webdrivers.install_dir                    = ENV.fetch('WD_INSTALL_DIR', nil)
       Webdrivers::Chromedriver.required_version = args.version
       Webdrivers::Chromedriver.update
       Webdrivers.logger.info "Updated to chromedriver #{Webdrivers::Chromedriver.current_version}"
