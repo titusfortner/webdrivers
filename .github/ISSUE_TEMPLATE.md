@@ -4,6 +4,8 @@ Short summary of the bug or feature request.
 #### Debug Info
 Please provide the following information for bug reports:
 
+* Webdrivers version:
+* Ruby version:
 * Operating system / CI Environment:
 * Browser and version:
 
