@@ -19,6 +19,7 @@ module Webdrivers
   end
 
   DEFAULT_CACHE_TIME = 86_400 # 24 hours
+  DEFAULT_INSTALL_DIR = File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
 
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
@@ -30,7 +31,7 @@ module Webdrivers
     # are set, it defaults to 86,400 Seconds (24 hours).
     #
     def cache_time
-      (ENV['WD_CACHE_TIME'] || @cache_time || DEFAULT_CACHE_TIME).to_i
+      (@cache_time || ENV['WD_CACHE_TIME'] || DEFAULT_CACHE_TIME).to_i
     end
 
     #
@@ -38,7 +39,7 @@ module Webdrivers
     #
     # @return [String]
     def install_dir
-      @install_dir || ENV['WD_INSTALL_DIR'] || File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
+      @install_dir || ENV['WD_INSTALL_DIR'] || DEFAULT_INSTALL_DIR
     end
 
     def logger
