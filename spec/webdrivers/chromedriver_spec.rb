@@ -146,7 +146,7 @@ describe Webdrivers::Chromedriver do
     it 'returns a Gem::Version instance if binary is on the system' do
       allow(chromedriver).to receive(:exists?).and_return(true)
       allow(Webdrivers::System).to receive(:call)
-        .with("#{chromedriver.driver_path} --version")
+        .with(chromedriver.driver_path, '--version')
         .and_return '71.0.3578.137'
 
       expect(chromedriver.current_version).to eq Gem::Version.new('71.0.3578.137')
@@ -253,8 +253,19 @@ describe Webdrivers::Chromedriver do
   describe '#driver_path' do
     it 'returns full location of binary' do
       expected_bin = "chromedriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
-      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expected_path = File.absolute_path "#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}"
       expect(chromedriver.driver_path).to eq(expected_path)
+    end
+  end
+
+  describe '#chrome_version' do
+    it 'returns a Gem::Version object' do
+      expect(chromedriver.chrome_version).to be_an_instance_of(Gem::Version)
+    end
+
+    it 'returns currently installed Chrome version' do
+      allow(Webdrivers::ChromeFinder).to receive(:version).and_return('72.0.0.0')
+      expect(chromedriver.chrome_version).to be Gem::Version.new('72.0.0.0')
     end
   end
 end

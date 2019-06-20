@@ -112,7 +112,7 @@ testing/geckodriver in https://hg.mozilla.org/mozilla-central.
 This program is subject to the terms of the Mozilla Public License 2.0.
 You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
 
-      allow(Webdrivers::System).to receive(:call).with("#{geckodriver.driver_path} --version").and_return return_value
+      allow(Webdrivers::System).to receive(:call).with(geckodriver.driver_path, '--version').and_return return_value
 
       expect(geckodriver.current_version).to eq Gem::Version.new('0.24.0')
     end
@@ -205,7 +205,7 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
   describe '#driver_path' do
     it 'returns full location of binary' do
       expected_bin = "geckodriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
-      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expected_path = File.absolute_path "#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}"
       expect(geckodriver.driver_path).to eq(expected_path)
     end
   end

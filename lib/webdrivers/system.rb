@@ -2,6 +2,7 @@
 
 require 'rubygems/package'
 require 'zip'
+require 'English'
 
 module Webdrivers
   #
@@ -145,15 +146,16 @@ module Webdrivers
         Selenium::WebDriver::Platform.bitsize
       end
 
-      def call(cmd)
+      def call(process, arg = nil)
+        cmd = arg ? [process, arg] : process # Windows provides powershell command (process) only, no args.
         Webdrivers.logger.debug "making System call: #{cmd}"
-        `#{cmd}`
-      end
+        p = IO.popen(cmd)
+        out = p.read
+        p.close
+        raise "Failed to make system call: #{cmd}" unless $CHILD_STATUS.success?
 
-      def escape_path(path)
-        return path.tr('/', '\\') if platform == 'win' # Windows
-
-        Shellwords.escape(path) # Linux and macOS
+        Webdrivers.logger.debug "System call returned: #{out}"
+        out
       end
     end
   end
