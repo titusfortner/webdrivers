@@ -87,7 +87,7 @@ describe Webdrivers::IEdriver do
 
       return_value = 'something IEDriverServer.exe 3.5.1 something else'
 
-      allow(Webdrivers::System).to receive(:call).with("#{iedriver.driver_path} --version").and_return return_value
+      allow(Webdrivers::System).to receive(:call).with(iedriver.driver_path, '--version').and_return return_value
 
       expect(iedriver.current_version).to eq Gem::Version.new('3.5.1')
     end
@@ -186,7 +186,7 @@ describe Webdrivers::IEdriver do
 
   describe '#driver_path' do
     it 'returns full location of binary' do
-      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe")
+      expected_path = File.absolute_path "#{File.join(ENV['HOME'])}/.webdrivers/IEDriverServer.exe"
       expect(iedriver.driver_path).to eq(expected_path)
     end
   end

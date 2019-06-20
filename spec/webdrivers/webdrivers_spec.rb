@@ -29,15 +29,15 @@ describe Webdrivers do
     end
 
     context 'when ENV variable WD_CACHE_TIME is set' do
-      before { described_class.cache_time = 86_400 }
+      before { described_class.cache_time = 3600 }
 
       it 'uses cache time value from Webdrivers.cache_time over the ENV variable value' do
-        allow(ENV).to receive(:[]).with('WD_CACHE_TIME').and_return(999)
-        expect(described_class.cache_time).to be(86_400)
+        allow(ENV).to receive(:[]).with('WD_CACHE_TIME').and_return(900)
+        expect(described_class.cache_time).to be(3600)
       end
 
       it 'returns cache time as an Integer' do
-        allow(ENV).to receive(:fetch).with('WD_CACHE_TIME', 86_400).and_return('999')
+        allow(ENV).to receive(:fetch).with('WD_CACHE_TIME', 3600).and_return('999')
         expect(described_class.cache_time).to be_an_instance_of(Integer)
       end
     end
@@ -76,7 +76,7 @@ describe Webdrivers do
         begin
           described_class.install_dir = 'my_install_dir_path'
           allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('my_env_path')
-          expect(described_class.install_dir).to be(described_class.install_dir)
+          expect(described_class.install_dir).to be('my_install_dir_path')
         ensure
           described_class.install_dir = nil
         end

@@ -86,8 +86,7 @@ Webdrivers.cache_time = 86_400 # Default: 86,400 Seconds (24 hours)
 ```
 
 Alternatively, you can define this value via the `WD_CACHE_TIME` environment
-variable, which takes precedence over the `Webdrivers.cache_time` value. 
-**Only set one to avoid confusion**.
+variable. **Only set one to avoid confusion**.
 
 ##### Special exception for chromedriver
 
@@ -157,8 +156,9 @@ require 'webdrivers'
 load 'webdrivers/Rakefile'
 ```
 
-These tasks respect the `WD_INSTALL_DIR` and `WD_CACHE_TIME` environment
-variables which can also be passed through the `rake` command:
+These tasks respect the `WD_INSTALL_DIR`, `WD_CACHE_TIME`, and
+`WD_CHROME_PATH` environment variables, which can also be passed 
+through the `rake` command:
 
 ```bash
 $ bundle exec rake webdrivers:chromedriver:update[2.46] webdrivers:geckodriver:update[0.24.0] WD_CACHE_TIME=86_400 WD_INSTALL_DIR='my_dir'
@@ -196,6 +196,9 @@ You can override this behavior by providing a path to the browser binary you wan
 ```ruby
 Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 ```
+
+Alternatively, you can define the path via the `WD_CHROME_PATH` environment
+variable.
 
 This is also required if Google Chrome is not installed in its 
 [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).

@@ -110,7 +110,7 @@ end
       #
       # @return [String]
       def driver_path
-        System.escape_path File.join(System.install_dir, file_name)
+        File.absolute_path File.join(System.install_dir, file_name)
       end
 
       private
@@ -146,7 +146,7 @@ end
       end
 
       def binary_version
-        version = System.call("#{driver_path} --version")
+        version = System.call(driver_path, '--version')
         Webdrivers.logger.debug "Current version of #{driver_path} is #{version}"
         version
       rescue Errno::ENOENT
