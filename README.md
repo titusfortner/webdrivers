@@ -203,9 +203,11 @@ variable.
 This is also required if Google Chrome is not installed in its 
 [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
-##### Heroku/CircleCI Users
+##### CircleCI Users
 
-Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium.
+Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium. 
+
+Please note that as of 06/22/2019, [`heroku-buildpack-google-chrome`](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) no longer requires this workaround.
 
 #### Microsoft Edge
 
