@@ -207,7 +207,7 @@ This is also required if Google Chrome is not installed in its
 
 Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium. 
 
-Please note that as of 06/22/2019, [`heroku-buildpack-google-chrome`](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) no longer requires this workaround.
+Please note that as of 06/21/2019, [`heroku-buildpack-google-chrome`](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) no longer requires this workaround.
 
 #### Microsoft Edge
 
