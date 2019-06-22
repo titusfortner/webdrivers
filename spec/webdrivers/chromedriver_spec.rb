@@ -31,7 +31,7 @@ describe Webdrivers::Chromedriver do
       it 'does not download when offline, binary exists and matches major browser version' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(chromedriver).to receive(:exists?).and_return(true)
-        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
 
         chromedriver.update
@@ -44,7 +44,7 @@ describe Webdrivers::Chromedriver do
 
         allow(Webdrivers::Network).to receive(:get_response).and_return(client_error)
         allow(chromedriver).to receive(:exists?).and_return(true)
-        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
 
         chromedriver.update
@@ -55,7 +55,7 @@ describe Webdrivers::Chromedriver do
       it 'raises ConnectionError when offline, and binary does not match major browser version' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(chromedriver).to receive(:exists?).and_return(true)
-        allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('72.0.0.0'))
 
         msg = %r{Can not reach https://chromedriver.storage.googleapis.com}
@@ -108,7 +108,7 @@ describe Webdrivers::Chromedriver do
 
     it 'makes a network call if cached driver does not match the browser' do
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
-      allow(chromedriver).to receive(:chrome_version).and_return(Gem::Version.new('73.0.3683.68'))
+      allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')
       allow(Webdrivers::System).to receive(:download)
 
@@ -155,19 +155,19 @@ describe Webdrivers::Chromedriver do
 
   describe '#latest_version' do
     it 'returns 2.41 if the browser version is less than 70' do
-      allow(chromedriver).to receive(:chrome_version).and_return('69.0.0')
+      allow(chromedriver).to receive(:browser_version).and_return('69.0.0')
 
       expect(chromedriver.latest_version).to eq(Gem::Version.new('2.41'))
     end
 
     it 'returns the correct point release for a production version greater than 70' do
-      allow(chromedriver).to receive(:chrome_version).and_return '71.0.3578.9999'
+      allow(chromedriver).to receive(:browser_version).and_return '71.0.3578.9999'
 
       expect(chromedriver.latest_version).to eq Gem::Version.new('71.0.3578.137')
     end
 
     it 'raises VersionError for beta version' do
-      allow(chromedriver).to receive(:chrome_version).and_return('100.0.0')
+      allow(chromedriver).to receive(:browser_version).and_return('100.0.0')
       msg = 'Unable to find latest point release version for 100.0.0. '\
 'You appear to be using a non-production version of Chrome. '\
 'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
@@ -177,7 +177,7 @@ describe Webdrivers::Chromedriver do
     end
 
     it 'raises VersionError for unknown version' do
-      allow(chromedriver).to receive(:chrome_version).and_return('72.0.9999.0000')
+      allow(chromedriver).to receive(:browser_version).and_return('72.0.9999.0000')
       msg = 'Unable to find latest point release version for 72.0.9999. '\
 'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
 'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
@@ -258,14 +258,14 @@ describe Webdrivers::Chromedriver do
     end
   end
 
-  describe '#chrome_version' do
+  describe '#browser_version' do
     it 'returns a Gem::Version object' do
-      expect(chromedriver.chrome_version).to be_an_instance_of(Gem::Version)
+      expect(chromedriver.browser_version).to be_an_instance_of(Gem::Version)
     end
 
     it 'returns currently installed Chrome version' do
       allow(Webdrivers::ChromeFinder).to receive(:version).and_return('72.0.0.0')
-      expect(chromedriver.chrome_version).to be Gem::Version.new('72.0.0.0')
+      expect(chromedriver.browser_version).to be Gem::Version.new('72.0.0.0')
     end
   end
 end

@@ -1,16 +1,36 @@
 # frozen_string_literal: true
 
 module Webdrivers
+  #
+  # @api private
+  #
   class EdgeFinder
     class << self
       def version
-        location = Selenium::WebDriver::EdgeChrome.path || send("#{System.platform}_location")
-        version = send("#{System.platform}_version", System.escape_path(location)) if location
+        version = send("#{System.platform}_version", location)
 
         raise VersionError, 'Failed to find Edge binary or its version.' if version.nil? || version.empty?
 
         Webdrivers.logger.debug "Browser version: #{version}"
         version[/\d+\.\d+\.\d+\.\d+/] # Microsoft Edge 73.0.3683.75 -> 73.0.3683.75
+      end
+
+      def location
+        user_defined_location || send("#{System.platform}_location")
+      end
+
+      private
+
+      def user_defined_location
+        if Selenium::WebDriver::EdgeChrome.path
+          Webdrivers.logger.debug "Selenium::WebDriver::EdgeChrome.path: #{Selenium::WebDriver::EdgeChrome.path}"
+          return Selenium::WebDriver::EdgeChrome.path
+        end
+
+        return if ENV['WD_EDGE_CHROME_PATH'].nil?
+
+        Webdrivers.logger.debug "WD_EDGE_CHROME_PATH: #{ENV['WD_EDGE_CHROME_PATH']}"
+        ENV['WD_EDGE_CHROME_PATH']
       end
 
       def win_location
@@ -21,12 +41,7 @@ module Webdrivers
         directories.each do |dir|
           envs.each do |root|
             option = "#{ENV[root]}\\#{dir}\\#{file}"
-            next unless File.exist?(option)
-
-            # Escape space and parenthesis with backticks.
-            option = option.gsub(/([\s()])/, '`\1') if RUBY_PLATFORM == 'java'
-
-            return option
+            return option if File.exist?(option)
           end
         end
         nil
@@ -56,11 +71,11 @@ module Webdrivers
       end
 
       def linux_version(location)
-        System.call("#{location} --product-version")&.strip
+        System.call(location, '--product-version')&.strip
       end
 
       def mac_version(location)
-        System.call("#{location} --version")&.strip
+        System.call(location, '--version')&.strip
       end
     end
   end

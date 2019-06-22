@@ -8,7 +8,9 @@ describe Webdrivers::Edgedriver do
   before(:all) do # rubocop:disable RSpec/BeforeAfterAll
     # Skip these tests if version of selenium-webdriver being tested with doesn't
     # have Chromium based Edge support
-    skip unless defined?(Selenium::WebDriver::EdgeChrome)
+    unless defined?(Selenium::WebDriver::EdgeChrome)
+      skip "The current selenium-webdriver doesn't include Chromium based Edge support"
+    end
   end
 
   before { edgedriver.remove }
@@ -27,7 +29,7 @@ describe Webdrivers::Edgedriver do
       it 'does not download when offline, binary exists and matches major browser version' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(edgedriver).to receive(:exists?).and_return(true)
-        allow(edgedriver).to receive(:edge_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
 
         edgedriver.update
@@ -40,8 +42,9 @@ describe Webdrivers::Edgedriver do
 
         allow(Webdrivers::Network).to receive(:get_response).and_return(client_error)
         allow(edgedriver).to receive(:exists?).and_return(true)
-        allow(edgedriver).to receive(:edge_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('73.0.3683.20'))
+
         edgedriver.update
 
         expect(File.exist?(edgedriver.driver_path)).to be false
@@ -50,7 +53,7 @@ describe Webdrivers::Edgedriver do
       it 'raises ConnectionError when offline, and binary does not match major browser version' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(edgedriver).to receive(:exists?).and_return(true)
-        allow(edgedriver).to receive(:edge_version).and_return(Gem::Version.new('73.0.3683.68'))
+        allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
         allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('72.0.0.0'))
 
         msg = %r{Can not reach https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/}
@@ -88,14 +91,14 @@ describe Webdrivers::Edgedriver do
       before { allow(edgedriver).to receive(:correct_binary?).and_return(false) }
 
       it 'downloads binary' do
-        allow(edgedriver).to receive(:edge_version).and_return('76.0.168.154')
+        allow(edgedriver).to receive(:browser_version).and_return('76.0.168.154')
         edgedriver.update
 
         expect(edgedriver.current_version).not_to be_nil
       end
 
       it 'raises ConnectionError if offline' do
-        allow(edgedriver).to receive(:edge_version).and_return('76.0.168.154')
+        allow(edgedriver).to receive(:browser_version).and_return('76.0.168.154')
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
         msg = %r{Can not reach https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/}
@@ -105,7 +108,7 @@ describe Webdrivers::Edgedriver do
 
     it 'makes a network call if cached driver does not match the browser' do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
-      allow(edgedriver).to receive(:edge_version).and_return(Gem::Version.new('73.0.3683.68'))
+      allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
       allow(edgedriver).to receive(:downloads).and_return(Gem::Version.new('73.0.3683.68') => 'http://some/driver/path')
 
       allow(Webdrivers::System).to receive(:download)
@@ -145,7 +148,7 @@ describe Webdrivers::Edgedriver do
     it 'returns a Gem::Version instance if binary is on the system' do
       allow(edgedriver).to receive(:exists?).and_return(true)
       allow(Webdrivers::System).to receive(:call)
-        .with("#{edgedriver.driver_path} --version")
+        .with(edgedriver.driver_path, '--version')
         .and_return '71.0.3578.137'
 
       expect(edgedriver.current_version).to eq Gem::Version.new('71.0.3578.137')
@@ -154,13 +157,13 @@ describe Webdrivers::Edgedriver do
 
   describe '#latest_version' do
     it 'returns the correct point release for a production version' do
-      allow(edgedriver).to receive(:edge_version).and_return '76.0.168.9999'
+      allow(edgedriver).to receive(:browser_version).and_return '76.0.168.9999'
 
       expect(edgedriver.latest_version).to eq Gem::Version.new('76.0.168.0')
     end
 
     it 'raises VersionError for beta version' do
-      allow(edgedriver).to receive(:edge_version).and_return('100.0.0')
+      allow(edgedriver).to receive(:browser_version).and_return('100.0.0')
       msg = 'Unable to find latest point release version for 100.0.0. '\
 'You appear to be using a non-production version of Edge. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
@@ -170,7 +173,7 @@ describe Webdrivers::Edgedriver do
     end
 
     it 'raises VersionError for unknown version' do
-      allow(edgedriver).to receive(:edge_version).and_return('72.0.9999.0000')
+      allow(edgedriver).to receive(:browser_version).and_return('72.0.9999.0000')
       msg = 'Unable to find latest point release version for 72.0.9999. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
 'to a known edgedriver version: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
@@ -187,7 +190,7 @@ describe Webdrivers::Edgedriver do
 
     it 'creates cached file' do
       allow(edgedriver).to receive(:downloads).and_return(Gem::Version.new('71.0.3578.137') => 'http://some/driver/path')
-      allow(edgedriver).to receive(:edge_version).and_return('71.0.3578.137')
+      allow(edgedriver).to receive(:browser_version).and_return('71.0.3578.137')
       edgedriver.latest_version
       expect(File.exist?("#{Webdrivers::System.install_dir}/msedgedriver.version")).to eq true
     end
@@ -213,7 +216,7 @@ describe Webdrivers::Edgedriver do
         </p>
       HTML
       allow(Webdrivers::System).to receive(:valid_cache?)
-      allow(edgedriver).to receive(:edge_version).and_return('76.0.168.333')
+      allow(edgedriver).to receive(:browser_version).and_return('76.0.168.333')
 
       expect(edgedriver.latest_version).to eq Gem::Version.new('76.0.168.0')
 
@@ -240,7 +243,7 @@ describe Webdrivers::Edgedriver do
 
   describe '#remove' do
     it 'removes existing edgedriver' do
-      allow(edgedriver).to receive(:edge_version).and_return('76.0.168.154')
+      allow(edgedriver).to receive(:browser_version).and_return('76.0.168.154')
       edgedriver.update
 
       edgedriver.remove
@@ -255,7 +258,7 @@ describe Webdrivers::Edgedriver do
   describe '#driver_path' do
     it 'returns full location of binary' do
       expected_bin = "msedgedriver#{'.exe' if Selenium::WebDriver::Platform.windows?}"
-      expected_path = Webdrivers::System.escape_path("#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}")
+      expected_path = File.absolute_path "#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}"
       expect(edgedriver.driver_path).to eq(expected_path)
     end
   end

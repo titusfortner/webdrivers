@@ -8,24 +8,12 @@ require 'webdrivers/edge_finder'
 module Webdrivers
   class Edgedriver < Chromedriver
     class << self
+      undef :chrome_version
       #
-      # Returns latest available chromedriver version.
-      #
-      # @return [Gem::Version]
-      def latest_version
-        @latest_version ||= begin
-          latest_applicable = with_cache(file_name) { latest_point_release(release_version) }
-
-          Webdrivers.logger.debug "Latest version available: #{latest_applicable}"
-          normalize_version(latest_applicable)
-        end
-      end
-
-      #
-      # Returns currently installed Chrome/Chromium version.
+      # Returns currently installed Edge version.
       #
       # @return [Gem::Version]
-      def edge_version
+      def browser_version
         normalize_version EdgeFinder.version
       end
 
@@ -88,19 +76,6 @@ module Webdrivers
         url = downloads[version]
         Webdrivers.logger.debug "edgedriver URL: #{url}"
         @download_url = url
-      end
-
-      # Returns release version from the currently installed Chrome version
-      #
-      # @example
-      #   73.0.3683.75 -> 73.0.3683
-      def release_version
-        edge = normalize_version(edge_version)
-        normalize_version(edge.segments[0..2].join('.'))
-      end
-
-      def sufficient_binary?
-        super && current_version && (current_version.segments.first == release_version.segments.first)
       end
 
       def downloads
