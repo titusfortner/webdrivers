@@ -1,6 +1,8 @@
 build: off
 cache:
   - vendor/bundle
+image:
+  - Visual Studio 2017
 environment:
   matrix:
     - RUBY_VERSION: Ruby24
@@ -24,11 +26,8 @@ environment:
       RAKE_TASK: spec
       SCRIPT_CONTEXT: jruby -G -S
 install:
-  - ps: |
-      if ($env:RUBY_BIN -eq 'jruby')
-      {
-        support\install_jruby.ps1
-      }
+  - ps: if ($env:RUBY_BIN -eq 'jruby') { support\install_jruby.ps1 }
+  - ps: support\install_msedge.ps1
   - set PATH=C:\%RUBY_VERSION%\bin;%PATH%
   - '%RUBY_BIN% -S gem update --system'
   - '%RUBY_BIN% -S gem install bundler'
