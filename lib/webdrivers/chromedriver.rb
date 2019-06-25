@@ -42,9 +42,10 @@ module Webdrivers
       # Returns currently installed Chrome/Chromium version.
       #
       # @return [Gem::Version]
-      def chrome_version
+      def browser_version
         normalize_version ChromeFinder.version
       end
+      alias chrome_version browser_version
 
       #
       # Returns url with domain for calls to get this driver.
@@ -102,7 +103,7 @@ module Webdrivers
       # @example
       #   73.0.3683.75 -> 73.0.3683
       def release_version
-        chrome = normalize_version(chrome_version)
+        chrome = normalize_version(browser_version)
         normalize_version(chrome.segments[0..2].join('.'))
       end
 
