@@ -22,22 +22,25 @@ module Webdrivers
       #
       # @return [String]
       def base_url
-        'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
+        # 'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
+        'https://msedgedriver.azureedge.net/'
       end
 
       def remove
         super
-        @downloads = nil
       end
 
       private
 
       def latest_point_release(version)
-        begin
-          lpr = downloads.keys.select { |ver| ver.segments[0..2] == version.segments[0..2] }.max
-          return normalize_version(lpr) if lpr
-        rescue NetworkError # rubocop:disable Lint/HandleExceptions
-        end
+        # Microsoft doesn't currently provide LATEST_RELEASE_X.Y.Z - only use X
+        # but require the driver version be >= the passed in version
+        str = Network.get(URI.join(base_url, "LATEST_RELEASE_#{version.segments[0]}"))
+        latest_release = normalize_version(str.encode('ASCII-8BIT', 'UTF-16'))
+        raise VersionError unless latest_release >= version
+
+        latest_release
+      rescue NetworkError, VersionError
         msg = failed_to_find_message(version)
         Webdrivers.logger.debug msg
         raise VersionError, msg
@@ -46,7 +49,10 @@ module Webdrivers
       def failed_to_find_message(version)
         msg = "Unable to find latest point release version for #{version}."
         msg = begin
-          latest_release = normalize_version(downloads.keys.max)
+          # str = Network.get(URI.join(base_url, 'LATEST_RELEASE'))
+          # Microsoft doesn't yet/ever support LATEST_RELEASE - Use Canary as latest
+          str = Network.get(URI.join(base_url, 'LATEST_CANARY'))
+          latest_release = normalize_version(str.encode('ASCII-8BIT', 'UTF-16'))
           if version > latest_release
             "#{msg} You appear to be using a non-production version of Edge."
           else
@@ -57,7 +63,7 @@ module Webdrivers
         end
 
         "#{msg} Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` "\
-        "to a known edgedriver version: #{base_url}"
+        "to a known edgedriver version: Can not reach #{base_url}"
       end
 
       def file_name
@@ -73,30 +79,10 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        url = downloads[version]
-        Webdrivers.logger.debug "edgedriver URL: #{url}"
+        file_name = System.platform == 'win' ? 'win32' : "#{System.platform}64"
+        url = "#{base_url}/#{version}/edgedriver_#{file_name}.zip"
+        Webdrivers.logger.debug "msedgedriver URL: #{url}"
         @download_url = url
-      end
-
-      def downloads
-        @downloads ||= begin
-          ds = parse_downloads(Network.get(base_url))
-          Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
-          ds
-                       rescue Webdrivers::NetworkError
-                         {}
-        end
-      end
-
-      def parse_downloads(html)
-        driver_download_url = 'https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/'
-        doc = Nokogiri::XML.parse(html)
-        doc.css(".driver-download__meta a[href^='#{driver_download_url}']")
-           .map { |a| a['href'] }
-           .select { |item| item.include?(System.platform == 'win' ? 'win32' : "#{System.platform}64") }
-           .each_with_object({}) do |url, hash|
-             hash[normalize_version url[%r{/([0-9\.]+)/edgedriver_(.*)\.zip$}, 1]] = url
-           end
       end
     end
   end
