@@ -31,7 +31,8 @@ module Webdrivers
     # are set, it defaults to 86,400 Seconds (24 hours).
     #
     def cache_time
-      (@cache_time || ENV['WD_CACHE_TIME'] || DEFAULT_CACHE_TIME).to_i
+      @cache_time ||= (ENV['WD_CACHE_TIME'] || DEFAULT_CACHE_TIME)
+      @cache_time.to_i
     end
 
     #
@@ -39,7 +40,7 @@ module Webdrivers
     #
     # @return [String]
     def install_dir
-      @install_dir || ENV['WD_INSTALL_DIR'] || DEFAULT_INSTALL_DIR
+      @install_dir ||= ENV['WD_INSTALL_DIR'] || DEFAULT_INSTALL_DIR
     end
 
     def logger
@@ -66,7 +67,7 @@ module Webdrivers
       raise 'Webdrivers.net_http_ssl_fix is no longer available.' \
       ' Please see https://github.com/titusfortner/webdrivers#ssl_connect-errors.'
     end
-end
+  end
 
   class Common
     class << self
@@ -77,7 +78,7 @@ end
       #
       # @return [Gem::Version]
       def required_version
-        normalize_version @required_version
+        normalize_version(@required_version ||= nil)
       end
 
       #

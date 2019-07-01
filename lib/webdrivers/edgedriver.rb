@@ -2,7 +2,7 @@
 
 require 'shellwords'
 require 'webdrivers/common'
-require 'webdrivers/edgedriver'
+require 'webdrivers/chromedriver'
 require 'webdrivers/edge_finder'
 
 module Webdrivers
