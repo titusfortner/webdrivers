@@ -217,6 +217,7 @@ describe Webdrivers::Edgedriver do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
       allow(Webdrivers::Network).to receive(:get).and_return('77.0.207.0'.encode('UTF-16'))
       allow(Webdrivers::System).to receive(:valid_cache?)
+      allow(edgedriver).to receive(:browser_version).and_return('77.0.207.0')
 
       expect(edgedriver.latest_version).to eq Gem::Version.new('77.0.207.0')
 
