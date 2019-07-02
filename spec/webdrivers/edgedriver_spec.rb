@@ -165,7 +165,7 @@ describe Webdrivers::Edgedriver do
     it 'returns the correct point release for a production version' do
       allow(edgedriver).to receive(:browser_version).and_return '77.0.207.0'
 
-      expect(edgedriver.latest_version).to eq Gem::Version.new('77.0.207.0')
+      expect(edgedriver.latest_version).to be_between(Gem::Version.new('77.0.207.0'), Gem::Version.new('78'))
     end
 
     it 'raises VersionError for beta version' do

@@ -90,7 +90,7 @@ module Webdrivers
         when /tar\.bz2$/
           untarbz2_file(tempfile)
         when /\.zip$/
-          unzip_file(tempfile)
+          unzip_file(tempfile, File.basename(target))
         else
           Webdrivers.logger.debug 'No Decompression needed'
           FileUtils.cp(tempfile, File.join(Dir.pwd, file_name))
@@ -115,19 +115,17 @@ module Webdrivers
         end
       end
 
-      def unzip_file(filename)
+      def unzip_file(filename, driver_name)
         Webdrivers.logger.debug "Decompressing #{filename}"
 
         Zip::File.open(filename) do |zip_file|
-          zip_file.each do |f|
-            @top_path ||= f.name
-            f_path = File.join(Dir.pwd, f.name)
-            delete(f_path)
-            FileUtils.mkdir_p(File.dirname(f_path)) unless File.exist?(File.dirname(f_path))
-            zip_file.extract(f, f_path)
-          end
+          driver = zip_file.get_entry(driver_name)
+          f_path = File.join(Dir.pwd, driver.name)
+          delete(f_path)
+          FileUtils.mkdir_p(File.dirname(f_path)) unless File.exist?(File.dirname(f_path))
+          zip_file.extract(driver, f_path)
         end
-        @top_path
+        driver_name
       end
 
       def platform
