@@ -1,5 +1,18 @@
+### 4.1.0 (2019-06-26)
+* Add support for `msedgedriver` (issue [#93](https://github.com/titusfortner/webdrivers/issues/93))
+* Allow users to provide a custom binary path via `WD_CHROME_PATH` 
+and `WD_EDGE_CHROME_ATH` environment variables (issues #[137](https://github.com/titusfortner/webdrivers/issues/137) 
+and [#93](https://github.com/titusfortner/webdrivers/issues/93))
+* Fix a bug where the user given Chrome binary path via `Selenium::WebDriver::Chrome.path` 
+was not properly escaped (issue [#139](https://github.com/titusfortner/webdrivers/issues/139))
+* Fix miscellaneous code warnings.
+* **Announcement**: As of 06/21/2019, `heroku-buildpack-google-chrome` 
+no longer requires a [workaround](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) 
+to work with this gem. See [heroku-buildpack-google-chrome#73](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) 
+for more information.
+
 ### 4.0.1 (2019-06-12)
-* Cache time now defaults to 86,400 Seconds (24 hours). Please note the special exception for `chromedriver` in the [README](https://github.com/titusfortner/webdrivers#special-exception-for-chromedriver) (issue [#132](https://github.com/titusfortner/webdrivers/issues/132))
+* Cache time now defaults to 86,400 Seconds (24 hours). Please note the special exception for `chromedriver` in the [README](https://github.com/titusfortner/webdrivers#special-exception-for-chromedriver-and-msedgedriver) (issue [#132](https://github.com/titusfortner/webdrivers/issues/132))
 * Properly escape Chrome binary path when using JRuby on Windows (issue [#130](https://github.com/titusfortner/webdrivers/issues/130))
 * Allow use of `selenium-webdriver` v4 (pre-releases only)
 

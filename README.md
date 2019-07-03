@@ -13,10 +13,7 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [chromedriver](http://chromedriver.chromium.org/)
 * [geckodriver](https://github.com/mozilla/geckodriver)
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
-
-Support for [`msedgedriver`](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
-will be added once the next Microsoft Edge version (v75) is released. More information is available 
-[here](https://developer.microsoft.com/en-us/microsoft-edge/).
+* [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)  - Dev and Canary releases on Windows and macOS only
 
 ## Usage
 
@@ -36,10 +33,12 @@ through Selenium.
 ### Specific Drivers
 
 If you want webdrivers to only manage specific drivers you can specify one or more as follows:
+
 ```ruby
 require 'webdrivers/chromedriver'
 require 'webdrivers/geckodriver'
 require 'webdrivers/iedriver'
+require 'webdrivers/edgedriver'
 ```
 
 ### Download Location
@@ -67,6 +66,9 @@ Webdrivers::Geckodriver.required_version  = '0.23.0'
 
 # Internet Explorer
 Webdrivers::IEdriver.required_version     = '3.14.0'
+
+# Edge (Chromium)
+Webdrivers::Edgedriver.required_version     = '76.0.183.0'
 ```
 
 You can explicitly trigger the update in your code, but this will happen
@@ -88,11 +90,11 @@ Webdrivers.cache_time = 86_400 # Default: 86,400 Seconds (24 hours)
 Alternatively, you can define this value via the `WD_CACHE_TIME` environment
 variable. **Only set one to avoid confusion**.
 
-##### Special exception for chromedriver
+##### Special exception for chromedriver and msedgedriver
 
-Cache time will be respected as long as a `chromedriver` binary exists and the major versions of 
-Chrome and `chromedriver` match. For example, if you update Chrome to v76 and `chromedriver` is 
-still at v75, `webdrivers` will ignore the cache time and update `chromedriver` to make sure you're 
+Cache time will be respected as long as a driver binary exists and the major versions of 
+the browser and the driver match. For example, if you update Chrome or Edge to v76 and its driver is 
+still at v75, `webdrivers` will ignore the cache time and update the driver to make sure you're 
 using a compatible version.
 
 ### Proxy
@@ -132,7 +134,7 @@ Other solutions are documented on the RubyGems [website](https://guides.rubygems
 ### Rake tasks
 
 Each driver has its own set of `rake` tasks (with `Railtie` support) that
-you can call once before executing the tests.  These are especially 
+you can call once before executing the tests. These are especially 
 useful if you're running tests in parallel and want to avoid performing 
 an update check per thread.
 
@@ -141,6 +143,9 @@ $ bundle exec rake -T
 rake webdrivers:chromedriver:remove           # Force remove chromedriver
 rake webdrivers:chromedriver:update[version]  # Remove and download updated chromedriver if necessary
 rake webdrivers:chromedriver:version          # Print current chromedriver version
+rake webdrivers:edgedriver:remove             # Force remove msedgedriver
+rake webdrivers:edgedriver:update[version]    # Remove and download updated msedgedriver if necessary
+rake webdrivers:edgedriver:version            # Print current msedgedriver version
 rake webdrivers:geckodriver:remove            # Force remove geckodriver
 rake webdrivers:geckodriver:update[version]   # Remove and download updated geckodriver if necessary
 rake webdrivers:geckodriver:version           # Print current geckodriver version
@@ -156,8 +161,8 @@ require 'webdrivers'
 load 'webdrivers/Rakefile'
 ```
 
-These tasks respect the `WD_INSTALL_DIR`, `WD_CACHE_TIME`, and
-`WD_CHROME_PATH` environment variables, which can also be passed 
+These tasks respect the `WD_INSTALL_DIR`, `WD_CACHE_TIME`, `WD_CHROME_PATH`,
+and `WD_EDGE_CHROME_PATH` environment variables, which can also be passed 
 through the `rake` command:
 
 ```bash
@@ -180,7 +185,7 @@ Webdrivers.logger.level = :DEBUG
 
 ### Browser Specific Notes
 
-#### Chrome/Chromium
+#### Chrome/Chromium 
 
 The version of `chromedriver` will depend on the version of Chrome you are using it with:
 
@@ -209,14 +214,13 @@ Follow the specific instructions [here](https://github.com/titusfortner/webdrive
 
 Please note that as of 06/21/2019, [`heroku-buildpack-google-chrome`](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) no longer requires this workaround.
 
-#### Microsoft Edge
+#### Microsoft Edge (Chromium)
 
-Microsoft Edge support for v18 and older has been removed for now, as it is currently 
-unreliable. To use Microsoft Edge, please visit the [Downloads and Installation page](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads). 
-
-Support for [`msedgedriver`](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
-will be added once the next Microsoft Edge version (v75) is released. More information is available 
-[here](https://developer.microsoft.com/en-us/microsoft-edge/).
+Microsoft Edge (Chromium) support was added in v4.1.0. Notes 
+from the [Chrome/Chromium](https://github.com/titusfortner/webdrivers#chromechromium) 
+section apply to this browser as well.
+  
+Please note that `msedgedriver` requires `selenium-webdriver` v4.
 
 ## Wiki
 
