@@ -1,4 +1,4 @@
-### 4.1.0 (2019-06-26)
+### 4.1.0 (2019-07-03)
 * Add support for `msedgedriver` (issue [#93](https://github.com/titusfortner/webdrivers/issues/93))
 * Allow users to provide a custom binary path via `WD_CHROME_PATH` 
 and `WD_EDGE_CHROME_ATH` environment variables (issues #[137](https://github.com/titusfortner/webdrivers/issues/137) 
