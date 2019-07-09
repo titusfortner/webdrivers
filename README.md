@@ -17,7 +17,7 @@ Run Selenium tests more easily with automatic installation and updates for all s
 
 ## Usage
 
-In your Gemfile: 
+In your Gemfile:
 
 `gem 'webdrivers', '~> 4.0'`
 
@@ -28,7 +28,7 @@ require 'webdrivers'
 ```
 
 The drivers will now be automatically downloaded or updated when you launch a browser
-through Selenium. 
+through Selenium.
 
 ### Specific Drivers
 
@@ -44,7 +44,7 @@ require 'webdrivers/edgedriver'
 ### Download Location
 
 The default download location is `~/.webdrivers` directory, and this is configurable:
- 
+
  ```ruby
  Webdrivers.install_dir = '/webdrivers/install/dir'
 ```
@@ -54,7 +54,7 @@ variable.
 
 ### Version Pinning
 
-If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise, 
+If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise,
 the latest (stable) driver will be downloaded and passed to Selenium.
 
 ```ruby
@@ -92,9 +92,9 @@ variable. **Only set one to avoid confusion**.
 
 ##### Special exception for chromedriver and msedgedriver
 
-Cache time will be respected as long as a driver binary exists and the major versions of 
-the browser and the driver match. For example, if you update Chrome or Edge to v76 and its driver is 
-still at v75, `webdrivers` will ignore the cache time and update the driver to make sure you're 
+Cache time will be respected as long as a driver binary exists and the major versions of
+the browser and the driver match. For example, if you update Chrome or Edge to v76 and its driver is
+still at v75, `webdrivers` will ignore the cache time and update the driver to make sure you're
 using a compatible version.
 
 ### Proxy
@@ -114,7 +114,7 @@ end
 ### `SSL_connect` errors
 
 If you are getting an error like this (especially common on Windows):
- 
+
 `SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed`
 
 Add the following to your Gemfile:
@@ -134,9 +134,25 @@ Other solutions are documented on the RubyGems [website](https://guides.rubygems
 ### Rake tasks
 
 Each driver has its own set of `rake` tasks (with `Railtie` support) that
-you can call once before executing the tests. These are especially 
-useful if you're running tests in parallel and want to avoid performing 
+you can call once before executing the tests. These are especially
+useful if you're running tests in parallel and want to avoid performing
 an update check per thread.
+
+If you are using Rails default configuration the `webdrivers` gem will only be loaded in the test group
+so you will need to specify the test environment when using the tasks:
+
+```ruby
+RAILS_ENV=test rails webdrivers:chromedriver:update
+```
+
+If you are not using Rails, you'll need to load them into your Rakefile like this:
+
+```ruby
+require 'webdrivers'
+load 'webdrivers/Rakefile'
+```
+
+The full list of available tasks is:
 
 ```bash
 $ bundle exec rake -T
@@ -154,15 +170,8 @@ rake webdrivers:iedriver:update[version]      # Remove and download updated IEDr
 rake webdrivers:iedriver:version              # Print current IEDriverServer version
 ```
 
-If you are not using Rails, you'll need to load them into your Rakefile like this:
-
-```ruby
-require 'webdrivers'
-load 'webdrivers/Rakefile'
-```
-
 These tasks respect the `WD_INSTALL_DIR`, `WD_CACHE_TIME`, `WD_CHROME_PATH`,
-and `WD_EDGE_CHROME_PATH` environment variables, which can also be passed 
+and `WD_EDGE_CHROME_PATH` environment variables, which can also be passed
 through the `rake` command:
 
 ```bash
@@ -185,17 +194,17 @@ Webdrivers.logger.level = :DEBUG
 
 ### Browser Specific Notes
 
-#### Chrome/Chromium 
+#### Chrome/Chromium
 
 The version of `chromedriver` will depend on the version of Chrome you are using it with:
 
- * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome. 
+ * For versions >= 70, the downloaded version of `chromedriver` will match the installed version of Google Chrome.
  More information [here](http://chromedriver.chromium.org/downloads/version-selection).
  * For versions <=  69, `chromedriver` version 2.41 will be downloaded.
- * For beta versions, you'll have to require the beta version of `chromedriver` 
+ * For beta versions, you'll have to require the beta version of `chromedriver`
  using `Webdrivers::Chromedriver.required_version`.
- 
-The gem looks for the Chrome/Chromium version that `chromedriver` will use by default. 
+
+The gem looks for the Chrome/Chromium version that `chromedriver` will use by default.
 You can override this behavior by providing a path to the browser binary you want to use:
 
 ```ruby
@@ -205,26 +214,26 @@ Selenium::WebDriver::Chrome.path = '/chromium/install/path/to/binary'
 Alternatively, you can define the path via the `WD_CHROME_PATH` environment
 variable.
 
-This is also required if Google Chrome is not installed in its 
+This is also required if Google Chrome is not installed in its
 [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
 ##### CircleCI Users
 
-Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium. 
+Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if your CI environment provides custom shims for Chrome or Chromium.
 
 Please note that as of 06/21/2019, [`heroku-buildpack-google-chrome`](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) no longer requires this workaround.
 
 #### Microsoft Edge (Chromium)
 
-Microsoft Edge (Chromium) support was added in v4.1.0. Notes 
-from the [Chrome/Chromium](https://github.com/titusfortner/webdrivers#chromechromium) 
+Microsoft Edge (Chromium) support was added in v4.1.0. Notes
+from the [Chrome/Chromium](https://github.com/titusfortner/webdrivers#chromechromium)
 section apply to this browser as well.
-  
+
 Please note that `msedgedriver` requires `selenium-webdriver` v4.
 
 ## Wiki
 
-Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki) 
+Please see the [wiki](https://github.com/titusfortner/webdrivers/wiki)
 for solutions to commonly reported issues.
 
 Join us in the `#webdrivers-gem` channel on [Slack](https://seleniumhq.herokuapp.com/)
@@ -237,5 +246,5 @@ see LICENSE.txt for full details and copyright.
 
 ## Contributing
 
-Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers). 
+Bug reports and pull requests are welcome [on GitHub](https://github.com/titusfortner/webdrivers).
 Run `bundle exec rake` and squash the commits in your PRs.
