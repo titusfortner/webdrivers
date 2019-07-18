@@ -1,3 +1,6 @@
+### 4.1.1 (2019-07-18)
+* Raise `BrowserNotFound` if Chrome and Edge binary are not found (issue [#144](https://github.com/titusfortner/webdrivers/issues/144)).
+
 ### 4.1.0 (2019-07-03)
 * Add support for `msedgedriver` (issue [#93](https://github.com/titusfortner/webdrivers/issues/93))
 * Allow users to provide a custom binary path via `WD_CHROME_PATH` 
