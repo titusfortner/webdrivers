@@ -8,15 +8,17 @@ module Webdrivers
     class << self
       def version
         version = send("#{System.platform}_version", location)
-
-        raise VersionError, 'Failed to find Chrome binary or its version.' if version.nil? || version.empty?
+        raise VersionError, 'Failed to find Chrome version.' if version.nil? || version.empty?
 
         Webdrivers.logger.debug "Browser version: #{version}"
         version[/\d+\.\d+\.\d+\.\d+/] # Google Chrome 73.0.3683.75 -> 73.0.3683.75
       end
 
       def location
-        user_defined_location || send("#{System.platform}_location")
+        chrome_bin = user_defined_location || send("#{System.platform}_location")
+        return chrome_bin unless chrome_bin.nil?
+
+        raise BrowserNotFound, 'Failed to find Chrome binary.'
       end
 
       private
