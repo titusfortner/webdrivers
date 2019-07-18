@@ -24,6 +24,7 @@ matrix:
     - rvm: 2.4.6
       env: RAKE_TASK=rubocop
     - rvm: jruby-9.2.7.0
+      jdk: openjdk8
       env: RAKE_TASK=spec
     - rvm: 2.6
       env: RAKE_TASK=spec
@@ -35,6 +36,6 @@ matrix:
         homebrew:
           taps: homebrew/cask-versions
           casks:
-            - microsoft-edge-canary
+            - microsoft-edge-dev
   allow_failures:
     - gemfile: gemfiles/Gemfile.edge

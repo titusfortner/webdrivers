@@ -18,6 +18,9 @@ module Webdrivers
   class NetworkError < StandardError
   end
 
+  class BrowserNotFound < StandardError
+  end
+
   DEFAULT_CACHE_TIME = 86_400 # 24 hours
   DEFAULT_INSTALL_DIR = File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
 
