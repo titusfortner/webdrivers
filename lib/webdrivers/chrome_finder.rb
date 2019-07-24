@@ -46,6 +46,8 @@ module Webdrivers
             return option if File.exist?(option)
           end
         end
+
+        nil
       end
 
       def mac_location
@@ -59,6 +61,8 @@ module Webdrivers
             return option if File.exist?(option)
           end
         end
+
+        nil
       end
 
       def linux_location
@@ -71,6 +75,8 @@ module Webdrivers
             return option if File.exist?(option)
           end
         end
+
+        nil
       end
 
       def win_version(location)
