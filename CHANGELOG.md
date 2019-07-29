@@ -1,3 +1,6 @@
+### 4.1.2 (2019-07-29)
+* Fix a bug related to raising `BrowserNotFound`.
+
 ### 4.1.1 (2019-07-18)
 * Raise `BrowserNotFound` if Chrome and Edge binary are not found (issue [#144](https://github.com/titusfortner/webdrivers/issues/144)).
 
@@ -9,10 +12,10 @@ and [#93](https://github.com/titusfortner/webdrivers/issues/93))
 * Fix a bug where the user given Chrome binary path via `Selenium::WebDriver::Chrome.path` 
 was not properly escaped (issue [#139](https://github.com/titusfortner/webdrivers/issues/139))
 * Fix miscellaneous code warnings.
-* **Announcement**: As of 06/21/2019, `heroku-buildpack-google-chrome` 
+* ~~**Announcement**: As of 06/21/2019, `heroku-buildpack-google-chrome` 
 no longer requires a [workaround](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) 
 to work with this gem. See [heroku-buildpack-google-chrome#73](https://github.com/heroku/heroku-buildpack-google-chrome/pull/73) 
-for more information.
+for more information.~~
 
 ### 4.0.1 (2019-06-12)
 * Cache time now defaults to 86,400 Seconds (24 hours). Please note the special exception for `chromedriver` in the [README](https://github.com/titusfortner/webdrivers#special-exception-for-chromedriver-and-msedgedriver) (issue [#132](https://github.com/titusfortner/webdrivers/issues/132))
