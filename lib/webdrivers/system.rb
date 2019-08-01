@@ -14,11 +14,13 @@ module Webdrivers
         max_attempts = 3
         attempts_made = 0
         delay = 0.5
-        Webdrivers.logger.debug "Deleting #{file}"
 
         begin
           attempts_made += 1
-          File.delete file if File.exist? file
+          if File.exist? file
+            Webdrivers.logger.debug "Deleting #{file}"
+            File.delete file
+          end
         rescue Errno::EACCES # Solves an intermittent file locking issue on Windows
           sleep(delay)
           retry if File.exist?(file) && attempts_made <= max_attempts
