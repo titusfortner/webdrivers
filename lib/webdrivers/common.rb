@@ -114,6 +114,8 @@ module Webdrivers
       #
       # @return [String]
       def driver_path
+        return ENV['WD_DRIVER_PATH'] if ENV['WD_DRIVER_PATH']
+
         File.absolute_path File.join(System.install_dir, file_name)
       end
 

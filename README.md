@@ -192,6 +192,14 @@ The logging level can be configured for debugging purpose:
 Webdrivers.logger.level = :DEBUG
 ```
 
+### Use pre-installed driver
+
+You can specify any driver path via the `WD_DRIVER_PATH` environment variable (in this case, nothing is downloaded). This feature is convenient when you want to specify a different driver path in each environment, for example, on local a downloaded driver by the gem, but on CI a pre-installed driver.
+
+```shell
+WD_DRIVER_PATH=/usr/local/bin/chromedriver rspec
+```
+
 ### Browser Specific Notes
 
 #### Chrome/Chromium

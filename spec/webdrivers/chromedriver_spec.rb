@@ -256,6 +256,12 @@ describe Webdrivers::Chromedriver do
       expected_path = File.absolute_path "#{File.join(ENV['HOME'])}/.webdrivers/#{expected_bin}"
       expect(chromedriver.driver_path).to eq(expected_path)
     end
+
+    it 'returns a given value of the `WD_DRIVER_PATH` environment variable' do
+      expected_path = '/path/to/chromedriver'
+      allow(ENV).to receive(:[]).with('WD_DRIVER_PATH').and_return(expected_path)
+      expect(chromedriver.driver_path).to eq(expected_path)
+    end
   end
 
   describe '#browser_version' do
