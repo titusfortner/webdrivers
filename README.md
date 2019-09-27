@@ -52,6 +52,14 @@ The default download location is `~/.webdrivers` directory, and this is configur
 Alternatively, you can define the path via the `WD_INSTALL_DIR` environment
 variable.
 
+#### When Using the parallel_tests gem
+
+When using the [parallel_tests](https://github.com/grosser/parallel_tests) gem, make sure to include this wherever you setup your testing environment:
+
+```ruby
+Webdrivers.install_dir = File.expand_path('/webdrivers/install/dir' + ENV['TEST_ENV_NUMBER'].to_s)
+```
+
 ### Version Pinning
 
 If you would like to use a specific (older or beta) version, you can specify it for each driver. Otherwise,
