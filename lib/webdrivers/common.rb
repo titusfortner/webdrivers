@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rubygems/package'
-require 'zip'
 require 'webdrivers/logger'
 require 'webdrivers/network'
 require 'webdrivers/system'
