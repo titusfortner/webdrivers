@@ -13,7 +13,7 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [chromedriver](http://chromedriver.chromium.org/)
 * [geckodriver](https://github.com/mozilla/geckodriver)
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
-* [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)  - Dev and Canary releases on Windows and macOS only
+* [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
 ## Usage
 
