@@ -4,6 +4,12 @@ require 'rubygems/package'
 require 'zip'
 require 'English'
 
+# validate zip entry sizes to avoid zip bombs
+# see https://github.com/rubyzip/rubyzip#size-validation
+# and https://github.com/rubyzip/rubyzip/pull/403 for further details
+# this will be the default in rubyzip 2.0+
+Zip.validate_entry_sizes = true
+
 module Webdrivers
   #
   # @api private
