@@ -29,6 +29,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov', '~>0.16'
 
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
-  s.add_runtime_dependency 'rubyzip', '>= 1.2.2'
+  s.add_runtime_dependency 'rubyzip', '>= 1.3.0'
   s.add_runtime_dependency 'selenium-webdriver', '>= 3.0', '< 4.0'
 end
