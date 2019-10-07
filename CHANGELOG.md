@@ -1,3 +1,7 @@
+### 4.1.3 (2019-10-07)
+* Require rubyzip version 1.3.0 or higher to fix [rubyzip#403](https://github.com/rubyzip/rubyzip/pull/403). Thanks rhymes! ([#153](https://github.com/titusfortner/webdrivers/pull/153))
+* Fix a bug where the file deletion confirmation was printed even when there were no files to delete.
+
 ### 4.1.2 (2019-07-29)
 * Fix a bug related to raising `BrowserNotFound`.
 
