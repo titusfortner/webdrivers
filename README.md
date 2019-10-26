@@ -13,7 +13,7 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [chromedriver](http://chromedriver.chromium.org/)
 * [geckodriver](https://github.com/mozilla/geckodriver)
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
-* [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)  - Dev and Canary releases on Windows and macOS only
+* [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
 ## Usage
 
@@ -68,7 +68,7 @@ Webdrivers::Geckodriver.required_version  = '0.23.0'
 Webdrivers::IEdriver.required_version     = '3.14.0'
 
 # Edge (Chromium)
-Webdrivers::Edgedriver.required_version     = '76.0.183.0'
+Webdrivers::Edgedriver.required_version   = '76.0.183.0'
 ```
 
 You can explicitly trigger the update in your code, but this will happen
