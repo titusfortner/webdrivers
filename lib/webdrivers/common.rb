@@ -21,7 +21,7 @@ module Webdrivers
   end
 
   DEFAULT_CACHE_TIME = 86_400 # 24 hours
-  DEFAULT_INSTALL_DIR = File.expand_path(File.join(ENV['HOME'], '.webdrivers'))
+  DEFAULT_INSTALL_DIR = File.expand_path('~/.webdrivers')
 
   class << self
     attr_accessor :proxy_addr, :proxy_port, :proxy_user, :proxy_pass
