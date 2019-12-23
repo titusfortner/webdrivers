@@ -66,7 +66,7 @@ module Webdrivers
       end
 
       def linux_location
-        directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /opt/google/chrome]
+        directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome]
         files = %w[google-chrome chrome chromium chromium-browser]
 
         directories.each do |dir|
