@@ -1,3 +1,8 @@
+### 4.2.0 (2019-12-27)
+* Add support for Microsoft Edge (Chromium) Beta releases ([#155](https://github.com/titusfortner/webdrivers/pull/155))
+* Use tilde expansion to resolve user's home directory ([#166](https://github.com/titusfortner/webdrivers/pull/161))
+* Add support for Chromium installed using Snap on Ubuntu ([#163](https://github.com/titusfortner/webdrivers/pull/163)). Thanks Tietew!
+
 ### 4.1.3 (2019-10-07)
 * Require rubyzip version 1.3.0 or higher to fix [rubyzip#403](https://github.com/rubyzip/rubyzip/pull/403). Thanks rhymes! ([#153](https://github.com/titusfortner/webdrivers/pull/153))
 * Fix a bug where the file deletion confirmation was printed even when there were no files to delete.
