@@ -21,7 +21,7 @@ environment:
       RUBY_BIN: ruby
       RAKE_TASK: spec
       SCRIPT_CONTEXT: bundle exec
-    - RUBY_VERSION: jruby-9.2.7.0
+    - RUBY_VERSION: jruby-9.2.9.0
       RUBY_BIN: jruby
       RAKE_TASK: spec
       SCRIPT_CONTEXT: jruby -G -S

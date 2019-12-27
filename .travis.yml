@@ -23,14 +23,14 @@ matrix:
       env: RAKE_TASK=spec
     - rvm: 2.4.6
       env: RAKE_TASK=rubocop
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.2.9.0
       jdk: openjdk8
       env: RAKE_TASK=spec
-    - rvm: 2.6
+    - rvm: 2.7
       env: RAKE_TASK=spec
       gemfile: gemfiles/Gemfile.edge
       os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11.3
       addons:
         chrome: stable
         homebrew:
