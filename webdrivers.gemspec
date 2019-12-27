@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ffi', '~> 1.0' # For selenium-webdriver on Windows
   s.add_development_dependency 'irb'
   s.add_development_dependency 'rake', '~> 12.0'
+  s.add_development_dependency 'reline', '0.0.7' # Required by irb, and newer versions don't work on JRuby
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rubocop', '~>0.66'
   s.add_development_dependency 'rubocop-performance'
