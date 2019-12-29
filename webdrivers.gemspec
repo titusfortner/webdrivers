@@ -14,6 +14,13 @@ Gem::Specification.new do |s|
   s.description = 'Run Selenium tests more easily with install and updates for all supported webdrivers.'
   s.licenses    = ['MIT']
 
+  s.metadata = {
+    'bug_tracker_uri' => 'https://github.com/titusfortner/webdrivers/issues',
+    'changelog_uri' => 'https://github.com/titusfortner/webdrivers/blob/master/CHANGELOG.md',
+    'documentation_uri' => "https://www.rubydoc.info/gems/webdrivers/#{Webdrivers::VERSION}",
+    'source_code_uri' => "https://github.com/titusfortner/webdrivers/tree/v#{Webdrivers::VERSION}"
+  }
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
