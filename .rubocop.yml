@@ -11,7 +11,7 @@ Layout/SpaceInsideHashLiteralBraces:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
   IgnoredPatterns:
     - '\s+# rubocop:disable'
