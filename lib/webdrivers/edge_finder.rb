@@ -37,7 +37,8 @@ module Webdrivers
 
       def win_location
         envs = %w[LOCALAPPDATA PROGRAMFILES PROGRAMFILES(X86)]
-        directories = ['\\Microsoft\\Edge Beta\\Application',
+        directories = ['\\Microsoft\\Edge\\Application',
+                       '\\Microsoft\\Edge Beta\\Application',
                        '\\Microsoft\\Edge Dev\\Application',
                        '\\Microsoft\\Edge SxS\\Application']
         file = 'msedge.exe'
