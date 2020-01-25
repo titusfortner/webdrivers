@@ -23,6 +23,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/webdrivers/tasks/*.rake'
+    - 'webdrivers.gemspec'
 
 Metrics/ClassLength:
   Max: 116
