@@ -36,6 +36,6 @@ matrix:
         homebrew:
           taps: homebrew/cask-versions
           casks:
-            - microsoft-edge-beta
+            - microsoft-edge
   allow_failures:
     - gemfile: gemfiles/Gemfile.edge
