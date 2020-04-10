@@ -7,6 +7,7 @@ require 'webdrivers/version'
 Gem::Specification.new do |s|
   s.name        = 'webdrivers'
   s.version     = Webdrivers::VERSION
+  s.required_ruby_version = '>= 2.4.0'
   s.authors     = ['Titus Fortner', 'Lakshya Kapoor', 'Thomas Walpole']
   s.email       = %w[titusfortner@gmail.com kapoorlakshya@gmail.com]
   s.homepage    = 'https://github.com/titusfortner/webdrivers'
