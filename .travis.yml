@@ -12,21 +12,21 @@ before_install:
   - gem update bundler
 matrix:
   include:
-    - rvm: 2.6.3
+    - rvm: 2.6.6
       env: RAKE_TASK=spec
-    - rvm: 2.5.5
+    - rvm: 2.5.8
       env: RAKE_TASK=spec
-    - rvm: 2.4.6
+    - rvm: 2.4.10
       env: RAKE_TASK=spec
-    - rvm: 2.4.6
+    - rvm: 2.7.1
       os: osx
       env: RAKE_TASK=spec
-    - rvm: 2.4.6
+    - rvm: 2.5.8
       env: RAKE_TASK=rubocop
-    - rvm: jruby-9.2.9.0
+    - rvm: jruby-9.2.11.1
       jdk: openjdk8
       env: RAKE_TASK=spec
-    - rvm: 2.7
+    - rvm: 2.7.1
       env: RAKE_TASK=spec
       gemfile: gemfiles/Gemfile.edge
       os: osx
