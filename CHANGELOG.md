@@ -1,3 +1,7 @@
+### 4.3.0 (2020-04-14)
+* Add support for Microsoft Edge (Chromium) stable
+* Drop support for Ruby < 2.4.0
+
 ### 4.2.0 (2019-12-27)
 * Add support for Microsoft Edge (Chromium) Beta releases ([#155](https://github.com/titusfortner/webdrivers/pull/155))
 * Use tilde expansion to resolve user's home directory ([#166](https://github.com/titusfortner/webdrivers/pull/161))
