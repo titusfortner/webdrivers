@@ -156,7 +156,7 @@ module Webdrivers
         cmd = arg ? [process, arg] : process # Windows provides powershell command (process) only, no args.
         Webdrivers.logger.debug "making System call: #{cmd}"
         p = IO.popen(cmd)
-        out = p.gets
+        out = p.read
         p.close
         raise "Failed to make system call: #{cmd}" unless $CHILD_STATUS.success?
 
