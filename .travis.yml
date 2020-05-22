@@ -8,25 +8,25 @@ addons:
   chrome: stable
 script: bundle exec rake $RAKE_TASK
 before_install:
-  - gem update --system
-  - gem update bundler
+  - gem update --system -N
+  - gem update bundler -N
 matrix:
   include:
-    - rvm: 2.6.6
+    - rvm: 2.4
       env: RAKE_TASK=spec
-    - rvm: 2.5.8
+    - rvm: 2.5
       env: RAKE_TASK=spec
-    - rvm: 2.4.10
+    - rvm: 2.6
       env: RAKE_TASK=spec
-    - rvm: 2.7.1
+    - rvm: 2.7
       os: osx
       env: RAKE_TASK=spec
-    - rvm: 2.5.8
+    - rvm: 2.7
       env: RAKE_TASK=rubocop
     - rvm: jruby-9.2.11.1
       jdk: openjdk8
       env: RAKE_TASK=spec
-    - rvm: 2.7.1
+    - rvm: 2.7
       env: RAKE_TASK=spec
       gemfile: gemfiles/Gemfile.edge
       os: osx
