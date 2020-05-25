@@ -114,15 +114,16 @@ describe Webdrivers::Edgedriver do
       end
     end
 
-    it 'makes a network call if cached driver does not match the browser' do
+    it 'makes network calls if cached driver does not match the browser' do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
+      allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('71.0.3578.137'))
       allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68'.encode('UTF-16'))
       allow(Webdrivers::System).to receive(:download)
 
       edgedriver.update
 
-      expect(Webdrivers::Network).to have_received(:get).once
+      expect(Webdrivers::Network).to have_received(:get).twice
     end
 
     context 'when required version is 0' do
@@ -163,13 +164,13 @@ describe Webdrivers::Edgedriver do
 
   describe '#latest_version' do
     it 'returns the correct point release for a production version' do
-      allow(edgedriver).to receive(:browser_version).and_return '77.0.207.0'
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('77.0.207.0')
 
       expect(edgedriver.latest_version).to be_between(Gem::Version.new('77.0.207.0'), Gem::Version.new('78'))
     end
 
     it 'raises VersionError for beta version' do
-      allow(edgedriver).to receive(:browser_version).and_return('100.0.0')
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('100.0.0')
       msg = 'Unable to find latest point release version for 100.0.0. '\
 'You appear to be using a non-production version of Edge. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
@@ -196,19 +197,22 @@ describe Webdrivers::Edgedriver do
     end
 
     it 'creates cached file' do
-      allow(edgedriver).to receive(:browser_version).and_return('77.0.207.0')
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('77.0.207.0')
       allow(Webdrivers::Network).to receive(:get).and_return('77.0.207.0'.encode('UTF-16'))
 
       edgedriver.latest_version
       expect(File.exist?("#{Webdrivers::System.install_dir}/msedgedriver.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid' do
+    it 'does not make network call if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
-      Webdrivers::System.cache_version('msedgedriver', '77.0.207.0')
+      Webdrivers::System.cache_version('msedgedriver', '82.0.445.0')
+      allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('82.0.445.0'))
+      allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('82.0.445.0'))
+      allow(Webdrivers::System).to receive(:exists?).and_return(true)
       allow(Webdrivers::Network).to receive(:get)
 
-      expect(edgedriver.latest_version).to eq Gem::Version.new('77.0.207.0')
+      expect(edgedriver.latest_version).to eq Gem::Version.new('82.0.445.0')
 
       expect(Webdrivers::Network).not_to have_received(:get)
     end
@@ -216,8 +220,8 @@ describe Webdrivers::Edgedriver do
     it 'makes a network call if cache is expired' do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
       allow(Webdrivers::Network).to receive(:get).and_return('77.0.207.0'.encode('UTF-16'))
-      allow(Webdrivers::System).to receive(:valid_cache?)
-      allow(edgedriver).to receive(:browser_version).and_return('77.0.207.0')
+      allow(Webdrivers::System).to receive(:valid_cache?).and_return(false)
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('77.0.207.0')
 
       expect(edgedriver.latest_version).to eq Gem::Version.new('77.0.207.0')
 

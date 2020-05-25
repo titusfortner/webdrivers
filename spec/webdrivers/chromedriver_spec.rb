@@ -106,15 +106,16 @@ describe Webdrivers::Chromedriver do
       end
     end
 
-    it 'makes a network call if cached driver does not match the browser' do
+    it 'makes network calls if cached driver does not match the browser' do
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('71.0.3578.137'))
       allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')
       allow(Webdrivers::System).to receive(:download)
 
       chromedriver.update
 
-      expect(Webdrivers::Network).to have_received(:get).once
+      expect(Webdrivers::Network).to have_received(:get).twice
     end
 
     context 'when required version is 0' do
@@ -155,19 +156,19 @@ describe Webdrivers::Chromedriver do
 
   describe '#latest_version' do
     it 'returns 2.41 if the browser version is less than 70' do
-      allow(chromedriver).to receive(:browser_version).and_return('69.0.0')
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('69.0.0')
 
       expect(chromedriver.latest_version).to eq(Gem::Version.new('2.41'))
     end
 
     it 'returns the correct point release for a production version greater than 70' do
-      allow(chromedriver).to receive(:browser_version).and_return '71.0.3578.9999'
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('71.0.3578.9999')
 
       expect(chromedriver.latest_version).to eq Gem::Version.new('71.0.3578.137')
     end
 
     it 'raises VersionError for beta version' do
-      allow(chromedriver).to receive(:browser_version).and_return('100.0.0')
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('100.0.0')
       msg = 'Unable to find latest point release version for 100.0.0. '\
 'You appear to be using a non-production version of Chrome. '\
 'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
@@ -177,7 +178,7 @@ describe Webdrivers::Chromedriver do
     end
 
     it 'raises VersionError for unknown version' do
-      allow(chromedriver).to receive(:browser_version).and_return('72.0.9999.0000')
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('72.0.9999.0000')
       msg = 'Unable to find latest point release version for 72.0.9999. '\
 'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
 'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
@@ -199,9 +200,12 @@ describe Webdrivers::Chromedriver do
       expect(File.exist?("#{Webdrivers::System.install_dir}/chromedriver.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid' do
+    it 'does not make network call if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('71.0.3578.137'))
+      allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('71.0.3578.137'))
+      allow(Webdrivers::System).to receive(:exists?).and_return(true)
       allow(Webdrivers::Network).to receive(:get)
 
       expect(chromedriver.latest_version).to eq Gem::Version.new('71.0.3578.137')
@@ -211,8 +215,9 @@ describe Webdrivers::Chromedriver do
 
     it 'makes a network call if cache is expired' do
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('71.0.3578.137')
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')
-      allow(Webdrivers::System).to receive(:valid_cache?)
+      allow(Webdrivers::System).to receive(:valid_cache?).and_return(false)
 
       expect(chromedriver.latest_version).to eq Gem::Version.new('73.0.3683.68')
 

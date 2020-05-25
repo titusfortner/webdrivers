@@ -135,9 +135,10 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
       expect(File.exist?("#{Webdrivers::System.install_dir}/geckodriver.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid' do
+    it 'does not make network call if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('geckodriver', '0.23.0')
+      allow(Webdrivers::System).to receive(:exists?).and_return(true)
       allow(Webdrivers::Network).to receive(:get)
 
       expect(geckodriver.latest_version).to eq Gem::Version.new('0.23.0')
