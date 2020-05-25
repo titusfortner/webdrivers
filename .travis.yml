@@ -9,7 +9,7 @@ addons:
 script: bundle exec rake $RAKE_TASK
 before_install:
   - gem update --system -N
-  - gem update bundler -N
+  - gem install bundler -N
 matrix:
   include:
     - rvm: 2.4
