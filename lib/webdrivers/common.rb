@@ -157,9 +157,15 @@ module Webdrivers
         nil
       end
 
-      def with_cache(file_name)
-        if System.valid_cache?(file_name)
-          normalize_version System.cached_version(file_name)
+      # Returns cached driver version if cache is still valid and the driver binary exists.
+      # Otherwise caches the given version (typically the latest available)
+      # In case of Chrome, it also verifies that the driver build and browser build versions are compatible.
+      # Example usage: lib/webdrivers/chromedriver.rb:34
+      def with_cache(file_name, driver_build = nil, browser_build = nil)
+        if System.valid_cache?(file_name) && exists? && (driver_build == browser_build)
+          cached_version = System.cached_version(file_name)
+          Webdrivers.logger.debug "using cached version as latest: #{cached_version}"
+          normalize_version cached_version
         else
           version = yield
           System.cache_version(file_name, version)
