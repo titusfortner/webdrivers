@@ -93,9 +93,9 @@ variable. **Only set one to avoid confusion**.
 ##### Special exception for chromedriver and msedgedriver
 
 Cache time will be respected as long as a driver binary exists and the major.minor.build versions of
-the browser and the driver match. For example, if you update Chrome or Edge to v76 and its driver is
-still at v75, `webdrivers` will ignore the cache time and update the driver to make sure you're
-using a compatible version.
+the browser and the driver match. For example, if you update Chrome or Edge to v76.0.123 and its driver is
+still at v76.0.100, `webdrivers` will ignore the cache time and update the driver to make sure you're
+using a compatible build version.
 
 ### Proxy
 

@@ -200,11 +200,11 @@ describe Webdrivers::Chromedriver do
       expect(File.exist?("#{Webdrivers::System.install_dir}/chromedriver.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid and driver exists' do
+    it 'does not make network calls if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
-      allow(chromedriver).to receive(:current_version).and_return(Gem::Version.new('71.0.3578.137'))
-      allow(chromedriver).to receive(:browser_version).and_return(Gem::Version.new('71.0.3578.137'))
+      allow(chromedriver).to receive(:current_version).and_return Gem::Version.new('71.0.3578.137')
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('71.0.3578.137')
       allow(Webdrivers::System).to receive(:exists?).and_return(true)
       allow(Webdrivers::Network).to receive(:get)
 
@@ -213,7 +213,7 @@ describe Webdrivers::Chromedriver do
       expect(Webdrivers::Network).not_to have_received(:get)
     end
 
-    it 'makes a network call if cache is expired' do
+    it 'makes network calls if cache is expired' do
       Webdrivers::System.cache_version('chromedriver', '71.0.3578.137')
       allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('71.0.3578.137')
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68')

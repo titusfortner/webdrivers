@@ -125,7 +125,8 @@ module Webdrivers
       end
       alias chrome_build_version browser_build_version
 
-      # Returns true if a executable driver binary exists and its build version matches the browser build version
+      # Returns true if an executable driver binary exists
+      # and its build version matches the browser build version
       def sufficient_binary?
         super && current_version && (current_version < normalize_version('70.0.3538') ||
           current_build_version == browser_build_version)

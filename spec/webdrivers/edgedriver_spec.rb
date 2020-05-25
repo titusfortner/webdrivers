@@ -116,8 +116,8 @@ describe Webdrivers::Edgedriver do
 
     it 'makes network calls if cached driver does not match the browser' do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
-      allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('71.0.3578.137'))
-      allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('73.0.3683.68'))
+      allow(edgedriver).to receive(:current_version).and_return Gem::Version.new('71.0.3578.137')
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('73.0.3683.68')
       allow(Webdrivers::Network).to receive(:get).and_return('73.0.3683.68'.encode('UTF-16'))
       allow(Webdrivers::System).to receive(:download)
 
@@ -204,11 +204,11 @@ describe Webdrivers::Edgedriver do
       expect(File.exist?("#{Webdrivers::System.install_dir}/msedgedriver.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid and driver exists' do
+    it 'does not make network calls if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('msedgedriver', '82.0.445.0')
-      allow(edgedriver).to receive(:current_version).and_return(Gem::Version.new('82.0.445.0'))
-      allow(edgedriver).to receive(:browser_version).and_return(Gem::Version.new('82.0.445.0'))
+      allow(edgedriver).to receive(:current_version).and_return Gem::Version.new('82.0.445.0')
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('82.0.445.0')
       allow(Webdrivers::System).to receive(:exists?).and_return(true)
       allow(Webdrivers::Network).to receive(:get)
 
@@ -217,7 +217,7 @@ describe Webdrivers::Edgedriver do
       expect(Webdrivers::Network).not_to have_received(:get)
     end
 
-    it 'makes a network call if cache is expired' do
+    it 'makes network calls if cache is expired' do
       Webdrivers::System.cache_version('msedgedriver', '71.0.3578.137')
       allow(Webdrivers::Network).to receive(:get).and_return('77.0.207.0'.encode('UTF-16'))
       allow(Webdrivers::System).to receive(:valid_cache?).and_return(false)

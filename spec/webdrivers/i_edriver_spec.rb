@@ -115,7 +115,7 @@ describe Webdrivers::IEdriver do
       expect(File.exist?("#{Webdrivers::System.install_dir}/IEDriverServer.version")).to eq true
     end
 
-    it 'does not make network call if cache is valid and driver exists' do
+    it 'does not make network calls if cache is valid and driver exists' do
       allow(Webdrivers).to receive(:cache_time).and_return(3600)
       Webdrivers::System.cache_version('IEDriverServer', '3.4.0')
       allow(Webdrivers::System).to receive(:exists?).and_return(true)
