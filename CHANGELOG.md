@@ -1,3 +1,11 @@
+### 4.4.0 (2020-05-31)
+* Implement initial support for WSLv1 ([#172](https://github.com/titusfortner/webdrivers/issues/172)). Thanks G-Rath!
+* Chrome/Edgedriver - Fix [#171](https://github.com/titusfortner/webdrivers/issues/171) by making sure the cached
+driver build version matches the browser build version before using it.
+* Chrome/Edgedriver - Driver version check now matches the driver and browser `major.minor.build` versions instead of just 
+the major version to be fully compliant with the `chromedriver` version selection
+[document](https://chromedriver.chromium.org/downloads/version-selection).
+
 ### 4.3.0 (2020-04-14)
 * Add support for Microsoft Edge (Chromium) stable
 * Drop support for Ruby < 2.4.0
