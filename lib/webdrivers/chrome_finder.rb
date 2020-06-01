@@ -50,6 +50,28 @@ module Webdrivers
         nil
       end
 
+      def wsl_location
+        _, drive, user = ENV['PATH'].match(%r{/([a-z])/Users/([^/:]+)/AppData/}).to_a
+
+        roots = [
+          "#{drive}:\\Users\\#{user}\\AppData\\Local",
+          "#{drive}:\\Program Files (x86)",
+          "#{drive}:\\Program Files"
+        ]
+
+        directories = %w[Google\\Chrome\\Application Chromium\\Application]
+        file = 'chrome.exe'
+
+        directories.each do |dir|
+          roots.each do |root|
+            option = System.to_wsl_path("#{root}\\#{dir}\\#{file}")
+            return option if File.exist?(option)
+          end
+        end
+
+        nil
+      end
+
       def mac_location
         directories = ['', File.expand_path('~')]
         files = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -66,6 +88,8 @@ module Webdrivers
       end
 
       def linux_location
+        return wsl_location if System.wsl?
+
         directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome]
         files = %w[google-chrome chrome chromium chromium-browser]
 
@@ -80,10 +104,16 @@ module Webdrivers
       end
 
       def win_version(location)
-        System.call("powershell (Get-ItemProperty '#{location}').VersionInfo.ProductVersion")&.strip
+        System.call("powershell.exe \"(Get-ItemProperty '#{location}').VersionInfo.ProductVersion\"")&.strip
+      end
+
+      def wsl_version(location)
+        win_version(System.to_win32_path(location))
       end
 
       def linux_version(location)
+        return wsl_version(location) if System.wsl?
+
         System.call(location, '--product-version')&.strip
       end
 

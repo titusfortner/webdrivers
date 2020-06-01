@@ -148,6 +148,25 @@ module Webdrivers
         end
       end
 
+      # @return [TrueClass, FalseClass]
+      def wsl?
+        platform == 'linux' && File.open('/proc/version').read.include?('Microsoft')
+      end
+
+      # @param [String] path
+      # @return [String]
+      def to_win32_path(path)
+        return path if /[a-z]:\\/iu.match?(path)
+
+        call("wslpath -w '#{path}'").chomp
+      end
+
+      # @param [String] path
+      # @return [String]
+      def to_wsl_path(path)
+        call("wslpath -u '#{path}'").chomp
+      end
+
       def bitsize
         Selenium::WebDriver::Platform.bitsize
       end
