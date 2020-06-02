@@ -15,6 +15,8 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
 * [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
+Works on macOS, Linux, Windows, and Windows Subsystem for Linux (WSL) v1.
+
 ## Usage
 
 In your Gemfile:
