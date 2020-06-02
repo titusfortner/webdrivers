@@ -1,5 +1,8 @@
+### 4.4.1 (2020-06-01)
+* Do not include binstubs used for troubleshooting only. Fixes [#174](https://github.com/titusfortner/webdrivers/issues/174).
+
 ### 4.4.0 (2020-05-31)
-* Implement initial support for WSLv1 ([#172](https://github.com/titusfortner/webdrivers/issues/172)). Thanks G-Rath!
+* Implement support for `chromedriver` in Windows Subsystem for Linux (WSL) v1 ([#172](https://github.com/titusfortner/webdrivers/issues/172)). Thanks G-Rath!
 * Chrome/Edgedriver - Fix [#171](https://github.com/titusfortner/webdrivers/issues/171) by making sure the cached
 driver build version matches the browser build version before using it.
 * Chrome/Edgedriver - Driver version check now matches the driver and browser `major.minor.build` versions instead of just 
