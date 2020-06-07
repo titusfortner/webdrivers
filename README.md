@@ -194,6 +194,14 @@ The logging level can be configured for debugging purpose:
 Webdrivers.logger.level = :DEBUG
 ```
 
+### WSLv1 support
+
+While WSLv1 is not designed to run headful applications like Chrome, it can run exes; as such when found to be running
+in WSL, `webdrivers` will use the Windows `chromedriver.exe`.
+
+It's recommended that you install the new PowerShell (PS7) to avoid [a known issue](https://github.com/microsoft/terminal/issues/367) 
+with the console font being changed when calling the old PowerShell (PS5).
+
 ### Browser Specific Notes
 
 #### Chrome/Chromium
