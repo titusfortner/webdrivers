@@ -104,6 +104,8 @@ module Webdrivers
       end
 
       def win_version(location)
+        System.call("pswh.exe -command \"(Get-ItemProperty '#{location}').VersionInfo.ProductVersion\"")&.strip
+      rescue StandardError
         System.call("powershell.exe \"(Get-ItemProperty '#{location}').VersionInfo.ProductVersion\"")&.strip
       end
 
