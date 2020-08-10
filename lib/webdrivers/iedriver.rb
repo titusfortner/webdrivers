@@ -44,15 +44,18 @@ module Webdrivers
       end
 
       def downloads
-        doc = Nokogiri::XML.parse(Network.get(base_url))
-        items = doc.css('Key').collect(&:text)
-        items.select! { |item| item.include?('IEDriverServer_Win32') }
-        ds = items.each_with_object({}) do |item, hash|
-          key = normalize_version item[/([^_]+)\.zip/, 1]
-          hash[key] = "#{base_url}#{item}"
+        ds = download_manifest.each_with_object({}) do |item, hash|
+          version = normalize_version item[/([^_]+)\.zip/, 1]
+          hash[version] = "#{base_url}#{item}"
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
         ds
+      end
+
+      def download_manifest
+        doc = Nokogiri::XML.parse(Network.get(base_url))
+        items = doc.css('Key').collect(&:text)
+        items.select { |item| item.include?('IEDriverServer_Win32') }
       end
     end
   end
