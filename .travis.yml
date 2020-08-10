@@ -23,7 +23,7 @@ matrix:
       env: RAKE_TASK=spec
     - rvm: 2.7
       env: RAKE_TASK=rubocop
-    - rvm: jruby-9.2.11.1
+    - rvm: jruby-9.2.13.0
       jdk: openjdk8
       env: RAKE_TASK=spec
     - rvm: 2.7
