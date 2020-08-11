@@ -30,9 +30,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ffi', '~> 1.0' # For selenium-webdriver on Windows
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.0'
-  s.add_development_dependency 'rubocop', '~>0.66'
+  s.add_development_dependency 'rubocop', '~>0.89'
   s.add_development_dependency 'rubocop-performance'
-  s.add_development_dependency 'rubocop-rspec', '~>1.32'
+  s.add_development_dependency 'rubocop-rspec', '~>1.42'
   s.add_development_dependency 'simplecov', '~>0.16'
 
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
