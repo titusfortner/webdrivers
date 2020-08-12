@@ -22,8 +22,8 @@ Gem::Specification.new do |s|
     'source_code_uri' => "https://github.com/titusfortner/webdrivers/tree/v#{Webdrivers::VERSION}"
   }
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = Dir['CHANGELOG.md', 'lib/**/*', 'LICENSE.txt', 'README.md']
+  s.test_files    = Dir['spec/**/*'].reject { |f| File.directory?(f) }
   s.executables   = []
   s.require_paths = ['lib']
 
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rubocop', '~>0.89'
+  s.add_development_dependency 'rubocop-packaging', '~>0.2.0'
   s.add_development_dependency 'rubocop-performance'
   s.add_development_dependency 'rubocop-rspec', '~>1.42'
   s.add_development_dependency 'simplecov', '~>0.16'

@@ -4,6 +4,7 @@ AllCops:
 require:
   - rubocop-rspec
   - rubocop-performance
+  - rubocop-packaging
 
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
