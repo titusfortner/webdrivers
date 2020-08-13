@@ -3,6 +3,7 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 require 'webdrivers/version'
+require 'rake/file_list'
 
 Gem::Specification.new do |s|
   s.name        = 'webdrivers'
@@ -22,7 +23,8 @@ Gem::Specification.new do |s|
     'source_code_uri' => "https://github.com/titusfortner/webdrivers/tree/v#{Webdrivers::VERSION}"
   }
 
-  s.files         = Dir['CHANGELOG.md', 'lib/**/*', 'LICENSE.txt', 'README.md']
+  s.files         = Rake::FileList['CHANGELOG.md', 'lib/**/*', 'LICENSE.txt', \
+                                   'README.md'].exclude(*File.read('.gitignore').split)
   s.test_files    = Dir['spec/**/*'].reject { |f| File.directory?(f) }
   s.executables   = []
   s.require_paths = ['lib']
