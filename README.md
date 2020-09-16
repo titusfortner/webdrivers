@@ -21,7 +21,7 @@ Works on macOS, Linux, Windows, and Windows Subsystem for Linux (WSL) v1.
 
 In your Gemfile:
 
-`gem 'webdrivers', '~> 4.0'`
+`gem 'webdrivers', '~> 4.0', require: false`
 
 In your project:
 
