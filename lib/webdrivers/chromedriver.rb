@@ -73,13 +73,12 @@ module Webdrivers
           else
             msg
           end
-              rescue NetworkError
-                "#{msg} A network issue is preventing determination of latest chromedriver release."
+        rescue NetworkError
+          "#{msg} A network issue is preventing determination of latest chromedriver release."
         end
 
         msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
-'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
-
+              'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
         Webdrivers.logger.debug msg
         raise VersionError, msg
       end

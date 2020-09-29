@@ -58,8 +58,8 @@ module Webdrivers
           else
             msg
           end
-              rescue NetworkError
-                "#{msg} A network issue is preventing determination of latest msedgedriver release."
+        rescue NetworkError
+          "#{msg} A network issue is preventing determination of latest msedgedriver release."
         end
 
         "#{msg} Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` "\
