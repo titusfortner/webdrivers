@@ -26,10 +26,6 @@ module Webdrivers
         'https://msedgedriver.azureedge.net/'
       end
 
-      def remove
-        super
-      end
-
       private
 
       def latest_point_release(version)
