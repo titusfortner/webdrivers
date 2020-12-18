@@ -150,7 +150,7 @@ module Webdrivers
 
       # @return [TrueClass, FalseClass]
       def wsl?
-        platform == 'linux' && File.open('/proc/version').read.include?('Microsoft')
+        platform == 'linux' && File.open('/proc/version').read.downcase.include?('microsoft')
       end
 
       # @param [String] path
