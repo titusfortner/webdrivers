@@ -1,8 +1,22 @@
+### 4.4.2 (2020-12-29)
+* Use new powershell if available to enhance WSL support ([#176](https://github.com/titusfortner/webdrivers/issues/176), 
+  [#186](https://github.com/titusfortner/webdrivers/pull/186)). Thanks, [G-Rath](https://github.com/G-Rath) and 
+  [131](https://github.com/131)!
+* Update rubocop version (development dependency only) ([#178](https://github.com/titusfortner/webdrivers/pull/178)).
+  Thanks, [utkarsh2102](https://github.com/utkarsh2102)!
+* Replace `git ls-files` with `dir` in the gemspec for better Debian support ([#179](https://github.com/titusfortner/webdrivers/pull/179),
+  [#184](https://github.com/titusfortner/webdrivers/issues/184)).
+  Thanks again, [utkarsh2102](https://github.com/utkarsh2102)!
+* Update README with `require: false` when adding gem to Gemfile ([#183](https://github.com/titusfortner/webdrivers/pull/183)).
+* Make WSL detection more generic ([#187](https://github.com/titusfortner/webdrivers/pull/187)).
+  [rbclark](https://github.com/rbclark)!
+  
 ### 4.4.1 (2020-06-01)
 * Do not include binstubs used for troubleshooting only. Fixes [#174](https://github.com/titusfortner/webdrivers/issues/174).
 
 ### 4.4.0 (2020-05-31)
-* Implement support for `chromedriver` in Windows Subsystem for Linux (WSL) v1 ([#172](https://github.com/titusfortner/webdrivers/issues/172)). Thanks G-Rath!
+* Implement support for `chromedriver` in Windows Subsystem for Linux (WSL) v1 ([#172](https://github.com/titusfortner/webdrivers/issues/172)). 
+  Thanks, [G-Rath](https://github.com/G-Rath)!
 * Chrome/Edgedriver - Fix [#171](https://github.com/titusfortner/webdrivers/issues/171) by making sure the cached
 driver build version matches the browser build version before using it.
 * Chrome/Edgedriver - Driver version check now matches the driver and browser `major.minor.build` versions instead of just 
