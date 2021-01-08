@@ -151,7 +151,7 @@ module Webdrivers
       # @return [TrueClass, FalseClass]
       def wsl?
         return false if ENV['WD_USE_WINDOWS'] == '0'
-         
+
         platform == 'linux' && File.open('/proc/version').read.downcase.include?('microsoft')
       end
 
