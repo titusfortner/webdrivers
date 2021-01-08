@@ -22,8 +22,9 @@ describe Webdrivers::ChromeFinder do
     end
   end
 
-  it "uses ENV['WD_CHROME_PATH'] when it is defined" do
+  it "uses ENV['WD_CHROME_PATH'] when it is defined" do        
     allow(ENV).to receive(:[]).with('WD_CHROME_PATH').and_return(chrome_finder.location)
+    allow(ENV).to receive(:[]).with('WD_USE_WINDOWS').and_return(nil)
     locations = %i[win_location mac_location linux_location]
     allow(chrome_finder).to receive_messages(locations)
 
@@ -33,7 +34,8 @@ describe Webdrivers::ChromeFinder do
 
   it 'uses Selenium::WebDriver::Chrome.path over WD_CHROME_PATH' do
     Selenium::WebDriver::Chrome.path = chrome_finder.location
-    allow(ENV).to receive(:[]).with('WD_CHROME_PATH').and_return('my_wd_chrome_path')
+    allow(ENV).to receive(:[]).with('WD_USE_WINDOWS').and_return(nil)
+    allow(ENV).to receive(:[]).with('WD_CHROME_PATH').and_return('my_wd_chrome_path')    
     expect(chrome_finder.version).not_to be_nil
     expect(ENV).not_to have_received(:[]).with('WD_CHROME_PATH')
   end
