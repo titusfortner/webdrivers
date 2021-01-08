@@ -204,6 +204,9 @@ in WSL, `webdrivers` will use the Windows `chromedriver.exe`.
 It's recommended that you install the new PowerShell (PS7) to avoid [a known issue](https://github.com/microsoft/terminal/issues/367) 
 with the console font being changed when calling the old PowerShell (PS5).
 
+### WSLv2 support
+
+You can use chrome headless on WSLv2. Install chrome on the WSL Linux and set `WD_USE_WINDOWS=0` to disable WSL detection, this will detect the system as Linux and use the chrome binary on Linux.
 ### Browser Specific Notes
 
 #### Chrome/Chromium

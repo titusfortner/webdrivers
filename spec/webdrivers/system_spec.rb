@@ -22,10 +22,19 @@ describe Webdrivers::System do
       end
     end
 
+    context 'when the current platform is linux and WD_USE_WINDOWS is set to 0' do
+      before { ENV['WD_USE_WINDOWS'] = '0' }
+
+      after { ENV.delete('WD_USE_WINDOWS') }
+
+      it { expect(described_class.wsl?).to eq false }
+    end
+
     context 'when the current platform is mac' do
       before { allow(described_class).to receive(:platform).and_return 'mac' }
 
       it 'does not bother checking proc' do
+        puts ENV['WD_USE_WINDOWS']
         allow(File).to receive(:open).and_call_original
 
         expect(described_class.wsl?).to eq false
