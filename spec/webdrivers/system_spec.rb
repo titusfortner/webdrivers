@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 describe Webdrivers::System do
-  describe '#wslv1?' do
-    subject(:wslv1) { described_class.wslv1? }
+  describe '#wsl_v1?' do
+    subject { described_class.wsl_v1? }
 
     before do
       allow(described_class).to receive(:platform).and_return(platform)

@@ -149,7 +149,7 @@ module Webdrivers
       end
 
       # @return [TrueClass, FalseClass]
-      def wslv1?
+      def wsl_v1?
         platform == 'linux' && File.open('/proc/version').read.include?('Microsoft')
       end
 
