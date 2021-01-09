@@ -84,7 +84,7 @@ module Webdrivers
       end
 
       def file_name
-        System.platform == 'win' || System.wsl? ? 'chromedriver.exe' : 'chromedriver'
+        System.platform == 'win' || System.wslv1? ? 'chromedriver.exe' : 'chromedriver'
       end
 
       def download_url
@@ -96,7 +96,7 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        file_name = System.platform == 'win' || System.wsl? ? 'win32' : "#{System.platform}64"
+        file_name = System.platform == 'win' || System.wslv1? ? 'win32' : "#{System.platform}64"
         url = "#{base_url}/#{version}/chromedriver_#{file_name}.zip"
         Webdrivers.logger.debug "chromedriver URL: #{url}"
         @download_url = url

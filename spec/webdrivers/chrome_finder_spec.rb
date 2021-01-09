@@ -52,7 +52,7 @@ describe Webdrivers::ChromeFinder do
     before do
       skip "The current platform cannot be WSL, as it's not Linux" unless Selenium::WebDriver::Platform.linux?
 
-      allow(Webdrivers::System).to receive(:wsl?).and_return(true)
+      allow(Webdrivers::System).to receive(:wslv1?).and_return(true)
       allow(Webdrivers::System).to receive(:to_wsl_path).and_return('')
       allow(Webdrivers::System).to receive(:to_win32_path).and_return('')
     end
