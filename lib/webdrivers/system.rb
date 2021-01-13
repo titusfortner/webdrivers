@@ -151,8 +151,8 @@ module Webdrivers
       # @return [TrueClass, FalseClass]
       def wsl_v1?
         if platform == 'linux'
-          version=File.open('/proc/version')&.read
-          if version.downcase.include?('microsoft') 
+          version = File.open('/proc/version')&.read
+          if version.downcase.include?('microsoft')
             ver = Gem::Version.new(version.gsub(/.*Linux version ([^ ]*).*/, '\1'))
             ver.canonical_segments[0] <= 4 && ver.canonical_segments[1] < 19
           else
