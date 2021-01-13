@@ -2,6 +2,14 @@
 
 require 'spec_helper'
 
+wslv2_proc_contents = [
+  'Linux version 4.19.0-18362-Microsoft',
+  '(Microsoft@Microsoft.com)',
+  '(gcc version 5.4.0 (GCC) )',
+  '#836-Microsoft',
+  'Mon May 05 16:04:00 PST 2020'
+].join ' '
+
 wsl_proc_contents = [
   'Linux version 4.4.0-18362-Microsoft',
   '(Microsoft@Microsoft.com)',
@@ -11,14 +19,24 @@ wsl_proc_contents = [
 ].join ' '
 
 describe Webdrivers::System do
-  describe '#wsl?' do
+  describe '#wsl_v1?' do
+    context 'when the current platform is linux but WSLv2' do
+      before { allow(described_class).to receive(:platform).and_return 'linux' }
+
+      it 'checks /proc/version' do
+        allow(File).to receive(:open).with('/proc/version').and_return(StringIO.new(wslv2_proc_contents))
+
+        expect(described_class.wsl_v1?).to eq false
+      end
+    end
+
     context 'when the current platform is linux' do
       before { allow(described_class).to receive(:platform).and_return 'linux' }
 
       it 'checks /proc/version' do
         allow(File).to receive(:open).with('/proc/version').and_return(StringIO.new(wsl_proc_contents))
 
-        expect(described_class.wsl?).to eq true
+        expect(described_class.wsl_v1?).to eq true
       end
     end
 
@@ -28,7 +46,7 @@ describe Webdrivers::System do
       it 'does not bother checking proc' do
         allow(File).to receive(:open).and_call_original
 
-        expect(described_class.wsl?).to eq false
+        expect(described_class.wsl_v1?).to eq false
 
         expect(File).not_to have_received(:open).with('/proc/version')
       end
