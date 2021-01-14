@@ -84,7 +84,7 @@ module Webdrivers
       end
 
       def file_name
-        System.platform == 'win' || System.wsl? ? 'chromedriver.exe' : 'chromedriver'
+        System.platform == 'win' || System.wsl_v1? ? 'chromedriver.exe' : 'chromedriver'
       end
 
       def apple_m1_compatible?(version)
@@ -102,7 +102,7 @@ module Webdrivers
 
         apple_arch = apple_m1_compatible?(version) ? '_m1' : ''
 
-        file_name = System.platform == 'win' || System.wsl? ? 'win32' : "#{System.platform}64#{apple_arch}"
+        file_name = System.platform == 'win' || System.wsl_v1? ? 'win32' : "#{System.platform}64#{apple_arch}"
         url = "#{base_url}/#{version}/chromedriver_#{file_name}.zip"
         Webdrivers.logger.debug "chromedriver URL: #{url}"
         @download_url = url

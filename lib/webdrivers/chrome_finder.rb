@@ -88,7 +88,7 @@ module Webdrivers
       end
 
       def linux_location
-        return wsl_location if System.wsl?
+        return wsl_location if System.wsl_v1?
 
         directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome]
         files = %w[google-chrome chrome chromium chromium-browser]
@@ -114,7 +114,7 @@ module Webdrivers
       end
 
       def linux_version(location)
-        return wsl_version(location) if System.wsl?
+        return wsl_version(location) if System.wsl_v1?
 
         System.call(location, '--product-version')&.strip
       end

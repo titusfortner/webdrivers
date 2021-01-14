@@ -2,36 +2,42 @@
 
 require 'spec_helper'
 
-wsl_proc_contents = [
-  'Linux version 4.4.0-18362-Microsoft',
-  '(Microsoft@Microsoft.com)',
-  '(gcc version 5.4.0 (GCC) )',
-  '#836-Microsoft',
-  'Mon May 05 16:04:00 PST 2020'
-].join ' '
-
 describe Webdrivers::System do
-  describe '#wsl?' do
-    context 'when the current platform is linux' do
-      before { allow(described_class).to receive(:platform).and_return 'linux' }
+  describe '#wsl_v1?' do
+    subject { described_class.wsl_v1? }
 
-      it 'checks /proc/version' do
-        allow(File).to receive(:open).with('/proc/version').and_return(StringIO.new(wsl_proc_contents))
+    before do
+      allow(described_class).to receive(:platform).and_return(platform)
+      allow(File).to receive(:open).with('/proc/version').and_return(StringIO.new(wsl_proc_version_contents))
+    end
 
-        expect(described_class.wsl?).to eq true
+    let(:platform) { 'linux' }
+    let(:wsl_proc_version_contents) { '' }
+
+    context 'when the current platform is linux and WSL version is 1' do
+      let(:wsl_proc_version_contents) do
+        'Linux version 4.4.0-18362-Microsoft'\
+        '(Microsoft@Microsoft.com) (gcc version 5.4.0 (GCC) )'\
+        '#836-Microsoft Mon May 05 16:04:00 PST 2020'
       end
+
+      it { is_expected.to eq true }
+    end
+
+    context 'when the current platform is linux and WSL version is 2' do
+      let(:wsl_proc_version_contents) do
+        'Linux version 4.19.84-microsoft-standard '\
+        '(oe-user@oe-host) (gcc version 8.2.0 (GCC)) '\
+        '#1 SMP Wed Nov 13 11:44:37 UTC 2019'
+      end
+
+      it { is_expected.to eq false }
     end
 
     context 'when the current platform is mac' do
-      before { allow(described_class).to receive(:platform).and_return 'mac' }
+      let(:platform) { 'mac' }
 
-      it 'does not bother checking proc' do
-        allow(File).to receive(:open).and_call_original
-
-        expect(described_class.wsl?).to eq false
-
-        expect(File).not_to have_received(:open).with('/proc/version')
-      end
+      it { is_expected.to eq false }
     end
   end
 

@@ -149,8 +149,8 @@ module Webdrivers
       end
 
       # @return [TrueClass, FalseClass]
-      def wsl?
-        platform == 'linux' && File.open('/proc/version').read.downcase.include?('microsoft')
+      def wsl_v1?
+        platform == 'linux' && File.open('/proc/version').read.include?('Microsoft')
       end
 
       # @param [String] path
