@@ -66,6 +66,20 @@ module Webdrivers
         System.platform == 'win' ? 'msedgedriver.exe' : 'msedgedriver'
       end
 
+      def apple_m1_compatible?
+        if System.apple_m1_architecture? && browser_version >= normalize_version('87.0.669.0')
+          Webdrivers.logger.debug 'Edge version is Apple M1 compatible.'
+          return true
+        end
+
+        Webdrivers.logger.debug 'Edge version is NOT Apple M1 compatible. Required >= 87.0.669.0'
+        false
+      end
+
+      def linux_compatible?
+        System.platform == 'linux' && browser_version >= normalize_version('89.0.731.0')
+      end
+
       def download_url
         return @download_url if @download_url
 
@@ -75,7 +89,16 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        file_name = System.platform == 'win' ? 'win32' : "#{System.platform}64"
+        file_name = if System.platform == 'win'
+                      'win32'
+                    elsif linux_compatible?
+                      'linux64'
+                    elsif apple_m1_compatible?
+                      'amd64'
+                    else
+                      'mac64'
+                    end
+
         url = "#{base_url}/#{version}/edgedriver_#{file_name}.zip"
         Webdrivers.logger.debug "msedgedriver URL: #{url}"
         @download_url = url

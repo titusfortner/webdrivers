@@ -87,8 +87,14 @@ module Webdrivers
         System.platform == 'win' || System.wsl_v1? ? 'chromedriver.exe' : 'chromedriver'
       end
 
-      def apple_m1_compatible?(version)
-        RUBY_PLATFORM.include?('arm64-darwin') && version >= normalize_version('87.0.4280.88')
+      def apple_m1_compatible?
+        if System.apple_m1_architecture? && browser_version >= normalize_version('87.0.4280.88')
+          Webdrivers.logger.debug 'Chrome version is Apple M1 compatible.'
+          return true
+        end
+
+        Webdrivers.logger.debug 'Chrome version is NOT Apple M1 compatible. Required >= 87.0.4280.88'
+        false
       end
 
       def download_url
@@ -100,7 +106,7 @@ module Webdrivers
                     normalize_version(required_version)
                   end
 
-        apple_arch = apple_m1_compatible?(version) ? '_m1' : ''
+        apple_arch = apple_m1_compatible? ? '_m1' : ''
 
         file_name = System.platform == 'win' || System.wsl_v1? ? 'win32' : "#{System.platform}64#{apple_arch}"
         url = "#{base_url}/#{version}/chromedriver_#{file_name}.zip"

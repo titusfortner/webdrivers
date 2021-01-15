@@ -148,6 +148,16 @@ module Webdrivers
         end
       end
 
+      def apple_m1_architecture?
+        if platform == 'mac' && RUBY_PLATFORM.include?('arm64-darwin')
+          Webdrivers.logger.debug 'Apple architecture: M1 (arm64-darwin)'
+          return true
+        end
+
+        Webdrivers.logger.debug 'Apple architecture: Intel (mac64)'
+        false
+      end
+
       # @return [TrueClass, FalseClass]
       def wsl_v1?
         platform == 'linux' && File.open('/proc/version').read.include?('Microsoft')
