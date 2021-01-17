@@ -81,8 +81,8 @@ module Webdrivers
       end
 
       def driver_filename(driver_version)
-        if System.platform == 'win'
-          'win32'
+        if System.platform == 'win' || System.wsl_v1?
+          "win#{System.bitsize}" # 32 or 64-bit
         elsif linux_compatible?(driver_version)
           'linux64'
         elsif System.platform == 'mac'
