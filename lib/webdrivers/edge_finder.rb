@@ -69,6 +69,17 @@ module Webdrivers
       end
 
       def linux_location
+        # directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome]
+        # files = %w[microsoft-edge] # Based on Microsoft Edge 89.0.760.0 dev
+        #
+        # directories.each do |dir|
+        #   files.each do |file|
+        #     option = "#{dir}/#{file}"
+        #     return option if File.exist?(option)
+        #   end
+        # end
+        #
+        # nil
         raise 'Default location not yet known'
       end
 
