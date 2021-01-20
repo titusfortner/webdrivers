@@ -1,0 +1,74 @@
+name: Ruby
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Cancel any previous run(s) on new commit push
+        uses: styfle/cancel-workflow-action@0.7.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Run rubocop
+        run: bundle exec rake rubocop
+
+  test-selenium-v3:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:  [ubuntu-18.04, macos-10.15, windows-2019]
+        ruby-version: [2.4, 2.5, 2.6, 2.7, 3.0, jruby]
+    steps:
+    - name: Cancel any previous run(s) on new commit push
+      uses: styfle/cancel-workflow-action@0.7.0
+      with:
+        access_token: ${{ github.token }}
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run tests
+      run: bundle exec rake spec
+
+  test-selenium-v4:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:  [macos-10.15, windows-2019]
+    env:
+      BUNDLE_GEMFILE: gemfiles/Gemfile.edge # Uses Selenium v4 for Edge (Chromium)
+    steps:
+    - name: Cancel any previous run(s) on new commit push
+      uses: styfle/cancel-workflow-action@0.7.0
+      with:
+        access_token: ${{ github.token }}
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        bundler-cache: true
+    - name: Link libc++.dylib for msedgedriver
+      # Work around for msedgedriver releases, like v86 and v87, that require libc++.dylib to run.
+      # This file is included in the zip with the driver, but not all drivers, like v88 and v89,
+      # need/include this.
+      # The macOS image has v86 available with this lib for now, so temporarily using it from there.
+      # Will implement a more permanent solution if future driver releases continue to intermittently
+      # or permanently require this.
+      run: |
+        if [ -f "/usr/local/share/edge_driver/libc++.dylib" ]; then
+          mkdir ~/.webdrivers
+          ln -s /usr/local/share/edge_driver/libc++.dylib ~/.webdrivers/libc++.dylib
+        fi
+      if: ${{ matrix.os == 'macos-10.15' }}
+    - name: Run tests
+      run: bundle exec rake spec
