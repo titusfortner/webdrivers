@@ -1,3 +1,12 @@
+# 4.5.0 (2021-01-19)
+* Improve format of README usage section. Thanks, [okuramasafumi](https://github.com/okuramasafumi)!
+* `chromedriver` - Add support for Apple M1 specific builds ([#193](https://github.com/titusfortner/webdrivers/pull/193)). Thanks, [MichaelHoste](https://github.com/MichaelHoste)!
+* `msedgedriver` - Add support for Apple M1 specific builds.
+* `msedgedriver` - Added automatic selection of 32-bit vs 64-bit builds on Windows and WSLv1.  
+* When using this gem in WSLv2, Chrome installed on the Linux filesystem will be automatically used ([#196](https://github.com/titusfortner/webdrivers/pull/196)). 
+  WSLv1 continues to automatically use Chrome from the Windows filesystem though. Thanks, [fabioxgn](https://github.com/fabioxgn)!
+  * We'll aim to make the behavior consistent in a future release.
+
 ### 4.4.2 (2020-12-29)
 * Use new powershell if available to enhance WSL support ([#176](https://github.com/titusfortner/webdrivers/issues/176), 
   [#186](https://github.com/titusfortner/webdrivers/pull/186)). Thanks, [G-Rath](https://github.com/G-Rath) and 
