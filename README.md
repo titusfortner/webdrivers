@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/webdrivers.svg)](https://badge.fury.io/rb/webdrivers)
 [![Build status](https://travis-ci.org/titusfortner/webdrivers.svg?branch=master)](https://travis-ci.org/titusfortner/webdrivers)
 [![AppVeyor status](https://ci.appveyor.com/api/projects/status/ejh90xqbvkphq4cy/branch/master?svg=true)](https://ci.appveyor.com/project/titusfortner/webdrivers/branch/master)
+![Tests](https://github.com/titusfortner/webdrivers/workflows/Tests/badge.svg)
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
