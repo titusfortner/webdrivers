@@ -14,7 +14,8 @@ Run Selenium tests more easily with automatic installation and updates for all s
 * [IEDriverServer](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver)
 * [msedgedriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
 
-Works on macOS, Linux, Windows, and Windows Subsystem for Linux (WSL) v1.
+Works on macOS, Linux, Windows, and Windows Subsystem for Linux (WSL) v1 and v2. And do see the browser and OS specific
+notes at the bottom.
 
 ## Usage
 
@@ -195,21 +196,7 @@ The logging level can be configured for debugging purpose:
 Webdrivers.logger.level = :DEBUG
 ```
 
-### WSLv1 support
-
-While WSLv1 is not designed to run headful applications like Chrome, it can run exes; as such when found to be running
-in WSL, `webdrivers` will use the Windows `chromedriver.exe`.
-
-It's recommended that you install the new PowerShell (PS7) to avoid [a known issue](https://github.com/microsoft/terminal/issues/367) 
-with the console font being changed when calling the old PowerShell (PS5).
-
-### WSLv2 support
-
-Webdrivers will detect WSLv2 as running on Linux.
-
-WSLv2 doesn't support connecting to host ports out of the box, so it isn't possible to connect to Chromedriver on Windows without extra configurations, see: https://github.com/microsoft/WSL/issues/4619. The simplest way to use Chromedriver with WSLv2 is to run Chrome headless on Linux.
-
-### Browser Specific Notes
+### Browser & OS Specific Notes
 
 #### Chrome/Chromium
 
@@ -234,7 +221,7 @@ variable.
 This is also required if Google Chrome is not installed in its
 [default location](https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver).
 
-##### Heroku Users
+#### Chrome on Heroku
 
 Follow the specific instructions [here](https://github.com/titusfortner/webdrivers/wiki/Heroku-buildpack-google-chrome) if you're using `heroku-buildpack-google-chrome`.
 
@@ -245,6 +232,27 @@ from the [Chrome/Chromium](https://github.com/titusfortner/webdrivers#chromechro
 section apply to this browser as well.
 
 Please note that `msedgedriver` requires `selenium-webdriver` v4.
+
+#### WSLv1 support
+
+While WSLv1 is not designed to run headful applications like Chrome, it can run exes; as such when found to be running
+in WSL, `webdrivers` will use Chrome on the Windows filesystem.
+
+It's recommended that you install the new PowerShell (PS7) to avoid [a known issue](https://github.com/microsoft/terminal/issues/367)
+with the console font being changed when calling the old PowerShell (PS5).
+
+#### WSLv2 support
+
+Webdrivers will detect WSLv2 as running on Linux and use Chrome on the Linux filesystem.
+
+WSLv2 doesn't support connecting to host ports out of the box, so it isn't possible to connect to Chromedriver on
+Windows without extra configurations, see: https://github.com/microsoft/WSL/issues/4619. The simplest way to use 
+Chromedriver with WSLv2 is to run Chrome headless on Linux.
+
+#### Chrome and Edge on Apple M1 (`arm64`)
+
+If you're switching from Intel to M1, you'll have to manually delete the existing Intel (`mac64`) driver before the 
+M1 (`arm64`) build can be downloaded. Otherwise, you'll get an error: `Bad CPU type in executable - ~/.webdrivers/chromedriver (Errno::E086)`
 
 ## Wiki
 
