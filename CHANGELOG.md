@@ -1,3 +1,6 @@
+# 4.6.0 (2021-02-26)
+* Update `Edgedriver` naming to support Selenium 4 beta (([#206](https://github.com/titusfortner/webdrivers/pull/206))
+
 # 4.5.0 (2021-01-19)
 * Improve format of README usage section. Thanks, [okuramasafumi](https://github.com/okuramasafumi)!
 * `chromedriver` - Add support for Apple M1 specific builds ([#193](https://github.com/titusfortner/webdrivers/pull/193)). Thanks, [MichaelHoste](https://github.com/MichaelHoste)!
