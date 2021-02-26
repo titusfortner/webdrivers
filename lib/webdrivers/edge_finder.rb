@@ -24,15 +24,15 @@ module Webdrivers
       private
 
       def user_defined_location
-        if Selenium::WebDriver::EdgeChrome.path
-          Webdrivers.logger.debug "Selenium::WebDriver::EdgeChrome.path: #{Selenium::WebDriver::EdgeChrome.path}"
-          return Selenium::WebDriver::EdgeChrome.path
+        if Selenium::WebDriver::Edge.path
+          Webdrivers.logger.debug "Selenium::WebDriver::Edge.path: #{Selenium::WebDriver::Edge.path}"
+          return Selenium::WebDriver::Edge.path
         end
 
-        return if ENV['WD_EDGE_CHROME_PATH'].nil?
+        return if ENV['WD_EDGE_PATH'].nil?
 
-        Webdrivers.logger.debug "WD_EDGE_CHROME_PATH: #{ENV['WD_EDGE_CHROME_PATH']}"
-        ENV['WD_EDGE_CHROME_PATH']
+        Webdrivers.logger.debug "WD_EDGE_PATH: #{ENV['WD_EDGE_PATH']}"
+        ENV['WD_EDGE_PATH']
       end
 
       def win_location

@@ -6,9 +6,7 @@ describe Webdrivers::Edgedriver do
   let(:edgedriver) { described_class }
 
   before(:all) do # rubocop:disable RSpec/BeforeAfterAll
-    # Skip these tests if version of selenium-webdriver being tested with doesn't
-    # have Chromium based Edge support
-    unless defined?(Selenium::WebDriver::EdgeChrome)
+    if Selenium::WebDriver::VERSION[0].to_i < 4
       skip "The current selenium-webdriver doesn't include Chromium based Edge support"
     end
   end

@@ -111,19 +111,4 @@ module Webdrivers
   end
 end
 
-if defined? Selenium::WebDriver::EdgeChrome
-  if ::Selenium::WebDriver::Service.respond_to? :driver_path=
-    ::Selenium::WebDriver::EdgeChrome::Service.driver_path = proc { ::Webdrivers::Edgedriver.update }
-  else
-    # v3.141.0 and lower
-    module Selenium
-      module WebDriver
-        module EdgeChrome
-          def self.driver_path
-            @driver_path ||= Webdrivers::Edgedriver.update
-          end
-        end
-      end
-    end
-  end
-end
+::Selenium::WebDriver::Edge::Service.driver_path = proc { ::Webdrivers::Edgedriver.update }

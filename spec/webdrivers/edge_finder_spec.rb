@@ -6,9 +6,7 @@ describe Webdrivers::EdgeFinder do
   let(:edge_finder) { described_class }
 
   before(:all) do # rubocop:disable RSpec/BeforeAfterAll
-    # Skip these tests if version of selenium-webdriver being tested with doesn't
-    # have Chromium based Edge support
-    unless defined?(Selenium::WebDriver::EdgeChrome)
+    if Selenium::WebDriver::VERSION[0].to_i < 4
       skip "The current selenium-webdriver doesn't include Chromium based Edge support"
     end
   end
@@ -20,8 +18,8 @@ describe Webdrivers::EdgeFinder do
   end
 
   context 'when the user provides a path to the Edge binary' do
-    it 'uses Selenium::WebDriver::EdgeChrome.path when it is defined' do
-      Selenium::WebDriver::EdgeChrome.path = edge_finder.location
+    it 'uses Selenium::WebDriver::Edge.path when it is defined' do
+      Selenium::WebDriver::Edge.path = edge_finder.location
       locations = %i[win_location mac_location linux_location]
       allow(edge_finder).to receive_messages(locations)
 
@@ -29,8 +27,8 @@ describe Webdrivers::EdgeFinder do
       locations.each { |loc| expect(edge_finder).not_to have_received(loc) }
     end
 
-    it "uses ENV['WD_EDGE_CHROME_PATH'] when it is defined" do
-      allow(ENV).to receive(:[]).with('WD_EDGE_CHROME_PATH').and_return(edge_finder.location)
+    it "uses ENV['WD_EDGE_PATH'] when it is defined" do
+      allow(ENV).to receive(:[]).with('WD_EDGE_PATH').and_return(edge_finder.location)
       locations = %i[win_location mac_location linux_location]
       allow(edge_finder).to receive_messages(locations)
 
@@ -38,11 +36,11 @@ describe Webdrivers::EdgeFinder do
       locations.each { |loc| expect(edge_finder).not_to have_received(loc) }
     end
 
-    it 'uses Selenium::WebDriver::EdgeChrome.path over WD_EDGE_CHROME_PATH' do
-      Selenium::WebDriver::EdgeChrome.path = edge_finder.location
-      allow(ENV).to receive(:[]).with('WD_EDGE_CHROME_PATH').and_return('my_wd_chrome_path')
+    it 'uses Selenium::WebDriver::Edge.path over WD_EDGE_PATH' do
+      Selenium::WebDriver::Edge.path = edge_finder.location
+      allow(ENV).to receive(:[]).with('WD_EDGE_PATH').and_return('my_wd_chrome_path')
       expect(edge_finder.version).not_to be_nil
-      expect(ENV).not_to have_received(:[]).with('WD_EDGE_CHROME_PATH')
+      expect(ENV).not_to have_received(:[]).with('WD_EDGE_PATH')
     end
   end
 
