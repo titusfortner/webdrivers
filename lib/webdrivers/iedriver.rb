@@ -45,7 +45,7 @@ module Webdrivers
 
       def downloads
         ds = download_manifest.each_with_object({}) do |item, hash|
-          version = normalize_version item[/([^_]+)\.zip/, 1]
+          version = normalize_version item[/\.?([^_]+)\.zip/, 1]
           hash[version] = "#{base_url}#{item}"
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
