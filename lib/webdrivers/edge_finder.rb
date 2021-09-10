@@ -24,6 +24,8 @@ module Webdrivers
       private
 
       def user_defined_location
+        return unless defined? Selenium::WebDriver::Edge.path
+
         if Selenium::WebDriver::Edge.path
           Webdrivers.logger.debug "Selenium::WebDriver::Edge.path: #{Selenium::WebDriver::Edge.path}"
           return Selenium::WebDriver::Edge.path
