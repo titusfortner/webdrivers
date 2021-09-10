@@ -1,3 +1,6 @@
+# master (Unreleased)
+* Allow `Edgedriver` to be maintained by Linux users
+
 # 4.6.1 (2021-08-19)
 * Fix bug in IEdriver caused by bad formatting in recent release
 
