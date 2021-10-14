@@ -22,7 +22,7 @@ notes at the bottom.
 In your Gemfile:
 
 ```ruby
-gem 'webdrivers', '~> 4.0', require: false
+gem 'webdrivers', '~> 5.0', require: false
 ```
 
 In your project:

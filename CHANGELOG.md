@@ -1,3 +1,7 @@
+# 5.0.0 (2021-10-19)
+* Require Selenium 4+
+* Remove custom Logger and use the one in Selenium 4
+
 # 4.7.0 (2021-10-14)
 * Add support for Selenium 4.x #218 (thanks yahonda )
 * Allow Edge on Linux
