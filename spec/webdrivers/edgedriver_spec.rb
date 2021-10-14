@@ -7,7 +7,9 @@ describe Webdrivers::Edgedriver do
 
   before(:all) do # rubocop:disable RSpec/BeforeAfterAll
     if Selenium::WebDriver::VERSION[0].to_i < 4
-      skip "The current selenium-webdriver doesn't include Chromium based Edge support"
+      skip 'The current selenium-webdriver does not include Chromium based Edge support'
+    elsif Webdrivers::System.platform == 'linux'
+      skip 'Edge is not yet supported on Linux'
     end
   end
 

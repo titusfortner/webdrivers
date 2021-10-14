@@ -76,15 +76,15 @@ module Webdrivers
         false
       end
 
-      # def linux_compatible?(driver_version)
-      #   System.platform == 'linux' && driver_version >= normalize_version('89.0.731.0')
-      # end
+      def linux_compatible?(driver_version)
+        System.platform == 'linux' && driver_version >= normalize_version('89.0.731.0')
+      end
 
       def driver_filename(driver_version)
         if System.platform == 'win' || System.wsl_v1?
           "win#{System.bitsize}" # 32 or 64-bit
-        # elsif linux_compatible?(driver_version)
-        #   'linux64'
+        elsif linux_compatible?(driver_version)
+          'linux64'
         elsif System.platform == 'mac'
           # Determine M1 or Intel architecture
           apple_arch = apple_m1_compatible?(driver_version) ? 'arm' : 'mac'
