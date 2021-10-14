@@ -192,14 +192,12 @@ You can obtain a copy of the license at https://mozilla.org/MPL/2.0/"
     end
 
     it 'uses provided value' do
-      begin
-        install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
-        Webdrivers.install_dir = install_dir
+      install_dir = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
+      Webdrivers.install_dir = install_dir
 
-        expect(Webdrivers::System.install_dir).to eq install_dir
-      ensure
-        Webdrivers.install_dir = nil
-      end
+      expect(Webdrivers::System.install_dir).to eq install_dir
+    ensure
+      Webdrivers.install_dir = nil
     end
   end
 

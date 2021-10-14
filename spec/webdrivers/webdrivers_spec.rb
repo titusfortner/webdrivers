@@ -49,37 +49,31 @@ describe Webdrivers do
     end
 
     it 'uses provided value' do
-      begin
-        install_dir                 = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
-        described_class.install_dir = install_dir
+      install_dir                 = File.expand_path(File.join(ENV['HOME'], '.webdrivers2'))
+      described_class.install_dir = install_dir
 
-        expect(described_class.install_dir).to eq install_dir
+      expect(described_class.install_dir).to eq install_dir
+    ensure
+      described_class.install_dir = nil
+    end
+
+    context 'when ENV variable WD_INSTALL_DIR is set and Webdrivers.install_dir is not' do
+      it 'uses path from the ENV variable' do
+        described_class.install_dir = nil
+        allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('custom_dir')
+        expect(described_class.install_dir).to be('custom_dir')
       ensure
         described_class.install_dir = nil
       end
     end
 
-    context 'when ENV variable WD_INSTALL_DIR is set and Webdrivers.install_dir is not' do
-      it 'uses path from the ENV variable' do
-        begin
-          described_class.install_dir = nil
-          allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('custom_dir')
-          expect(described_class.install_dir).to be('custom_dir')
-        ensure
-          described_class.install_dir = nil
-        end
-      end
-    end
-
     context 'when both ENV variable WD_INSTALL_DIR and Webdrivers.install_dir are set' do
       it 'uses path from Webdrivers.install_dir' do
-        begin
-          described_class.install_dir = 'my_install_dir_path'
-          allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('my_env_path')
-          expect(described_class.install_dir).to be('my_install_dir_path')
-        ensure
-          described_class.install_dir = nil
-        end
+        described_class.install_dir = 'my_install_dir_path'
+        allow(ENV).to receive(:[]).with('WD_INSTALL_DIR').and_return('my_env_path')
+        expect(described_class.install_dir).to be('my_install_dir_path')
+      ensure
+        described_class.install_dir = nil
       end
     end
   end
