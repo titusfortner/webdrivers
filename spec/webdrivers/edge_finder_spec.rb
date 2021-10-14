@@ -5,13 +5,7 @@ require 'spec_helper'
 describe Webdrivers::EdgeFinder do
   let(:edge_finder) { described_class }
 
-  before(:all) do # rubocop:disable RSpec/BeforeAfterAll
-    if Selenium::WebDriver::VERSION[0].to_i < 4
-      skip 'The current selenium-webdriver does not include Chromium based Edge support'
-    elsif Webdrivers::System.platform == 'linux'
-      skip 'Edge is not yet supported on Linux'
-    end
-  end
+  before { skip 'Edge is not yet supported on Linux' if Webdrivers::System.platform == 'linux' }
 
   context 'when the user relies on the gem to figure out the location of Edge' do
     it 'determines the location correctly based on the current OS' do

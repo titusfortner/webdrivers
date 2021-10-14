@@ -20,67 +20,15 @@ jobs:
       - name: Run rubocop
         run: bundle exec rake rubocop
 
-  test-selenium-v3:
-    name: Selenium 3.142.7 Tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:  [ubuntu-18.04, macos-10.15, windows-2019]
-    env:
-      BUNDLE_GEMFILE: gemfiles/Gemfile.cur
-    steps:
-      - name: Cancel any previous run(s) on new commit push
-        uses: styfle/cancel-workflow-action@0.7.0
-        with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-          bundler-cache: true
-      - name: Run tests
-        run: bundle exec rake spec
-
-  test-selenium-old:
-    name: Selenium 3.142.0 Tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:  [ubuntu-18.04, macos-10.15, windows-2019]
-    env:
-      BUNDLE_GEMFILE: gemfiles/Gemfile.old
-    steps:
-      - name: Cancel any previous run(s) on new commit push
-        uses: styfle/cancel-workflow-action@0.7.0
-        with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-          bundler-cache: true
-      - name: Run tests
-        run: bundle exec rake spec
-
-  test-selenium-v4:
-    name: Selenium 4 Tests
+  test-selenium:
+    name: Selenium Tests
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:  [ubuntu-18.04, macos-10.15, windows-2019]
         ruby-version: [2.6, 2.7, 3.0, jruby]
-    env:
-      BUNDLE_GEMFILE: gemfiles/Gemfile.new # Uses Selenium v4 for Edge (Chromium)
     steps:
-    - name: Cancel any previous run(s) on new commit push
-      uses: styfle/cancel-workflow-action@0.7.0
-      with:
-        access_token: ${{ github.token }}
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
