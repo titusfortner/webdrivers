@@ -68,17 +68,4 @@ module Webdrivers
   end
 end
 
-if ::Selenium::WebDriver::Service.respond_to? :driver_path=
-  ::Selenium::WebDriver::Firefox::Service.driver_path = proc { ::Webdrivers::Geckodriver.update }
-else
-  # v3.141.0 and lower
-  module Selenium
-    module WebDriver
-      module Firefox
-        def self.driver_path
-          @driver_path ||= Webdrivers::Geckodriver.update
-        end
-      end
-    end
-  end
-end
+::Selenium::WebDriver::Firefox::Service.driver_path = proc { ::Webdrivers::Geckodriver.update }

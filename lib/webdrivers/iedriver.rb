@@ -61,17 +61,4 @@ module Webdrivers
   end
 end
 
-if ::Selenium::WebDriver::Service.respond_to? :driver_path=
-  ::Selenium::WebDriver::IE::Service.driver_path = proc { ::Webdrivers::IEdriver.update }
-else
-  # v3.141.0 and lower
-  module Selenium
-    module WebDriver
-      module IE
-        def self.driver_path
-          @driver_path ||= Webdrivers::IEdriver.update
-        end
-      end
-    end
-  end
-end
+::Selenium::WebDriver::IE::Service.driver_path = proc { ::Webdrivers::IEdriver.update }

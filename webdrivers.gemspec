@@ -38,5 +38,5 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
   s.add_runtime_dependency 'rubyzip', '>= 1.3.0'
-  s.add_runtime_dependency 'selenium-webdriver', '>= 3.0', '< 5.0'
+  s.add_runtime_dependency 'selenium-webdriver', '> 3.141', '< 5.0'
 end
