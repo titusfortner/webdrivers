@@ -6,6 +6,10 @@ describe Webdrivers::IEdriver do
   let(:iedriver) { described_class }
 
   before do
+    if ENV['CI'] && !Selenium::WebDriver::Platform.windows?
+      skip('Only run IE tests on Windows on CI because rate limiting')
+    end
+
     iedriver.remove
     iedriver.required_version = nil
   end
@@ -69,7 +73,7 @@ describe Webdrivers::IEdriver do
       it 'raises ConnectionError if offline' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
-        msg = %r{Can not reach https://selenium-release.storage.googleapis.com/}
+        msg = %r{Can not reach https://api.github.com/repos/seleniumhq/selenium/releases}
         expect { iedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
@@ -109,7 +113,8 @@ describe Webdrivers::IEdriver do
     end
 
     it 'creates cached file' do
-      allow(Webdrivers::Network).to receive(:get).and_return('3.4.0')
+      json = '[{"assets": [{"name":"IEDriverServer_Win32_3.150.0.zip"}]}]'
+      allow(Webdrivers::Network).to receive(:get).and_return(json)
 
       iedriver.latest_version
       expect(File.exist?("#{Webdrivers::System.install_dir}/IEDriverServer.version")).to eq true

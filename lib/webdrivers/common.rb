@@ -118,12 +118,12 @@ module Webdrivers
 
       private
 
+      def download_version
+        required_version == EMPTY_VERSION ? latest_version : required_version
+      end
+
       def download_url
-        @download_url ||= if required_version == EMPTY_VERSION
-                            downloads[downloads.keys.max]
-                          else
-                            downloads[normalize_version(required_version)]
-                          end
+        @download_url ||= direct_url(download_version).tap { |url| Webdrivers.logger.debug "#{file_name} URL: #{url}" }
       end
 
       def exists?
@@ -131,11 +131,7 @@ module Webdrivers
       end
 
       def correct_binary?
-        current_version == if required_version == EMPTY_VERSION
-                             latest_version
-                           else
-                             normalize_version(required_version)
-                           end
+        current_version == download_version
       rescue ConnectionError, VersionError
         driver_path if sufficient_binary?
       end

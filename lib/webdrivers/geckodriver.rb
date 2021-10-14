@@ -42,14 +42,6 @@ module Webdrivers
         System.platform == 'win' ? 'geckodriver.exe' : 'geckodriver'
       end
 
-      def download_url
-        @download_url ||= if required_version == EMPTY_VERSION
-                            direct_url(latest_version)
-                          else
-                            direct_url(required_version)
-                          end
-      end
-
       def direct_url(version)
         "#{base_url}/download/v#{version}/geckodriver-v#{version}-#{platform_ext}"
       end

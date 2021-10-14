@@ -34,7 +34,7 @@ module Webdrivers
       #
       # @return [String]
       def base_url
-        'https://selenium-release.storage.googleapis.com/'
+        'https://api.github.com/repos/seleniumhq/selenium/releases'
       end
 
       private
@@ -43,19 +43,23 @@ module Webdrivers
         'IEDriverServer.exe'
       end
 
+      def direct_url(version)
+        downloads[version]
+      end
+
       def downloads
         ds = download_manifest.each_with_object({}) do |item, hash|
-          version = normalize_version item[/\.?([^_]+)\.zip/, 1]
-          hash[version] = "#{base_url}#{item}"
+          version = normalize_version item['name'][/\.?([^_]+)\.zip/, 1]
+          hash[version] = item['browser_download_url']
         end
         Webdrivers.logger.debug "Versions now located on downloads site: #{ds.keys}"
         ds
       end
 
       def download_manifest
-        doc = Nokogiri::XML.parse(Network.get(base_url))
-        items = doc.css('Key').collect(&:text)
-        items.select { |item| item.include?('IEDriverServer_Win32') }
+        json = Network.get(base_url)
+        all_assets = JSON.parse(json).map { |release| release['assets'] }.flatten
+        all_assets.select { |asset| asset['name'].include?('IEDriverServer_Win32') }
       end
     end
   end
