@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rubygems/package'
-require 'webdrivers/logger'
 require 'webdrivers/network'
 require 'webdrivers/system'
 require 'selenium-webdriver'
+require 'webdrivers/logger'
 require 'webdrivers/version'
 
 module Webdrivers
