@@ -88,6 +88,8 @@ module Webdrivers
       #
       # @return [String] Path to the driver binary.
       def update
+        return driver_path if user_defined_driver_path
+
         if correct_binary?
           msg = required_version != EMPTY_VERSION ?  'The required webdriver version' : 'A working webdriver version'
           Webdrivers.logger.debug "#{msg} is already on the system"
@@ -113,10 +115,19 @@ module Webdrivers
       #
       # @return [String]
       def driver_path
-        File.absolute_path File.join(System.install_dir, file_name)
+        user_defined_driver_path || File.absolute_path(File.join(System.install_dir, file_name))
       end
 
       private
+
+      def user_defined_driver_path
+        env_var_name = "WD_#{name.split('::').last.upcase}_PATH"
+
+        return if ENV[env_var_name].nil?
+
+        Webdrivers.logger.debug "#{env_var_name}: #{ENV[env_var_name]}"
+        ENV[env_var_name]
+      end
 
       def download_version
         required_version == EMPTY_VERSION ? latest_version : required_version
