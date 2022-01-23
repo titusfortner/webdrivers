@@ -90,7 +90,7 @@ module Webdrivers
       def linux_location
         return wsl_location if System.wsl_v1?
 
-        directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome]
+        directories = %w[/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin /opt/google/chrome /opt/chromium.org/chromium]
         files = %w[google-chrome chrome chromium chromium-browser]
 
         directories.each do |dir|
