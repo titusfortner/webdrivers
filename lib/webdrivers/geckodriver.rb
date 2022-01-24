@@ -60,4 +60,5 @@ module Webdrivers
   end
 end
 
-::Selenium::WebDriver::Firefox::Service.driver_path = proc { ::Webdrivers::Geckodriver.update }
+::Selenium::WebDriver::Firefox::Service.driver_path =
+  File.expand_path(File.join(__dir__, '../../bin/drivers/geckodriver'))

@@ -146,4 +146,5 @@ module Webdrivers
   end
 end
 
-::Selenium::WebDriver::Chrome::Service.driver_path = proc { ::Webdrivers::Chromedriver.update }
+::Selenium::WebDriver::Chrome::Service.driver_path =
+  File.expand_path(File.join(__dir__, '../../bin/drivers/chromedriver'))

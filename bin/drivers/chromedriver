@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'webdrivers/chromedriver'
+
+ENV['WEBDRIVERS'] = '1'
+
+exec ::Webdrivers::Chromedriver.update

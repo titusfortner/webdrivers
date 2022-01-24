@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'webdrivers/edgedriver'
+
+ENV['WEBDRIVERS'] = '1'
+
+exec ::Webdrivers::Edgedriver.update

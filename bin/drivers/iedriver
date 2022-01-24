@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'webdrivers/iedriver'
+
+ENV['WEBDRIVERS'] = '1'
+
+exec ::Webdrivers::IEdriver.update

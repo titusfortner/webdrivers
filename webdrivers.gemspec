@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     'source_code_uri' => "https://github.com/titusfortner/webdrivers/tree/v#{Webdrivers::VERSION}"
   }
 
-  s.files         = Dir['lib/**/*'] + %w[CHANGELOG.md LICENSE.txt README.md]
+  s.files         = Dir['lib/**/*'] + Dir['bin/drivers/**/*'] + %w[CHANGELOG.md LICENSE.txt README.md]
   s.test_files    = Dir['spec/**/*'].reject { |f| File.directory?(f) }
   s.executables   = []
   s.require_paths = ['lib']

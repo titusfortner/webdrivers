@@ -101,4 +101,5 @@ module Webdrivers
   end
 end
 
-::Selenium::WebDriver::Edge::Service.driver_path = proc { ::Webdrivers::Edgedriver.update }
+::Selenium::WebDriver::Edge::Service.driver_path =
+  File.expand_path(File.join(__dir__, '../../bin/drivers/edgedriver'))

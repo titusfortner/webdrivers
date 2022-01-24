@@ -65,4 +65,5 @@ module Webdrivers
   end
 end
 
-::Selenium::WebDriver::IE::Service.driver_path = proc { ::Webdrivers::IEdriver.update }
+::Selenium::WebDriver::IE::Service.driver_path =
+  File.expand_path(File.join(__dir__, '../../bin/drivers/iedriver'))
