@@ -51,7 +51,7 @@ module Webdrivers
         when 'linux'
           "linux#{System.bitsize}.tar.gz"
         when 'mac'
-          'macos.tar.gz'
+          System.apple_m1_architecture? ? 'macos-aarch64.tar.gz' : 'macos.tar.gz'
         when 'win'
           "win#{System.bitsize}.zip"
         end
