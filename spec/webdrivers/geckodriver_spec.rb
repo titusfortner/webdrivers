@@ -92,6 +92,40 @@ describe Webdrivers::Geckodriver do
       msg = /Net::HTTPServerException: 404 "Not Found"/
       expect { geckodriver.update }.to raise_error(StandardError, msg)
     end
+
+    context 'when platform is Apple Sillicon' do
+      it 'downloads aarch64 binary' do
+        allow(Webdrivers::System).to receive(:platform).and_return('mac')
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(true)
+        base = 'https://github.com/mozilla/geckodriver/releases/download'
+        binary = 'geckodriver-v0.31.0-macos-aarch64.tar.gz'
+        url = "#{base}/v0.31.0/#{binary}"
+
+        allow(Webdrivers::System).to receive(:download).with(url, geckodriver.driver_path)
+
+        geckodriver.required_version = '0.31.0'
+        geckodriver.update
+
+        expect(Webdrivers::System).to have_received(:download).with(url, geckodriver.driver_path)
+      end
+    end
+
+    context 'when platform isn\'t Apple Sillicon' do
+      it 'downloads default binary' do
+        allow(Webdrivers::System).to receive(:platform).and_return('mac')
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(false)
+        base = 'https://github.com/mozilla/geckodriver/releases/download'
+        binary = 'geckodriver-v0.31.0-macos.tar.gz'
+        url = "#{base}/v0.31.0/#{binary}"
+
+        allow(Webdrivers::System).to receive(:download).with(url, geckodriver.driver_path)
+
+        geckodriver.required_version = '0.31.0'
+        geckodriver.update
+
+        expect(Webdrivers::System).to have_received(:download).with(url, geckodriver.driver_path)
+      end
+    end
   end
 
   describe '#current_version' do
