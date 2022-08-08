@@ -165,8 +165,8 @@ describe Webdrivers::Edgedriver do
     end
 
     it 'raises VersionError for beta version' do
-      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('100.0.0')
-      msg = 'Unable to find latest point release version for 100.0.0. '\
+      allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('999.0.0')
+      msg = 'Unable to find latest point release version for 999.0.0. '\
 'You appear to be using a non-production version of Edge. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
 'to a known edgedriver version: Can not reach https://msedgedriver.azureedge.net/'
