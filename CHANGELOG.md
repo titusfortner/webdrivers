@@ -1,3 +1,10 @@
+# 5.1.0 (2022-09-19)
+* Improve error messages (#232, thanks dan-jensen)
+* Fix circular require bug with railtie (#233, thanks amatsuda)
+* Support downloading correct geckodriver on Apple silicon (#234 thanks stephannv)
+* Update linux locations for Chrome to latest chromedriver finder (thanks entretechno-jeremiah) 
+* Add support for Microsoft Edge on Linux (#236)
+
 # 5.0.0 (2021-10-19)
 * Require Selenium 4+
 * Remove custom Logger and use the one in Selenium 4
