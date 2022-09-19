@@ -22,8 +22,7 @@ module Webdrivers
       #
       # @return [String]
       def base_url
-        # 'https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/'
-        'https://msedgedriver.azureedge.net/'
+        'https://msedgedriver.azureedge.net'
       end
 
       private
@@ -76,14 +75,10 @@ module Webdrivers
         false
       end
 
-      def linux_compatible?(driver_version)
-        System.platform == 'linux' && driver_version >= normalize_version('89.0.731.0')
-      end
-
       def driver_filename(driver_version)
         if System.platform == 'win' || System.wsl_v1?
           "win#{System.bitsize}" # 32 or 64-bit
-        elsif linux_compatible?(driver_version)
+        elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
           # Determine M1 or Intel architecture

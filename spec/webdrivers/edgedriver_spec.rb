@@ -6,7 +6,6 @@ describe Webdrivers::Edgedriver do
   let(:edgedriver) { described_class }
 
   before do
-    skip 'Edge is not yet supported on Linux' if Webdrivers::System.platform == 'linux'
     edgedriver.remove
   end
 
@@ -123,19 +122,19 @@ describe Webdrivers::Edgedriver do
 
     context 'when required version is 0' do
       it 'downloads the latest version' do
-        allow(edgedriver).to receive(:latest_version).and_return(Gem::Version.new('77.0.207.0'))
+        allow(edgedriver).to receive(:latest_version).and_return(Gem::Version.new('98.0.1089.1'))
         edgedriver.required_version = 0
         edgedriver.update
-        expect(edgedriver.current_version.version).to eq('77.0.207.0')
+        expect(edgedriver.current_version.version).to eq('98.0.1089.1')
       end
     end
 
     context 'when required version is nil' do
       it 'downloads the latest version' do
-        allow(edgedriver).to receive(:latest_version).and_return(Gem::Version.new('77.0.207.0'))
+        allow(edgedriver).to receive(:latest_version).and_return(Gem::Version.new('98.0.1089.1'))
         edgedriver.required_version = nil
         edgedriver.update
-        expect(edgedriver.current_version.version).to eq('77.0.207.0')
+        expect(edgedriver.current_version.version).to eq('98.0.1089.1')
       end
     end
   end
@@ -169,7 +168,7 @@ describe Webdrivers::Edgedriver do
       msg = 'Unable to find latest point release version for 999.0.0. '\
 'You appear to be using a non-production version of Edge. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
-'to a known edgedriver version: Can not reach https://msedgedriver.azureedge.net/'
+'to a known edgedriver version: Can not reach https://msedgedriver.azureedge.net'
 
       expect { edgedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
@@ -178,7 +177,7 @@ describe Webdrivers::Edgedriver do
       allow(edgedriver).to receive(:browser_version).and_return Gem::Version.new('77.0.9999')
       msg = 'Unable to find latest point release version for 77.0.9999. '\
 'Please set `Webdrivers::Edgedriver.required_version = <desired driver version>` '\
-'to a known edgedriver version: Can not reach https://msedgedriver.azureedge.net/'
+'to a known edgedriver version: Can not reach https://msedgedriver.azureedge.net'
 
       expect { edgedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
