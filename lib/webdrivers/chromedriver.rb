@@ -96,6 +96,14 @@ module Webdrivers
         Webdrivers.logger.debug 'chromedriver version is NOT Apple M1 compatible. Required >= 87.0.4280.88'
         false
       end
+      
+      def apple_arch(driver_version)
+        if apple_m1_compatible?(driver_version)
+          driver_version > normalize_version('106.0.5249.21') ? '_arm64' : '64_m1'
+        else
+          '64'
+        end           
+      end
 
       def direct_url(driver_version)
         "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
@@ -107,8 +115,7 @@ module Webdrivers
         elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
-          apple_arch = apple_m1_compatible?(driver_version) ? '_m1' : ''
-          "mac64#{apple_arch}"
+          "mac#{apple_arch(driver_version)}"
         else
           raise 'Failed to determine driver filename to download for your OS.'
         end
