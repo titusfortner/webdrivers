@@ -1,3 +1,6 @@
+# 5.2.0 (2022-09-29)
+* `chromedriver` - Fix downloading on M1 macs from version 106.0.5249.61 ([#237](https://github.com/titusfortner/webdrivers/issues/237), thanks jmccure)
+
 # 5.1.0 (2022-09-19)
 * Improve error messages (#232, thanks dan-jensen)
 * Fix circular require bug with railtie (#233, thanks amatsuda)
