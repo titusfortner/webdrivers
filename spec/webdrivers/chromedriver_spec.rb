@@ -135,6 +135,40 @@ describe Webdrivers::Chromedriver do
         expect(chromedriver.current_version.version).to eq('72.0.3626.7')
       end
     end
+
+    context 'when using an Apple machine' do
+      before do
+        allow(Webdrivers::System).to receive(:platform).and_return('mac')
+        allow(Webdrivers::System).to receive(:download)
+      end
+
+      it 'uses the correct chromedriver filename suffix for Intel' do
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(false)
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('106.0.5249.61'))
+        chromedriver.required_version = nil
+
+        chromedriver.update
+        expect(Webdrivers::System).to have_received(:download).with(end_with('_mac64.zip'), anything)
+      end
+
+      it 'uses the correct chromedriver filename suffix from version 106.0.5249.61 for Silicon' do
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(true)
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('106.0.5249.61'))
+        chromedriver.required_version = nil
+
+        chromedriver.update
+        expect(Webdrivers::System).to have_received(:download).with(end_with('_arm64.zip'), anything)
+      end
+
+      it 'uses the correct chromedriver filename suffix for versions less than 106.0.5249.61 for Silicon' do
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(true)
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('106.0.5249.21'))
+        chromedriver.required_version = nil
+
+        chromedriver.update
+        expect(Webdrivers::System).to have_received(:download).with(end_with('_mac64_m1.zip'), anything)
+      end
+    end
   end
 
   describe '#current_version' do
