@@ -97,11 +97,11 @@ module Webdrivers
         false
       end
 
-      def apple_filename(driver_version)
+      def apple_m1_filename(driver_version)
         if apple_m1_compatible?(driver_version)
-          driver_version >= normalize_version('106.0.5249.61') ? 'mac_arm64' : 'mac64_m1'
+          driver_version >= normalize_version('106.0.5249.61') ? "mac_arm64" :  "mac64_m1"
         else
-          'mac64'
+          "mac64"
         end
       end
 
@@ -115,7 +115,7 @@ module Webdrivers
         elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
-          apple_filename(driver_version)
+          apple_m1_filename(driver_version)
         else
           raise 'Failed to determine driver filename to download for your OS.'
         end

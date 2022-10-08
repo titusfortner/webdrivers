@@ -273,4 +273,42 @@ describe Webdrivers::Chromedriver do
       expect(chromedriver.browser_version).to be Gem::Version.new('72.0.0.0')
     end
   end
+
+  describe "private methods" do
+    describe "#direct_url" do
+      context "with mac platform" do
+
+        before do
+          allow(Webdrivers::System).to receive(:platform) { 'mac' }
+        end
+
+        context "when version is lower than 106.0.5249.61" do
+          it do
+            version_string = '71.0.3578.137'
+            version = Gem::Version.new(version_string)
+
+            expect(chromedriver.send(:direct_url, version)).to eq "#{chromedriver.base_url}/#{version_string}/chromedriver_mac64.zip"
+          end
+        end
+
+        context "when version is 106.0.5249.61" do
+          it do
+            version_string = '106.0.5249.61'
+            version = Gem::Version.new(version_string)
+
+            expect(chromedriver.send(:direct_url, version)).to eq "#{chromedriver.base_url}/#{version_string}/chromedriver_mac_arm64.zip"
+          end
+        end
+
+        context "when version is higher than 106.0.5249.61" do
+          it do
+            version_string = '106.0.5249.21'
+            version = Gem::Version.new(version_string)
+
+            expect(chromedriver.send(:direct_url, version)).to eq "#{chromedriver.base_url}/#{version_string}/chromedriver_mac64_m1.zip"
+          end
+        end
+      end
+    end
+  end
 end
