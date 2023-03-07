@@ -5,6 +5,22 @@
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
+## Update: Selenium Manager
+
+Selenium is working to make all 3rd party driver managers obsolete with a single solution that works in all
+languages. The new Selenium Manager is [still in beta](https://github.com/orgs/SeleniumHQ/projects/5), 
+but if you are using Selenium 4.6+ you may not need this gem.
+
+The current logic (as of Selenium 4.8) determines driver path in this order:
+* Specified in a `Service` constructor provided as an argument in the `Driver` constructor
+* Specified by `driver_path` attribute accessor for the `Service` class (which is what this gem does)
+* Located in a directory included in the `PATH` environment variable
+* Located in the directory Selenium Manager has downloaded it to
+
+If you don't have any drivers in locations on `PATH`, you can try not requiring this gem and see if you still need it.
+
+Please provide feedback or raise issues with [Selenium Project](https://github.com/SeleniumHQ/selenium/issues/new/choose)
+
 ## Description
 
 `webdrivers` downloads drivers and directs Selenium to use them. Currently supports:
