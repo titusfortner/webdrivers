@@ -3,7 +3,6 @@
 require 'shellwords'
 require 'webdrivers/common'
 require 'webdrivers/chrome_finder'
-require 'json'
 
 module Webdrivers
   class Chromedriver < Common
@@ -156,17 +155,17 @@ module Webdrivers
       end
 
       def chrome_for_testing_base_url
-        'https://googlechromelabs-github-io.translate.goog/chrome-for-testing'
+        'https://googlechromelabs-github-io.translate.goog'
       end
 
       def stable_version
-        uri = URI.join(chrome_for_testing_base_url, 'last-known-good-versions.json')
+        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testinglast-known-good-versions.json')
         res = Network.get(uri)
         JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version)
       end
 
       def direct_url_for_over_115(driver_version)
-        uri = URI.join(chrome_for_testing_base_url, 'last-known-good-versions-with-downloads.json')
+        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions-with-downloads.json')
         json = JSON.parse(Network.get(uri), symbolize_names: true).dig(:channels, :Stable, :downloads, :chrome)
         json.find { |e| e[:platform] == driver_filename(driver_version) }[:url]
       end
