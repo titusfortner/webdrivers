@@ -159,7 +159,7 @@ module Webdrivers
       end
 
       def stable_version
-        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testinglast-known-good-versions.json')
+        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testin/last-known-good-versions.json')
         res = Network.get(uri)
         JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version)
       end
