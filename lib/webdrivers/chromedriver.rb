@@ -63,7 +63,11 @@ module Webdrivers
       private
 
       def latest_point_release(version)
-        normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+        if version < normalize_version('115')
+          return normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+        end
+
+        latest_patch_version(version)
       rescue NetworkError
         msg = "Unable to find latest point release version for #{version}."
         msg = begin
@@ -77,8 +81,14 @@ module Webdrivers
           "#{msg} A network issue is preventing determination of latest chromedriver release."
         end
 
+        url = if version >= normalize_version('115')
+                'https://googlechromelabs.github.io/chrome-for-testing'
+              else
+                'https://chromedriver.storage.googleapis.com/index.html'
+              end
+
         msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
-              'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+              "to a known chromedriver version: #{url}"
         Webdrivers.logger.debug msg
         raise VersionError, msg
       end
@@ -105,8 +115,17 @@ module Webdrivers
         end
       end
 
+      def apple_filename_for_api(driver_version)
+        if apple_m1_compatible?(driver_version)
+          driver_version >= normalize_version('106.0.5249.61') ? 'mac-arm64' : 'mac64-m1'
+        else
+          'mac-x64'
+        end
+      end
+
       def direct_url(driver_version)
-        "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
+        direct_url_from_api(driver_version) ||
+          "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
       end
 
       def driver_filename(driver_version)
@@ -115,7 +134,11 @@ module Webdrivers
         elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
-          apple_filename(driver_version)
+          if driver_version >= normalize_version('115')
+            apple_filename_for_api(driver_version)
+          else
+            apple_filename(driver_version)
+          end
         else
           raise 'Failed to determine driver filename to download for your OS.'
         end
@@ -148,6 +171,33 @@ module Webdrivers
       def sufficient_binary?
         super && current_version && (current_version < normalize_version('70.0.3538') ||
           current_build_version == browser_build_version)
+      end
+
+      def chrome_for_testing_base_url
+        'https://googlechromelabs.github.io'
+      end
+
+      def latest_patch_version(driver_version)
+        latest_patch_version = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/latest-patch-versions-per-build.json')
+                                  .then { |url| Network.get(url) }
+                                  .then { |res| JSON.parse(res, symbolize_names: true) }
+                                  .then { |json| json.dig(:builds, :"#{driver_version}", :version) }
+                                  .then { |version| version ? normalize_version(version) : nil }
+        raise NetworkError unless latest_patch_version
+
+        latest_patch_version
+      end
+
+      def direct_url_from_api(driver_version)
+        return if normalize_version(driver_version) < normalize_version('115')
+
+        URI.join(chrome_for_testing_base_url, '/chrome-for-testing/known-good-versions-with-downloads.json')
+           .then { |url| Network.get(url) }
+           .then { |res| JSON.parse(res, symbolize_names: true) }
+           .then { |json| json[:versions].find { |e| e[:version] == driver_version.to_s } }
+           .then { |json| json.dig(:downloads, :chromedriver) }
+           .then { |json| json.find { |e| e[:platform] == driver_filename(driver_version) } }
+           .then { |json| json&.dig(:url) }
       end
     end
   end
