@@ -3,6 +3,7 @@
 require 'shellwords'
 require 'webdrivers/common'
 require 'webdrivers/chrome_finder'
+require 'json'
 
 module Webdrivers
   class Chromedriver < Common
@@ -63,7 +64,7 @@ module Webdrivers
       private
 
       def latest_point_release(version)
-        normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+        normalize_version(stable_version) || normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
       rescue NetworkError
         msg = "Unable to find latest point release version for #{version}."
         msg = begin
@@ -106,7 +107,11 @@ module Webdrivers
       end
 
       def direct_url(driver_version)
-        "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
+        if normalize_version('115') > driver_version
+          direct_url_for_over_115(driver_version)
+        else
+          "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
+        end
       end
 
       def driver_filename(driver_version)
@@ -148,6 +153,22 @@ module Webdrivers
       def sufficient_binary?
         super && current_version && (current_version < normalize_version('70.0.3538') ||
           current_build_version == browser_build_version)
+      end
+
+      def chrome_for_testing_base_url
+        'https://googlechromelabs-github-io.translate.goog/chrome-for-testing'
+      end
+
+      def stable_version
+        uri = URI.join(chrome_for_testing_base_url, 'last-known-good-versions.json')
+        res = Network.get(uri)
+        JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version)
+      end
+
+      def direct_url_for_over_115(driver_version)
+        uri = URI.join(chrome_for_testing_base_url, 'last-known-good-versions-with-downloads.json')
+        json = JSON.parse(Network.get(uri), symbolize_names: true).dig(:channels, :Stable, :downloads, :chrome)
+        json.find { |e| e[:platform] == driver_filename(driver_version) }[:url]
       end
     end
   end
