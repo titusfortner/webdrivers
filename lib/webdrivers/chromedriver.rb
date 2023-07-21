@@ -155,7 +155,7 @@ module Webdrivers
       end
 
       def chrome_for_testing_base_url
-        'https://googlechromelabs-github-io.translate.goog'
+        'https://googlechromelabs.github.io'
       end
 
       def stable_version
