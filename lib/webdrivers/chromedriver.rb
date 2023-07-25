@@ -170,6 +170,7 @@ module Webdrivers
       end
 
       def direct_url_from_api(driver_version)
+        return if  normalize_version('115') > driver_version
         uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions-with-downloads.json')
         json = JSON.parse(Network.get(uri), symbolize_names: true).dig(:channels, :Stable, :downloads, :chromedriver)
         json.find { |e| e[:platform] == driver_filename(driver_version) }[:url]
