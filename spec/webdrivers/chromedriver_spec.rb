@@ -259,6 +259,23 @@ describe Webdrivers::Chromedriver do
       expect(Webdrivers::Network).to have_received(:get)
       expect(Webdrivers::System).to have_received(:valid_cache?)
     end
+
+    it 'call chrome_for_testing if the browser version is greater than 115' do
+      allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('115.0.5790.102')
+      allow(Webdrivers::Network).to receive(:get).and_return(
+        {"channels":
+          {"Stable":
+            {
+              "channel": 'Stable',
+              "version": '115.0.5790.102',
+              "revision": '1148114'
+            }}}.to_json
+      )
+      uri = URI.join('https://googlechromelabs.github.io', 'chrome-for-testing/last-known-good-versions.json')
+
+      expect(chromedriver.latest_version).to eq Gem::Version.new('115.0.5790.102')
+      expect(Webdrivers::Network).to have_received(:get).with(uri)
+    end
   end
 
   describe '#required_version=' do
