@@ -168,6 +168,24 @@ describe Webdrivers::Chromedriver do
         chromedriver.update
         expect(Webdrivers::System).to have_received(:download).with(end_with('_mac64_m1.zip'), anything)
       end
+
+      it 'uses the correct chromedriver filename suffix for versions greater than 115 for Intel' do
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(false)
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('115.0.5790.102'))
+        chromedriver.required_version = nil
+
+        chromedriver.update
+        expect(Webdrivers::System).to have_received(:download).with(end_with('-mac-x64.zip'), anything)
+      end
+
+      it 'uses the correct chromedriver filename suffix for versions greater than 115 for Silicon' do
+        allow(Webdrivers::System).to receive(:apple_m1_architecture?).and_return(true)
+        allow(chromedriver).to receive(:latest_version).and_return(Gem::Version.new('115.0.5790.102'))
+        chromedriver.required_version = nil
+
+        chromedriver.update
+        expect(Webdrivers::System).to have_received(:download).with(end_with('-mac-arm64.zip'), anything)
+      end
     end
   end
 
@@ -266,9 +284,7 @@ describe Webdrivers::Chromedriver do
         {"channels":
           {"Stable":
             {
-              "channel": 'Stable',
               "version": '115.0.5790.102',
-              "revision": '1148114'
             }}}.to_json
       )
       uri = URI.join('https://googlechromelabs.github.io', 'chrome-for-testing/last-known-good-versions.json')
