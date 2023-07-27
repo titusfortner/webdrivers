@@ -114,7 +114,8 @@ module Webdrivers
       end
 
       def direct_url(driver_version)
-        direct_url_from_api(driver_version) || "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
+        direct_url_from_api(driver_version) ||
+          "#{base_url}/#{driver_version}/chromedriver_#{driver_filename(driver_version)}.zip"
       end
 
       def driver_filename(driver_version)
@@ -123,7 +124,11 @@ module Webdrivers
         elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
-          driver_version >= normalize_version('115') ? apple_filename_for_api(driver_version) : apple_filename(driver_version)
+          if driver_version >= normalize_version('115')
+            apple_filename_for_api(driver_version)
+          else
+            apple_filename(driver_version)
+          end
         else
           raise 'Failed to determine driver filename to download for your OS.'
         end
@@ -163,14 +168,17 @@ module Webdrivers
       end
 
       def stable_version(driver_version)
-        return if  normalize_version('115') >= driver_version
+        return if driver_version < normalize_version('115')
+
         uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions.json')
         res = Network.get(uri)
-        normalize_version(JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version))
+        result = normalize_version(JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version))
+        driver_version > result ? nil : result
       end
 
       def direct_url_from_api(driver_version)
-        return if  normalize_version('115') >= driver_version
+        return if normalize_version(driver_version) < normalize_version('115')
+
         uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions-with-downloads.json')
         json = JSON.parse(Network.get(uri), symbolize_names: true).dig(:channels, :Stable, :downloads, :chromedriver)
         json.find { |e| e[:platform] == driver_filename(driver_version) }[:url]

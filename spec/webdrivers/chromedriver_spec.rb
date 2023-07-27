@@ -66,7 +66,7 @@ describe Webdrivers::Chromedriver do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(chromedriver).to receive(:exists?).and_return(false)
 
-        msg = %r{Can not reach https://chromedriver.storage.googleapis.com}
+        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
         expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
@@ -101,7 +101,7 @@ describe Webdrivers::Chromedriver do
       it 'raises ConnectionError if offline' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
-        msg = %r{Can not reach https://chromedriver.storage.googleapis.com/}
+        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
         expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
@@ -223,11 +223,12 @@ describe Webdrivers::Chromedriver do
     it 'raises ConnectionError when offline' do
       allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
-      msg = %r{^Can not reach https://chromedriver.storage.googleapis.com}
+      msg = %r{^Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
       expect { chromedriver.latest_version }.to raise_error(Webdrivers::ConnectionError, msg)
     end
 
     it 'creates cached file' do
+      allow(chromedriver).to receive(:stable_version).and_return(nil)
       allow(Webdrivers::Network).to receive(:get).and_return('71.0.3578.137')
 
       chromedriver.latest_version
