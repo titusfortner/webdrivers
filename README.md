@@ -5,21 +5,39 @@
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
-## Update: Selenium Manager
+## Update: Future of this Project
 
-Selenium is working to make all 3rd party driver managers obsolete with a single solution that works in all
-languages. The new Selenium Manager is [still in beta](https://github.com/orgs/SeleniumHQ/projects/5), 
-but if you are using Selenium 4.6+ you may not need this gem.
+With Google's new Chrome for Testing project, a number of things have changed that affect this project.
 
-The current logic (as of Selenium 4.8) determines driver path in this order:
-* Specified in a `Service` constructor provided as an argument in the `Driver` constructor
-* Specified by `driver_path` attribute accessor for the `Service` class (which is what this gem does)
-* Located in a directory included in the `PATH` environment variable
-* Located in the directory Selenium Manager has downloaded it to
+Selenium 4.11 implements driver management (and more!) in a more maintainable way than this gem 
+with the new [Selenium Manager](https://www.selenium.dev/documentation/selenium_manager/).
 
-If you don't have any drivers in locations on `PATH`, you can try not requiring this gem and see if you still need it.
-
+If you can update to Selenium 4.11, please do so and stop requiring this gem.
 Please provide feedback or raise issues with [Selenium Project](https://github.com/SeleniumHQ/selenium/issues/new/choose)
+
+If you cannot update to Selenium 4.11 but are using Selenium 4, the next release of this gem should provide
+proper support for downloading Chromedriver 115+.
+
+If you cannot update to Selenium 4, you can set the required version of chromedriver to v114
+(`Webdrivers.required_version = '114.0.5735.90'`) and 
+[Disable the build check](https://www.selenium.dev/documentation/webdriver/browsers/chrome/#disabling-build-check). 
+This is not guaranteed to continue working and will not receive bug fixes. The goal is to have a 
+Webdrivers 6 that provides support for older versions of Ruby and Selenium.
+
+The current plan:
+
+**Webdrivers 5.3.0**
+* Merge https://github.com/titusfortner/webdrivers/pull/249 to get a basic fix
+* Set the maximum Selenium version to 4.10
+
+**Webdrivers 5.3.1**
+* add a `#post_install_message` telling people to update to Selenium 4.11 and not to require this gem
+
+**Webdrivers 6.0**
+* create a `selenium-manager.gem` based off of https://github.com/SeleniumHQ/selenium/pull/12429
+* re-implement this gem to wrap `selenium-manager.gem`
+* make this gem less restrictive to versions of Selenium / Ruby
+
 
 ## Description
 
