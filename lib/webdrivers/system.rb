@@ -127,8 +127,14 @@ module Webdrivers
         Webdrivers.logger.debug "Decompressing #{filename}"
 
         Zip::File.open(filename) do |zip_file|
-          driver = zip_file.entries.find { |e| File.basename(e.name) == driver_name }
-          f_path = File.join(Dir.pwd, File.basename(driver.name))
+          driver = zip_file.entries.find do |e|
+            if driver_name == 'chromedriver'
+              File.basename(e.name) == driver_name
+            else
+              zip_file.get_entry(driver_name)
+            end
+          end
+          f_path = File.join(Dir.pwd,  driver_name == 'chromedriver' ? File.basename(driver.name) : driver.name)
           delete(f_path)
           FileUtils.mkdir_p(File.dirname(f_path)) unless File.exist?(File.dirname(f_path))
           zip_file.extract(driver, f_path)
