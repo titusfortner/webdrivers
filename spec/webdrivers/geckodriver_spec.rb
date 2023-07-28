@@ -86,10 +86,10 @@ describe Webdrivers::Geckodriver do
       expect(Webdrivers::System).to have_received(:download).with(url, geckodriver.driver_path)
     end
 
-    it 'does something when a wrong version is supplied' do
+    it 'raises error when a wrong version is supplied' do
       geckodriver.required_version = '0.2.0'
 
-      msg = /Net::HTTPServerException: 404 "Not Found"/
+      msg = /404 "Not Found"/
       expect { geckodriver.update }.to raise_error(StandardError, msg)
     end
 
