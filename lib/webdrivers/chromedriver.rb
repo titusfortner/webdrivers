@@ -87,7 +87,6 @@ module Webdrivers
                 'https://chromedriver.storage.googleapis.com/index.html'
               end
 
-        p url
         msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
               "to a known chromedriver version: #{url}"
         Webdrivers.logger.debug msg
@@ -184,8 +183,6 @@ module Webdrivers
                                   .then { |res| JSON.parse(res, symbolize_names: true) }
                                   .then { |json| json.dig(:builds, :"#{driver_version}", :version) }
                                   .then { |version| version ? normalize_version(version) : nil }
-
-        p latest_patch_version
         raise NetworkError unless latest_patch_version
 
         latest_patch_version
