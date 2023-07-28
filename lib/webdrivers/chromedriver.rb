@@ -63,7 +63,11 @@ module Webdrivers
       private
 
       def latest_point_release(version)
-        stable_version(version) || normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+        if version < normalize_version('115')
+          return normalize_version(Network.get(URI.join(base_url, "LATEST_RELEASE_#{version}")))
+        end
+
+        latest_patch_version(version)
       rescue NetworkError
         msg = "Unable to find latest point release version for #{version}."
         msg = begin
@@ -77,8 +81,15 @@ module Webdrivers
           "#{msg} A network issue is preventing determination of latest chromedriver release."
         end
 
+        url = if version >= normalize_version('115')
+                'https://googlechromelabs.github.io/chrome-for-testing'
+              else
+                'https://chromedriver.storage.googleapis.com/index.html'
+              end
+
+        p url
         msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
-              'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+              "to a known chromedriver version: #{url}"
         Webdrivers.logger.debug msg
         raise VersionError, msg
       end
@@ -167,21 +178,29 @@ module Webdrivers
         'https://googlechromelabs.github.io'
       end
 
-      def stable_version(driver_version)
-        return if driver_version < normalize_version('115')
+      def latest_patch_version(driver_version)
+        latest_patch_version = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/latest-patch-versions-per-build.json')
+                                  .then { |url| Network.get(url) }
+                                  .then { |res| JSON.parse(res, symbolize_names: true) }
+                                  .then { |json| json.dig(:builds, :"#{driver_version}", :version) }
+                                  .then { |version| version ? normalize_version(version) : nil }
 
-        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions.json')
-        res = Network.get(uri)
-        result = normalize_version(JSON.parse(res, symbolize_names: true).dig(:channels, :Stable, :version))
-        driver_version > result ? nil : result
+        p latest_patch_version
+        raise NetworkError unless latest_patch_version
+
+        latest_patch_version
       end
 
       def direct_url_from_api(driver_version)
         return if normalize_version(driver_version) < normalize_version('115')
 
-        uri = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/last-known-good-versions-with-downloads.json')
-        json = JSON.parse(Network.get(uri), symbolize_names: true).dig(:channels, :Stable, :downloads, :chromedriver)
-        json.find { |e| e[:platform] == driver_filename(driver_version) }[:url]
+        URI.join(chrome_for_testing_base_url, '/chrome-for-testing/known-good-versions-with-downloads.json')
+           .then { |url| Network.get(url) }
+           .then { |res| JSON.parse(res, symbolize_names: true) }
+           .then { |json| json[:versions].find { |e| e[:version] == driver_version.to_s } }
+           .then { |json| json.dig(:downloads, :chromedriver) }
+           .then { |json| json.find { |e| e[:platform] == driver_filename(driver_version) } }
+           .then { |json| json&.dig(:url) }
       end
     end
   end

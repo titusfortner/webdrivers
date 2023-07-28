@@ -66,7 +66,7 @@ describe Webdrivers::Chromedriver do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
         allow(chromedriver).to receive(:exists?).and_return(false)
 
-        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
+        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json}
         expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
@@ -101,7 +101,7 @@ describe Webdrivers::Chromedriver do
       it 'raises ConnectionError if offline' do
         allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
-        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
+        msg = %r{Can not reach https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json}
         expect { chromedriver.update }.to raise_error(Webdrivers::ConnectionError, msg)
       end
     end
@@ -224,7 +224,7 @@ describe Webdrivers::Chromedriver do
       msg = 'Unable to find latest point release version for 999.0.0. '\
 'You appear to be using a non-production version of Chrome. '\
 'Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` '\
-'to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html'
+'to a known chromedriver version: https://googlechromelabs.github.io/chrome-for-testing'
 
       expect { chromedriver.latest_version }.to raise_exception(Webdrivers::VersionError, msg)
     end
@@ -241,12 +241,12 @@ describe Webdrivers::Chromedriver do
     it 'raises ConnectionError when offline' do
       allow(Net::HTTP).to receive(:get_response).and_raise(SocketError)
 
-      msg = %r{^Can not reach https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json}
+      msg = %r{^Can not reach https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json}
       expect { chromedriver.latest_version }.to raise_error(Webdrivers::ConnectionError, msg)
     end
 
     it 'creates cached file' do
-      allow(chromedriver).to receive(:stable_version).and_return(nil)
+      allow(chromedriver).to receive(:latest_patch_version).and_return(nil)
       allow(Webdrivers::Network).to receive(:get).and_return('71.0.3578.137')
 
       chromedriver.latest_version
@@ -281,13 +281,9 @@ describe Webdrivers::Chromedriver do
     it 'call chrome_for_testing if the browser version is greater than 115' do
       allow(chromedriver).to receive(:browser_version).and_return Gem::Version.new('115.0.5790.102')
       allow(Webdrivers::Network).to receive(:get).and_return(
-        {"channels":
-          {"Stable":
-            {
-              "version": '115.0.5790.102',
-            }}}.to_json
+        {"builds": {'115.0.5790': {"version": '115.0.5790.102'}}}.to_json
       )
-      uri = URI.join('https://googlechromelabs.github.io', 'chrome-for-testing/last-known-good-versions.json')
+      uri = URI.join('https://googlechromelabs.github.io', '/chrome-for-testing/latest-patch-versions-per-build.json')
 
       expect(chromedriver.latest_version).to eq Gem::Version.new('115.0.5790.102')
       expect(Webdrivers::Network).to have_received(:get).with(uri)
