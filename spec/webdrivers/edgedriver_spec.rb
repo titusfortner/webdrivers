@@ -95,6 +95,7 @@ describe Webdrivers::Edgedriver do
       before { allow(edgedriver).to receive(:correct_binary?).and_return(false) }
 
       it 'downloads binary' do
+        allow(Webdrivers::EdgeFinder).to receive(:version).and_return('115.0.1901.188')
         edgedriver.update
 
         expect(edgedriver.current_version).not_to be_nil
@@ -241,6 +242,7 @@ describe Webdrivers::Edgedriver do
 
   describe '#remove' do
     it 'removes existing edgedriver' do
+      allow(Webdrivers::EdgeFinder).to receive(:version).and_return('115.0.1901.188')
       edgedriver.update
 
       edgedriver.remove

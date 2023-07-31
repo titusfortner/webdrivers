@@ -81,14 +81,8 @@ module Webdrivers
           "#{msg} A network issue is preventing determination of latest chromedriver release."
         end
 
-        url = if version >= normalize_version('115')
-                'https://googlechromelabs.github.io/chrome-for-testing'
-              else
-                'https://chromedriver.storage.googleapis.com/index.html'
-              end
-
         msg = "#{msg} Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` "\
-              "to a known chromedriver version: #{url}"
+                'to a known chromedriver version: https://chromedriver.chromium.org/downloads/version-selection'
         Webdrivers.logger.debug msg
         raise VersionError, msg
       end
@@ -108,18 +102,16 @@ module Webdrivers
       end
 
       def apple_filename(driver_version)
-        if apple_m1_compatible?(driver_version)
-          driver_version >= normalize_version('106.0.5249.61') ? 'mac_arm64' : 'mac64_m1'
-        else
-          'mac64'
+        unless apple_m1_compatible?(driver_version)
+          return driver_version >= normalize_version('115') ? 'mac-x64' : 'mac64'
         end
-      end
 
-      def apple_filename_for_api(driver_version)
-        if apple_m1_compatible?(driver_version)
-          driver_version >= normalize_version('106.0.5249.61') ? 'mac-arm64' : 'mac64-m1'
+        if driver_version < normalize_version('106.0.5249.61')
+          'mac64_m1'
+        elsif driver_version < normalize_version('115')
+          'mac_arm64'
         else
-          'mac-x64'
+          'mac-arm64'
         end
       end
 
@@ -134,11 +126,7 @@ module Webdrivers
         elsif System.platform == 'linux'
           'linux64'
         elsif System.platform == 'mac'
-          if driver_version >= normalize_version('115')
-            apple_filename_for_api(driver_version)
-          else
-            apple_filename(driver_version)
-          end
+          apple_filename(driver_version)
         else
           raise 'Failed to determine driver filename to download for your OS.'
         end
@@ -164,6 +152,7 @@ module Webdrivers
       def browser_build_version
         normalize_version(browser_version.segments[0..2].join('.'))
       end
+
       alias chrome_build_version browser_build_version
 
       # Returns true if an executable driver binary exists
@@ -174,11 +163,11 @@ module Webdrivers
       end
 
       def chrome_for_testing_base_url
-        'https://googlechromelabs.github.io'
+        'https://googlechromelabs.github.io/chrome-for-testing/'
       end
 
       def latest_patch_version(driver_version)
-        latest_patch_version = URI.join(chrome_for_testing_base_url, '/chrome-for-testing/latest-patch-versions-per-build.json')
+        latest_patch_version = URI.join(chrome_for_testing_base_url, 'latest-patch-versions-per-build.json')
                                   .then { |url| Network.get(url) }
                                   .then { |res| JSON.parse(res, symbolize_names: true) }
                                   .then { |json| json.dig(:builds, :"#{driver_version}", :version) }
@@ -191,7 +180,7 @@ module Webdrivers
       def direct_url_from_api(driver_version)
         return if normalize_version(driver_version) < normalize_version('115')
 
-        URI.join(chrome_for_testing_base_url, '/chrome-for-testing/known-good-versions-with-downloads.json')
+        URI.join(chrome_for_testing_base_url, 'known-good-versions-with-downloads.json')
            .then { |url| Network.get(url) }
            .then { |res| JSON.parse(res, symbolize_names: true) }
            .then { |json| json[:versions].find { |e| e[:version] == driver_version.to_s } }

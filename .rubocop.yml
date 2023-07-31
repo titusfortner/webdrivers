@@ -52,8 +52,9 @@ Metrics/BlockLength:
     - 'webdrivers.gemspec'
 
 Metrics/ClassLength:
-  Max: 116
+  Max: 105
   Exclude:
+    - 'lib/webdrivers/chromedriver.rb'
     - 'lib/webdrivers/system.rb'
 
 Metrics/CyclomaticComplexity:
@@ -95,4 +96,7 @@ RSpec/ExampleLength:
   Enabled: false
 
 RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
   Enabled: false
