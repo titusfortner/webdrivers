@@ -5,21 +5,37 @@
 
 Run Selenium tests more easily with automatic installation and updates for all supported webdrivers.
 
-## Update: Selenium Manager
+## Update: Future of this Project
 
-Selenium is working to make all 3rd party driver managers obsolete with a single solution that works in all
-languages. The new Selenium Manager is [still in beta](https://github.com/orgs/SeleniumHQ/projects/5), 
-but if you are using Selenium 4.6+ you may not need this gem.
+With Google's new [Chrome for Testing](https://developer.chrome.com/blog/chrome-for-testing/) project, 
+and Selenium's new [Selenium Manager](https://www.selenium.dev/documentation/selenium_manager/) feature, 
+what is required of this gem has changed..
 
-The current logic (as of Selenium 4.8) determines driver path in this order:
-* Specified in a `Service` constructor provided as an argument in the `Driver` constructor
-* Specified by `driver_path` attribute accessor for the `Service` class (which is what this gem does)
-* Located in a directory included in the `PATH` environment variable
-* Located in the directory Selenium Manager has downloaded it to
-
-If you don't have any drivers in locations on `PATH`, you can try not requiring this gem and see if you still need it.
-
+If you can update to to the latest version of Selenium, please do so and stop requiring this gem.
+Selenium 4.10 will work for Chrome v115 (ignore the warning), and Selenium 4.11 will work for everything going forward.
 Please provide feedback or raise issues with [Selenium Project](https://github.com/SeleniumHQ/selenium/issues/new/choose)
+
+If you cannot upgrade to the latest version of Selenium, you can set the required version of chromedriver to v114
+(`Webdrivers.required_version = '114.0.5735.90'`) and 
+[Disable the build check](https://www.selenium.dev/documentation/webdriver/browsers/chrome/#disabling-build-check). 
+This is not guaranteed to continue working and will not receive bug fixes. 
+
+The current plan:
+
+**Webdrivers 5.3.0**
+* Merge https://github.com/titusfortner/webdrivers/pull/249 to get a basic fix for Chrome for Testing support
+* Set the maximum Selenium version to 4.10
+* Continue to support Ruby 2.6+ and Selenium 4+
+
+**Webdrivers 5.3.1**
+* Add a `#post_install_message` telling people to update to Selenium 4.11 and not to require this gem
+
+**Webdrivers 6.0**
+* Create a `selenium-manager.gem` based off of https://github.com/SeleniumHQ/selenium/pull/12429
+* Re-implement this gem to wrap `selenium-manager.gem`
+* Add support for Selenium 3.142 and investigate support for Ruby 2.4 / 2.5
+
+If anyone would like to help get Webdrivers 6 working, please let us know.
 
 ## Description
 
