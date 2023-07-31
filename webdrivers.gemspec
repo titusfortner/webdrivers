@@ -39,4 +39,16 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
   s.add_runtime_dependency 'rubyzip', '>= 1.3.0'
   s.add_runtime_dependency 'selenium-webdriver', '~> 4.0', '< 4.11'
+
+  s.post_install_message = <<~ENDBANNER
+    Webdrivers gem update options
+    *****************************
+
+    Selenium itself now manages drivers by default: https://www.selenium.dev/documentation/selenium_manager
+    * If you are using Ruby 3+ — please update to Selenium 4.11+ and stop requiring this gem
+    * If you are using Ruby 2.6+ and Selenium 4.0+ — this version will work for now
+    * If you use Ruby < 2.6 or Selenium 3, a 6.0 version of this gem with additional support is planned
+
+    Restrict your gemfile to "webdrivers", "= 5.3.0" to stop seeing this message
+  ENDBANNER
 end

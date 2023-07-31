@@ -1,3 +1,6 @@
+# 5.3.1 (2023-07-31)
+* Add post_install_message to explain status of gem
+
 # 5.3.0 (2023-07-31)
 * Add support for Chrome for Testing drivers ([#237](https://github.com/titusfortner/webdrivers/issues/249), thanks sadahiro-ono)
 * Support is restricted to Selenium 4.0 - 4.10 to encourage people to update to Selenium 4.11
