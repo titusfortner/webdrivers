@@ -11,7 +11,7 @@ With Google's new [Chrome for Testing](https://developer.chrome.com/blog/chrome-
 and Selenium's new [Selenium Manager](https://www.selenium.dev/documentation/selenium_manager/) feature, 
 what is required of this gem has changed.
 
-If you can update to to the latest version of Selenium (4.11+), please do so and stop requiring this gem.
+If you can update to the latest version of Selenium (4.11+), please do so and stop requiring this gem.
 Provide feedback or raise issues to [Selenium Project](https://github.com/SeleniumHQ/selenium/issues/new/choose)
 
 If you cannot upgrade to Selenium 4.11, Webdrivers 5.3.0 will continue to support Ruby 2.6+ and Selenium 4.0 - 4.10
