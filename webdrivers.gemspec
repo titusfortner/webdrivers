@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
   s.add_runtime_dependency 'rubyzip', '>= 1.3.0'
-  s.add_runtime_dependency 'selenium-webdriver', '~> 4.0', '< 4.11'
+  s.add_runtime_dependency 'selenium-webdriver', '~> 4.0', '<= 4.11'
 
   s.post_install_message = <<~ENDBANNER
     Webdrivers gem update options
