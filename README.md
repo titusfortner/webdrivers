@@ -16,11 +16,6 @@ Provide feedback or raise issues to [Selenium Project](https://github.com/Seleni
 
 If you cannot upgrade to Selenium 4.11, Webdrivers 5.3.0 will continue to support Ruby 2.6+ and Selenium 4.0 - 4.10
 
-If you are using an older version of webdrivers gem, and cannot upgrade, you can set
-the required version of chromedriver to v114 (`Webdrivers::Chromedriver.required_version = '114.0.5735.90'`) and 
-[Disable the build check](https://www.selenium.dev/documentation/webdriver/browsers/chrome/#disabling-build-check). 
-This is not guaranteed to continue working and will not receive bug fixes.
-
 **Webdrivers 6.0**
 To provide support for Selenium 3 and Ruby < 2.6 a 6.0 version is planned. It requires:
 * Creating a `selenium-manager.gem` based off of https://github.com/SeleniumHQ/selenium/pull/12429
